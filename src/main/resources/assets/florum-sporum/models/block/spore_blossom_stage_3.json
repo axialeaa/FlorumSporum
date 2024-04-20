@@ -1,0 +1,4 @@
+{
+    "parent": "minecraft:block/spore_blossom",
+    "ambientocclusion": false
+}

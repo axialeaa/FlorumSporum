@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "florum-sporum",
+	"version": "${version}",
+	"name": "Florum Sporum",
+	"description": "Adds new blockstates and capabilities to spore blossoms, enhancing and enchanting the natural world!",
+	"authors": [
+		"axialeaa"
+	],
+	"contact": {
+		"sources": "https://github.com/axialeaa/FlorumSporum",
+		"issues": "https://github.com/axialeaa/FlorumSporum/issues"
+	},
+	"license": "LGPLv3",
+	"icon": "assets/florum-sporum/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.axialeaa.florumsporum.FlorumSporum"
+		]
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.github_releases": "https://github.com/axialeaa/FlorumSporum/releases",
+				"modmenu.modrinth": "https://modrinth.com/mod/florum-sporum"
+			}
+		}
+	},
+	"mixins": [
+      "florum-sporum.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.7",
+		"minecraft": "~1.20.3",
+		"java": ">=17"
+    }
+}

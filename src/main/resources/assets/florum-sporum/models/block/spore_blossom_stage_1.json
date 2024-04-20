@@ -1,0 +1,61 @@
+{
+	"credit": "Made by axialeaa using Blockbench",
+	"ambientocclusion": false,
+	"parent": "block/block",
+	"textures": {
+		"particle": "florum-sporum:block/spore_blossom_stage_1",
+		"flower": "florum-sporum:block/spore_blossom_stage_1",
+		"base": "block/spore_blossom_base"
+	},
+	"elements": [
+		{
+			"from": [1, 15.9, 1],
+			"to": [15, 15.9, 15],
+			"shade": false,
+			"faces": {
+				"up": {"uv": [1, 1, 15, 15], "texture": "#base"},
+				"down": {"uv": [1, 1, 15, 15], "texture": "#base"}
+			}
+		},
+		{
+			"from": [7.9, 0, 0],
+			"to": [7.9, 16, 16],
+			"shade": false,
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, 16, 0]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#flower"},
+				"west": {"uv": [0, 16, 16, 0], "texture": "#flower"}
+			}
+		},
+		{
+			"from": [8.1, 0, 0],
+			"to": [8.1, 16, 16],
+			"shade": false,
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [8, 16, 0]},
+			"faces": {
+				"east": {"uv": [0, 16, 16, 0], "texture": "#flower"},
+				"west": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#flower"}
+			}
+		},
+		{
+			"from": [0, 0, 7.9],
+			"to": [16, 16, 7.9],
+			"shade": false,
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [0, 16, 8]},
+			"faces": {
+				"north": {"uv": [16, 0, 0, 16], "rotation": 180, "texture": "#flower"},
+				"south": {"uv": [16, 16, 0, 0], "texture": "#flower"}
+			}
+		},
+		{
+			"from": [0, 0, 8.1],
+			"to": [16, 16, 8.1],
+			"shade": false,
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 16, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#flower"},
+				"south": {"uv": [0, 16, 16, 0], "texture": "#flower"}
+			}
+		}
+	]
+}

@@ -1,0 +1,92 @@
+{
+  "variants": {
+    "age=0,facing=down": {
+      "model": "florum-sporum:block/spore_blossom_stage_0"
+    },
+    "age=1,facing=down": {
+      "model": "florum-sporum:block/spore_blossom_stage_1"
+    },
+    "age=2,facing=down": {
+      "model": "florum-sporum:block/spore_blossom_stage_2"
+    },
+    "age=3,facing=down": {
+      "model": "florum-sporum:block/spore_blossom_stage_3"
+    },
+    "age=0,facing=up": {
+      "model": "florum-sporum:block/spore_blossom_stage_0",
+      "x": 180
+    },
+    "age=1,facing=up": {
+      "model": "florum-sporum:block/spore_blossom_stage_1",
+      "x": 180
+    },
+    "age=2,facing=up": {
+      "model": "florum-sporum:block/spore_blossom_stage_2",
+      "x": 180
+    },
+    "age=3,facing=up": {
+      "model": "florum-sporum:block/spore_blossom_stage_3",
+      "x": 180
+    },
+    "age=0,facing=north": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_0"
+    },
+    "age=1,facing=north": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_1"
+    },
+    "age=2,facing=north": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_2"
+    },
+    "age=3,facing=north": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_3"
+    },
+    "age=0,facing=east": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_0",
+      "y": 90
+    },
+    "age=1,facing=east": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_1",
+      "y": 90
+    },
+    "age=2,facing=east": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_2",
+      "y": 90
+    },
+    "age=3,facing=east": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_3",
+      "y": 90
+    },
+    "age=0,facing=south": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_0",
+      "y": 180
+    },
+    "age=1,facing=south": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_1",
+      "y": 180
+    },
+    "age=2,facing=south": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_2",
+      "y": 180
+    },
+    "age=3,facing=south": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_3",
+      "y": 180
+    },
+    "age=0,facing=west": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_0",
+      "y": 270
+    },
+    "age=1,facing=west": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_1",
+      "y": 270
+    },
+    "age=2,facing=west": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_2",
+      "y": 270
+    },
+    "age=3,facing=west": {
+      "model": "florum-sporum:block/spore_blossom_horizontal_stage_3",
+      "y": 270
+    }
+  }
+}
