@@ -1,0 +1,21 @@
+{
+  "block.spore_blossom.close": {
+    "sounds": [
+      "block/big_dripleaf/tilt_down1",
+      "block/big_dripleaf/tilt_down2",
+      "block/big_dripleaf/tilt_down3",
+      "block/big_dripleaf/tilt_down4",
+      "block/big_dripleaf/tilt_down5"
+    ],
+    "subtitle": "subtitles.block.spore_blossom.close"
+  },
+  "block.spore_blossom.open": {
+    "sounds": [
+      "block/big_dripleaf/tilt_up1",
+      "block/big_dripleaf/tilt_up2",
+      "block/big_dripleaf/tilt_up3",
+      "block/big_dripleaf/tilt_up4"
+    ],
+    "subtitle": "subtitles.block.spore_blossom.open"
+  }
+}

@@ -3,8 +3,7 @@
 	"ambientocclusion": false,
 	"parent": "block/block",
 	"textures": {
-		"particle": "florum-sporum:block/spore_blossom_stage_2",
-		"flower": "florum-sporum:block/spore_blossom_stage_2",
+		"particle": "block/spore_blossom",
 		"base": "block/spore_blossom_base"
 	},
 	"elements": [

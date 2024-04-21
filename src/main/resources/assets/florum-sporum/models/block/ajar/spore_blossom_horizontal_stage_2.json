@@ -1,0 +1,6 @@
+{
+	"parent": "florum-sporum:block/spore_blossom_horizontal_ajar",
+	"textures": {
+		"flower": "florum-sporum:block/spore_blossom_stage_2"
+	}
+}

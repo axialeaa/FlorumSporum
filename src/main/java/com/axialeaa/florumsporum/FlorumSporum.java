@@ -1,5 +1,6 @@
 package com.axialeaa.florumsporum;
 
+import com.axialeaa.florumsporum.registry.FlorumSporumSoundEvents;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ public class FlorumSporum implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info(MOD_NAME + " initialized. Let it grow!");
+        FlorumSporumSoundEvents.init();
     }
 
 }

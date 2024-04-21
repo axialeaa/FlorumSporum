@@ -4,7 +4,6 @@
 	"parent": "block/block",
 	"textures": {
 		"particle": "block/spore_blossom",
-		"flower": "block/spore_blossom",
 		"base": "block/spore_blossom_base"
 	},
 	"elements": [

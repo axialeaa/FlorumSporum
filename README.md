@@ -9,7 +9,4 @@ Read on to find out how to download this mod, and what opportunities doing so wi
 Simply head to the releases page, find the latest release for the version you're playing on, and place the jar in your mods folder. This mod doesn't require any accompanying library.
 
 ## Details
-In vanilla minecraft, bubble columns emit particle effects that indicate the direction of the stream: a downward "whirlpool" for magma blocks and an updraft for soul sand. Unfortunately, rendering a lot of particle effects at once can be costly, and they don't even render behind transparent blocks like water in the fast or fancy graphics profile.
-
-This mod allows bubble columns to use unbaked block models instead, which has the intended visual symmetry of the Bedrock Edition counterpart. This provides a decent performance improvement as well as a unique visual style you can see from the image below!
-![2023-11-18_19 05 37](https://github.com/axialeaa/BlockyBubbles/assets/116074698/c8343ad4-6047-4b33-80a9-a36c667cdfa1)
+Spore Blossoms can be found hanging on the mossy ceilings of lush caves, passively enriching the environment by producing a high concentration of spores. 

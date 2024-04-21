@@ -1,5 +1,6 @@
 package com.axialeaa.florumsporum.mixin;
 
+import com.axialeaa.florumsporum.util.Openness;
 import com.axialeaa.florumsporum.util.SporeBlossomStatics;
 import com.google.common.collect.Maps;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -9,6 +10,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
@@ -39,14 +41,14 @@ import static com.axialeaa.florumsporum.util.SporeBlossomStatics.*;
 /**
  * This is the main class that handles the modified logic for the spore blossom. It uses extending and overriding as well as interface method implementation so it's incompatible with other mods doing the same thing as me, but there's if you've installed two mods with such similar functionalities, you've probably made a mistake worth a crash report anyway!
  */
+@SuppressWarnings("deprecation")
 @Mixin(SporeBlossomBlock.class)
 public abstract class SporeBlossomBlockMixin extends Block implements Fertilizable {
 
-    @SuppressWarnings("deprecation")
     @Shadow public abstract boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos);
 
     @Unique
-    private static final Map<Direction, VoxelShape> SHAPE_MAP = Util.make(Maps.newHashMap(), map -> {
+    private static final Map<Direction, VoxelShape> SHAPES_FOR_DIRECTION = Util.make(Maps.newHashMap(), map -> {
         map.put(Direction.DOWN, createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0));
         map.put(Direction.UP, createCuboidShape(2.0, 0.0, 2.0, 14.0, 3.0, 14.0));
         map.put(Direction.NORTH, createCuboidShape(2.0, 2.0, 13.0, 14.0, 14.0, 16.0));
@@ -61,12 +63,12 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void registerDefaultState(Settings settings, CallbackInfo ci) {
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.DOWN).with(AGE, 3));
+        this.setDefaultState(this.getDefaultState().with(FACING, Direction.DOWN).with(AGE, 3).with(OPENNESS, Openness.FULL));
     }
 
     @WrapWithCondition(method = "randomDisplayTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V", ordinal = 0))
     private boolean shouldCreateShower(World instance, ParticleEffect parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, @Local(argsOnly = true) BlockState state) {
-        return getAge(state) >= MAX_AGE && getFacing(state) == Direction.DOWN;
+        return getOpenness(state) == Openness.FULL && getFacing(state) == Direction.DOWN;
     }
 
     /**
@@ -74,7 +76,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
      */
     @ModifyConstant(method = "randomDisplayTick", constant = @Constant(intValue = 14))
     private int modifyIterationCount(int constant, @Local(argsOnly = true) BlockState state) {
-        return MathHelper.lerp((float) getAge(state) / MAX_AGE, 0, constant);
+        return MathHelper.lerp((float) (getOpenness(state).ordinal() + 1) / 4, 0, constant);
     }
 
     @WrapOperation(method = "canPlaceAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;sideCoversSmallSquare(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z"))
@@ -89,7 +91,30 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @ModifyReturnValue(method = "getOutlineShape", at = @At("RETURN"))
     private VoxelShape getShapeForState(VoxelShape original, @Local(argsOnly = true) BlockState state) {
-        return SHAPE_MAP.get(getFacing(state));
+        return SHAPES_FOR_DIRECTION.get(getFacing(state));
+    }
+
+    @Override
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (!world.isClient() && hasEntityAt(world, pos) && !world.isReceivingRedstonePower(pos)) {
+            if (closeFully(world, pos, state))
+                world.scheduleBlockTick(pos, this, 1);
+        }
+    }
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        if (world.isReceivingRedstonePower(pos))
+            openFully(world, pos, state);
+    }
+
+    @Override
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        if (!hasEntityAt(world, pos)) {
+            if (openNext(world, pos, state))
+                world.scheduleBlockTick(pos, this, 10);
+        }
+        else world.scheduleBlockTick(pos, this, 60);
     }
 
     @Nullable
@@ -129,7 +154,6 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     /**
      * Increases the {@link SporeBlossomStatics#AGE} blockstate property every 1 in 10 randomTicks, while the spore blossom is resting on moss.
      */
-    @SuppressWarnings("deprecation")
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (random.nextFloat() < 0.1 && world.getBlockState(getSupportingPos(pos, state)).getBlock() instanceof MossBlock)
@@ -137,11 +161,11 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     }
 
     /**
-     * Adds the {@link SporeBlossomStatics#FACING} and {@link SporeBlossomStatics#AGE} blockstate properties to the spore blossom.
+     * Adds the {@link SporeBlossomStatics#FACING}, {@link SporeBlossomStatics#AGE} and {@link SporeBlossomStatics#OPENNESS} blockstate properties to the spore blossom.
      */
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, AGE);
+        builder.add(FACING, AGE, OPENNESS);
     }
 
 }

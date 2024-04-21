@@ -1,14 +1,24 @@
 package com.axialeaa.florumsporum.util;
 
 import com.axialeaa.florumsporum.mixin.SporeBlossomBlockMixin;
+import com.axialeaa.florumsporum.registry.FlorumSporumSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 
 /**
  * The purpose of this class is to store static fields and methods used by {@link SporeBlossomBlockMixin SporeBlossomBlockMixin} without needing to make them private. This allows them to be called outside of that mixin.
@@ -24,9 +34,9 @@ public class SporeBlossomStatics {
      */
     public static final DirectionProperty FACING = Properties.FACING;
     /**
-     * The maximum age the spore blossom can reach.
+     * A blockstate property that specifies whether the spore blossom is closed.
      */
-    public static final int MAX_AGE = Properties.AGE_3_MAX;
+    public static final EnumProperty<Openness> OPENNESS = EnumProperty.of("openness", Openness.class);
 
     /**
      * @return the age value of the spore blossom passed through {@code state}.
@@ -43,6 +53,82 @@ public class SporeBlossomStatics {
     }
 
     /**
+     * @return the openness property of the spore blossom passed through {@code state}.
+     */
+    public static Openness getOpenness(BlockState state) {
+        return state.get(OPENNESS);
+    }
+
+    /**
+     * @return true if the spore blossom (passed through {@code state}) is fully closed.
+     */
+    public static boolean isFullyClosed(BlockState state) {
+        return getOpenness(state) == Openness.CLOSED;
+    }
+
+    /**
+     * @return true if the spore blossom (passed through {@code state}) is fully open.
+     */
+    public static boolean isFullyOpen(BlockState state) {
+        return getOpenness(state).ordinal() > getAge(state);
+    }
+
+    /**
+     * Fully closes the spore blossom (if the current state supports it) and plays a sound.
+     * @return true if the closure was successful.
+     * @implNote The return value is used for conditionally scheduling a block tick when this method succeeds, instead of boilerplating the {@link SporeBlossomStatics#isFullyClosed(BlockState)} call.
+     * @see SporeBlossomBlockMixin#onEntityCollision(BlockState, World, BlockPos, Entity)
+     */
+    public static boolean closeFully(World world, BlockPos pos, BlockState state) {
+        if (isFullyClosed(state))
+            return false;
+
+        playSound(world, pos, FlorumSporumSoundEvents.SPORE_BLOSSOM_CLOSE);
+        world.setBlockState(pos, state.with(OPENNESS, Openness.CLOSED));
+
+        return true;
+    }
+
+    /**
+     * Opens the spore blossom to the maximum stage permitted by the spore blossom's age and plays a sound.
+     * @return true if the opening was successful.
+     * @implNote Here, the return value isn't actually used. I've just kept it in for readability reasons.
+     * @see SporeBlossomBlockMixin#neighborUpdate(BlockState, World, BlockPos, Block, BlockPos, boolean)
+     */
+    public static boolean openFully(World world, BlockPos pos, BlockState state) {
+        if (isFullyOpen(state))
+            return false;
+
+        playSound(world, pos, FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN);
+        world.setBlockState(pos, state.with(OPENNESS, Openness.get(getAge(state))));
+
+        return true;
+    }
+
+    /**
+     * Opens the spore blossom to the next stage and plays a sound.
+     * @return true if the opening was successful.
+     * @implNote The return value is used for conditionally scheduling a block tick when this method succeeds, instead of boilerplating the {@link SporeBlossomStatics#isFullyOpen(BlockState)} call.
+     * @see SporeBlossomBlockMixin#scheduledTick(BlockState, ServerWorld, BlockPos, Random)
+     */
+    public static boolean openNext(World world, BlockPos pos, BlockState state) {
+        if (isFullyOpen(state))
+            return false;
+
+        playSound(world, pos, FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN);
+        world.setBlockState(pos, state.with(OPENNESS, Openness.get(Math.min(getOpenness(state).ordinal() + 1, 3))));
+
+        return true;
+    }
+
+    /**
+     * @return true if there is at least one non-spectator entity located at {@code pos}.
+     */
+    public static boolean hasEntityAt(World world, BlockPos pos) {
+        return !world.getEntitiesByClass(Entity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR).isEmpty();
+    }
+
+    /**
      * @return the block position the spore blossom (passed through {@code state}) is resting on.
      */
     public static BlockPos getSupportingPos(BlockPos pos, BlockState state) {
@@ -50,13 +136,19 @@ public class SporeBlossomStatics {
     }
 
     /**
-     * Increments the age of the spore blossom (passed through {@code state}) by 1.
+     * Increments the spore blossom's age and openness value and plays a sound.
+     * @return true if the increment was successful.
+     * @implNote The return value is used for conditionally dropping an item when this method fails, instead of boilerplating the {@link SporeBlossomStatics#isMaxAge(BlockState)} call.
+     * @see SporeBlossomBlockMixin#grow(ServerWorld, Random, BlockPos, BlockState)
+     * @see SporeBlossomBlockMixin#randomTick(BlockState, ServerWorld, BlockPos, Random)
      */
     public static boolean advanceAge(ServerWorld world, BlockPos pos, BlockState state) {
         if (isMaxAge(state))
             return false;
 
-        world.setBlockState(pos, state.with(AGE, getAge(state) + 1), Block.NOTIFY_LISTENERS);
+        int i = getAge(state) + 1;
+        world.setBlockState(pos, state.with(AGE, i).with(OPENNESS, Openness.get(i)), Block.NOTIFY_LISTENERS);
+
         return true;
     }
 
@@ -64,7 +156,14 @@ public class SporeBlossomStatics {
      * @return true if the spore blossom (passed through {@code state}) is the maximum age it can reach.
      */
     public static boolean isMaxAge(BlockState state) {
-        return getAge(state) >= MAX_AGE;
+        return getAge(state) == 3;
+    }
+
+    /**
+     * Plays a sound at {@code pos}.
+     */
+    public static void playSound(World world, BlockPos pos, SoundEvent soundEvent) {
+        world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, MathHelper.nextBetween(world.random, 0.8F, 1.2F));
     }
 
 }
