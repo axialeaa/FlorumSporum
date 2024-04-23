@@ -2,9 +2,11 @@ package com.axialeaa.florumsporum.util;
 
 import com.axialeaa.florumsporum.mixin.SporeBlossomBlockMixin;
 import com.axialeaa.florumsporum.registry.FlorumSporumSoundEvents;
+import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -13,12 +15,21 @@ import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+
+import java.util.Map;
+
+/*? if >1.18.2 {*/
+import net.minecraft.util.math.random.Random;
+/*?} else {*//*
+import java.util.Random;
+*//*?} */
 
 /**
  * The purpose of this class is to store static fields and methods used by {@link SporeBlossomBlockMixin SporeBlossomBlockMixin} without needing to make them private. This allows them to be called outside of that mixin.
@@ -37,6 +48,19 @@ public class SporeBlossomStatics {
      * A blockstate property that specifies whether the spore blossom is closed.
      */
     public static final EnumProperty<Openness> OPENNESS = EnumProperty.of("openness", Openness.class);
+
+    private static final Map<Direction, VoxelShape> SHAPES_FOR_DIRECTION = Util.make(Maps.newHashMap(), map -> {
+        map.put(Direction.DOWN, Block.createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0));
+        map.put(Direction.UP, Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 3.0, 14.0));
+        map.put(Direction.NORTH, Block.createCuboidShape(2.0, 2.0, 13.0, 14.0, 14.0, 16.0));
+        map.put(Direction.EAST, Block.createCuboidShape(0.0, 2.0, 2.0, 3.0, 14.0, 14.0));
+        map.put(Direction.SOUTH, Block.createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 3.0));
+        map.put(Direction.WEST,  Block.createCuboidShape(13.0, 2.0, 2.0, 16.0, 14.0, 14.0));
+    });
+
+    public static VoxelShape getShapeForDirection(Direction direction) {
+        return SHAPES_FOR_DIRECTION.get(direction);
+    }
 
     /**
      * @return the age value of the spore blossom passed through {@code state}.
@@ -70,7 +94,10 @@ public class SporeBlossomStatics {
      * @return true if the spore blossom (passed through {@code state}) is fully open.
      */
     public static boolean isFullyOpen(BlockState state) {
-        return getOpenness(state).ordinal() > getAge(state);
+        if (getAge(state) == 0)
+            return false;
+
+        return getOpenness(state).ordinal() == getAge(state);
     }
 
     /**
@@ -96,7 +123,7 @@ public class SporeBlossomStatics {
      * @see SporeBlossomBlockMixin#neighborUpdate(BlockState, World, BlockPos, Block, BlockPos, boolean)
      */
     public static boolean openFully(World world, BlockPos pos, BlockState state) {
-        if (isFullyOpen(state))
+        if (isFullyOpen(state) || getAge(state) == 0)
             return false;
 
         playSound(world, pos, FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN);
@@ -112,7 +139,7 @@ public class SporeBlossomStatics {
      * @see SporeBlossomBlockMixin#scheduledTick(BlockState, ServerWorld, BlockPos, Random)
      */
     public static boolean openNext(World world, BlockPos pos, BlockState state) {
-        if (isFullyOpen(state))
+        if (isFullyOpen(state) || getAge(state) == 0)
             return false;
 
         playSound(world, pos, FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN);
@@ -125,7 +152,7 @@ public class SporeBlossomStatics {
      * @return true if there is at least one non-spectator entity located at {@code pos}.
      */
     public static boolean hasEntityAt(World world, BlockPos pos) {
-        return !world.getEntitiesByClass(Entity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR).isEmpty();
+        return !world.getEntitiesByClass(LivingEntity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR).isEmpty();
     }
 
     /**

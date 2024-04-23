@@ -1,5 +1,5 @@
 {
-	"parent": "florum-sporum:block/spore_blossom_ajar",
+	"parent": "florum-sporum:block/template_spore_blossom_ajar",
 	"textures": {
 		"flower": "florum-sporum:block/spore_blossom_stage_2"
 	}

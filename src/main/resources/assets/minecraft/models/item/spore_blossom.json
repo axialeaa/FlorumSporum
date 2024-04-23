@@ -1,5 +1,5 @@
 {
-  "parent": "florum-sporum:block/spore_blossom_full",
+  "parent": "florum-sporum:block/full/spore_blossom_stage_3",
   "display": {
     "thirdperson_righthand": {
       "rotation": [165, 45, 0],

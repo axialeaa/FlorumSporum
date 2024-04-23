@@ -5,20 +5,13 @@
       "type": "minecraft:weighted_state_provider",
       "entries": [
         {
-          "weight": 5,
-          "data": {
-            "Name": "minecraft:spore_blossom",
-            "Properties": {
-              "age": "0"
-            }
-          }
-        },
-        {
           "weight": 3,
           "data": {
             "Name": "minecraft:spore_blossom",
             "Properties": {
-              "age": "1"
+              "facing": "down",
+              "age": "0",
+              "openness": "closed"
             }
           }
         },
@@ -27,7 +20,9 @@
           "data": {
             "Name": "minecraft:spore_blossom",
             "Properties": {
-              "age": "2"
+              "facing": "down",
+              "age": "1",
+              "openness": "ajar"
             }
           }
         },
@@ -36,7 +31,20 @@
           "data": {
             "Name": "minecraft:spore_blossom",
             "Properties": {
-              "age": "3"
+              "facing": "down",
+              "age": "2",
+              "openness": "partial"
+            }
+          }
+        },
+        {
+          "weight": 1,
+          "data": {
+            "Name": "minecraft:spore_blossom",
+            "Properties": {
+              "facing": "down",
+              "age": "3",
+              "openness": "full"
             }
           }
         }

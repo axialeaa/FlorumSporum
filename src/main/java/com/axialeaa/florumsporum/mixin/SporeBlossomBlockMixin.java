@@ -2,7 +2,6 @@ package com.axialeaa.florumsporum.mixin;
 
 import com.axialeaa.florumsporum.util.Openness;
 import com.axialeaa.florumsporum.util.SporeBlossomStatics;
-import com.google.common.collect.Maps;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
@@ -16,11 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
@@ -34,7 +31,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Map;
+/*? if >1.18.2 { */
+import net.minecraft.util.math.random.Random;
+/*? } else { *//*
+import java.util.Random;
+*//*? } */
+
+/*? if <1.19.3 { *//*
+import net.minecraft.world.BlockView;
+*//*? } */
 
 import static com.axialeaa.florumsporum.util.SporeBlossomStatics.*;
 
@@ -47,16 +52,6 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @Shadow public abstract boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos);
 
-    @Unique
-    private static final Map<Direction, VoxelShape> SHAPES_FOR_DIRECTION = Util.make(Maps.newHashMap(), map -> {
-        map.put(Direction.DOWN, createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0));
-        map.put(Direction.UP, createCuboidShape(2.0, 0.0, 2.0, 14.0, 3.0, 14.0));
-        map.put(Direction.NORTH, createCuboidShape(2.0, 2.0, 13.0, 14.0, 14.0, 16.0));
-        map.put(Direction.EAST, createCuboidShape(0.0, 2.0, 2.0, 3.0, 14.0, 14.0));
-        map.put(Direction.SOUTH, createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 3.0));
-        map.put(Direction.WEST,  createCuboidShape(13.0, 2.0, 2.0, 16.0, 14.0, 14.0));
-    });
-
     public SporeBlossomBlockMixin(Settings settings) {
         super(settings);
     }
@@ -68,7 +63,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @WrapWithCondition(method = "randomDisplayTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V", ordinal = 0))
     private boolean shouldCreateShower(World instance, ParticleEffect parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, @Local(argsOnly = true) BlockState state) {
-        return getOpenness(state) == Openness.FULL && getFacing(state) == Direction.DOWN;
+        return !isFullyClosed(state) && isMaxAge(state) && getFacing(state) == Direction.DOWN;
     }
 
     /**
@@ -76,7 +71,12 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
      */
     @ModifyConstant(method = "randomDisplayTick", constant = @Constant(intValue = 14))
     private int modifyIterationCount(int constant, @Local(argsOnly = true) BlockState state) {
-        return MathHelper.lerp((float) (getOpenness(state).ordinal() + 1) / 4, 0, constant);
+        if (isFullyClosed(state) || getAge(state) == 0)
+            return 0;
+
+        float delta = (float) Math.min(getOpenness(state).ordinal(), getAge(state)) / 3;
+
+        return (int) MathHelper.lerp(delta, 0, constant); // Casting to int here satisfies versions below 1.19.4
     }
 
     @WrapOperation(method = "canPlaceAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;sideCoversSmallSquare(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z"))
@@ -91,15 +91,13 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @ModifyReturnValue(method = "getOutlineShape", at = @At("RETURN"))
     private VoxelShape getShapeForState(VoxelShape original, @Local(argsOnly = true) BlockState state) {
-        return SHAPES_FOR_DIRECTION.get(getFacing(state));
+        return getShapeForDirection(getFacing(state));
     }
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!world.isClient() && hasEntityAt(world, pos) && !world.isReceivingRedstonePower(pos)) {
-            if (closeFully(world, pos, state))
-                world.scheduleBlockTick(pos, this, 1);
-        }
+        if (!world.isClient() && hasEntityAt(world, pos) && !world.isReceivingRedstonePower(pos) && closeFully(world, pos, state))
+            scheduleBlockTick(world, pos, 1);
     }
 
     @Override
@@ -112,9 +110,9 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (!hasEntityAt(world, pos)) {
             if (openNext(world, pos, state))
-                world.scheduleBlockTick(pos, this, 10);
+                scheduleBlockTick(world, pos, 10);
         }
-        else world.scheduleBlockTick(pos, this, 60);
+        else scheduleBlockTick(world, pos, 60);
     }
 
     @Nullable
@@ -128,7 +126,13 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     }
 
     @Override
+    /*? if <1.19.3 { *//*
+    public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
+    *//*? } elif >=1.19.3 <=1.20.1 { *//*
+    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state, boolean isClient) {
+    *//*? } else { */
     public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
+    /*? } */
         return true;
     }
 
@@ -166,6 +170,17 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING, AGE, OPENNESS);
+    }
+
+    @Unique
+    private void scheduleBlockTick(World world, BlockPos pos, int delay) {
+        /*? if <1.18.2 { *//*
+        world.getBlockTickScheduler().schedule(pos, this, delay);
+        *//*? } elif >=1.18.2 <=1.19.2 { *//*
+        world.createAndScheduleBlockTick(pos, this, delay);
+        *//*? } else { */
+        world.scheduleBlockTick(pos, this, delay);
+        /*? } */
     }
 
 }
