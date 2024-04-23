@@ -5,8 +5,10 @@ Florum Sporum is a client and server-side [Fabric](https://fabricmc.net) mod tha
 
 Read on to find out how to download this mod, and what opportunities doing so will provide you with!
 
-## Getting Started
-Simply head to the releases page, find the latest release for the version you're playing on, and place the jar in your mods folder. This mod doesn't require any accompanying library.
+Powered by https://github.com/kikugie/stonecutter-kt.
 
-## Details
-Spore Blossoms can be found hanging on the mossy ceilings of lush caves, passively enriching the environment by producing a high concentration of spores. 
+## Getting Started
+Due to the use of custom sound registration and resources, you will need to download [Fabric API](https://github.com/FabricMC/fabric) in order to use it. Once you have, simply drag both the Fabric API and <strong>Florum Sporum</strong> into your mods folder.
+
+## <i>An old traveller left something behind...</i>
+![](..%2F_BRANDING%2Fflorum-sporum%2Fexcerpt.png)
