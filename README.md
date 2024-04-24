@@ -1,8 +1,8 @@
-<h2 align="center">
+<h1 align="center">
   <img width="20%" src="https://github.com/axialeaa/FlorumSporum/assets/116074698/e13e3a1a-6947-4b0e-aab0-9ff49cedd483">
   <br>
   Hi there! Thank you for checking out Florum Sporum!
-</h2>
+</h1>
 
 <p align="center">
   <!-- MODRINTH DOWNLOADS --->
