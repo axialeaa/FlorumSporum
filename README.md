@@ -6,7 +6,7 @@
 
 <p align="center">
   <!-- MODRINTH DOWNLOADS --->
-  <a href="https://modrinth.com/mod/florum-sporum">
+  <a href="https://modrinth.com/mod/florum-sporum/versions">
     <img src="https://img.shields.io/modrinth/dt/florum-sporum?label=Modrinth Downloads&logo=modrinth&style=flat-square">
   </a>
   <!-- MODRINTH FOLLOWERS --->
@@ -23,13 +23,11 @@
   </a>
   <br>
   <!-- LICENSE --->
-  <a href="https://github.com/axialeaa/FlorumSporum/releases">
+  <a href="https://github.com/axialeaa/FlorumSporum/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/axialeaa/FlorumSporum?label=License&style=flat-square">
   </a>
   <!-- VERSIONS --->
-  <a href="https://modrinth.com/mod/florum-sporum">
-    <img src="https://img.shields.io/modrinth/game-versions/florum-sporum?label=Versions&style=flat-square">
-  </a>
+  <img src="https://img.shields.io/modrinth/game-versions/florum-sporum?label=Versions&style=flat-square">
 </p>
 
 ![](https://github.com/axialeaa/FlorumSporum/assets/116074698/da4c137f-5aa1-435d-a205-a57e59323ff1)
