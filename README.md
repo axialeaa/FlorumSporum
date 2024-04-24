@@ -32,19 +32,19 @@
 
 ![](https://github.com/axialeaa/FlorumSporum/assets/116074698/da4c137f-5aa1-435d-a205-a57e59323ff1)
 
-<strong>Florum Sporum</strong> is a [Fabric][fabric] mod that attempts to breathe more life into spore blossoms, without undoing any of Mojang's work! Alongside adding 96 new blockstate property combinations to make spore blossoms feel more integrated into your Minecraft worlds, <strong>Florum Sporum</strong> finally adds a way to obtain these wonderful flowers renewably in a way that feels both natural and vanilla-like!
+**Florum Sporum** is a [Fabric][fabric] mod that attempts to breathe more life into spore blossoms, without undoing any of Mojang's work! Alongside adding 96 new blockstate property combinations to make spore blossoms feel more integrated into your Minecraft worlds, **Florum Sporum** finally adds a way to obtain these wonderful flowers renewably in a way that feels both natural and vanilla-like!
 
-Check out [the wiki][wiki] for a more in-depth overview of <strong>Florum Sporum</strong>'s features!
+Check out [the wiki][wiki] for a more in-depth overview of **Florum Sporum**'s features!
 ***
 
 ### Get Started
-<strong>Florum Sporum</strong> operates on [Kikugie's fork of Stonecutter][stonecutter-kt], allowing for easy multi-version scheming. Every release will be available for most versions since 1.17 when spore blossoms were added, allowing you to get the full experience regardless of your circumstances.
+**Florum Sporum** operates on [Kikugie's fork of Stonecutter][stonecutter-kt], allowing for easy multi-version scheming. Every release will be available for most versions since 1.17 when spore blossoms were added, allowing you to get the full experience regardless of your circumstances.
 
 - Make sure you're running a Fabric instance of the game. If you're playing from the vanilla launcher, follow the [Fabric installation guide][fabric-guide]. If you're playing from a third-party launcher like [Prism][prism], you'll need to follow their own instructions which you can often find on their respective websites. For example, [here][prism-guide] is Prism's guide to downloading mods.
-- If you're not using a third-party launcher with in-built mod installation, you'll need to download the latest version of <strong>Florum Sporum</strong> for your game version from the [GitHub releases][github-releases] page or on [Modrinth][modrinth-versions]. Drag the `.jar` file into your mods folder and launch the game!
+- If you're not using a third-party launcher with in-built mod installation, you'll need to download the latest version of **Florum Sporum** for your game version from the [GitHub releases][github-releases] page or on [Modrinth][modrinth-versions]. Drag the `.jar` file into your mods folder and launch the game!
 
 > [!IMPORTANT]
-> <strong>Florum Sporum</strong> requires [Fabric API][fabric-api]. Without it, the game will fail to start!
+> **Florum Sporum** requires [Fabric API][fabric-api]. Without it, the game will fail to start!
 ***
 
 <h3 align="center">
