@@ -7,27 +7,33 @@
 <p align="center">
   <!-- MODRINTH DOWNLOADS --->
   <a href="https://modrinth.com/mod/florum-sporum/versions">
-    <img src="https://img.shields.io/modrinth/dt/florum-sporum?label=Modrinth Downloads&logo=modrinth&style=flat-square">
+    <img src="https://img.shields.io/modrinth/dt/florum-sporum?label=Modrinth Downloads&logo=modrinth&style=flat-square"
+       alt="Modrinth Downloads">
   </a>
   <!-- MODRINTH FOLLOWERS --->
   <a href="https://modrinth.com/mod/florum-sporum">
-    <img src="https://img.shields.io/modrinth/game-versions/florum-sporum?label=Modrinth Followers&logo=modrinth&style=flat-square">
+    <img src="https://img.shields.io/modrinth/game-versions/florum-sporum?label=Modrinth Followers&logo=modrinth&style=flat-square"
+       alt="Modrinth Followers">
   </a>
   <!-- GITHUB DOWNLOADS --->
   <a href="https://github.com/axialeaa/FlorumSporum/releases">
-    <img src="https://img.shields.io/github/downloads/axialeaa/FlorumSporum/total?label=GitHub Downloads&logo=github&style=flat-square">
+    <img src="https://img.shields.io/github/downloads/axialeaa/FlorumSporum/total?label=GitHub Downloads&logo=github&style=flat-square"
+      alt="GitHub Downloads">
   </a>
   <!-- GITHUB STARS --->
   <a href="https://github.com/axialeaa/FlorumSporum">
-    <img src="https://img.shields.io/github/stars/axialeaa/FlorumSporum?label=GitHub Stars&logo=github&style=flat-square">
+    <img src="https://img.shields.io/github/stars/axialeaa/FlorumSporum?label=GitHub Stars&logo=github&style=flat-square"
+      alt="GitHub Stars">
   </a>
   <br>
   <!-- LICENSE --->
   <a href="https://github.com/axialeaa/FlorumSporum/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/axialeaa/FlorumSporum?label=License&style=flat-square">
+    <img src="https://img.shields.io/github/license/axialeaa/FlorumSporum?label=License&style=flat-square"
+      alt="License">
   </a>
   <!-- VERSIONS --->
-  <img src="https://img.shields.io/modrinth/game-versions/florum-sporum?label=Versions&style=flat-square">
+  <img src="https://img.shields.io/modrinth/game-versions/florum-sporum?label=Versions&style=flat-square"
+    alt="Versions">
 </p>
 
 ![](https://github.com/axialeaa/FlorumSporum/assets/116074698/da4c137f-5aa1-435d-a205-a57e59323ff1)
@@ -51,7 +57,8 @@ Check out [the wiki][wiki] for a more in-depth overview of **Florum Sporum**'s f
   <i>An old traveller left something behind...</i>
 </h3>
 <p align="center">
-  <img width="50%" src="https://github.com/axialeaa/FlorumSporum/assets/116074698/c7ea49f6-d231-4203-b810-465d6e2358f3">
+  <img width="50%" src="https://github.com/axialeaa/FlorumSporum/assets/116074698/c7ea49f6-d231-4203-b810-465d6e2358f3" alt="Flora: Spore Blossom
+	This is a most fascinating species. Despite each living in solitude on the ceilings of Lush Caves, they can be found in staggering abundance across the ecosystem, suggesting their survival strategy is effective. Possible symbiotic relationship with moss? These flowers let off distinctive spores, perhaps aiding the growth of the surrounding environment. In addition, fully-grown specimens produce a shower-like stream of spores underneath themselves. This may in effect assist ground-anchored species, though this is not confirmed. Much like the native Big Dripleaf plants, Spore Blossoms possess an innate touch sensitivity, furling their petals immediately upon contact. This is best assumed to be a method of self-preservation against predators, or indeed anything willing to obstruct its part to play in the panoply of underground flora.">
 </p>
 
 [wiki]: https://github.com/axialeaa/FlorumSporum/wiki/Features
