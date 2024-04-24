@@ -36,7 +36,7 @@
     alt="Versions">
 </p>
 
-![](https://github.com/axialeaa/FlorumSporum/assets/116074698/da4c137f-5aa1-435d-a205-a57e59323ff1)
+![A juvenile spore blossom](https://github.com/axialeaa/FlorumSporum/assets/116074698/da4c137f-5aa1-435d-a205-a57e59323ff1)
 
 **Florum Sporum** is a [Fabric][fabric] mod that attempts to breathe more life into spore blossoms, without undoing any of Mojang's work! Alongside adding 96 new blockstate property combinations to make spore blossoms feel more integrated into your Minecraft worlds, **Florum Sporum** finally adds a way to obtain these wonderful flowers renewably in a way that feels both natural and vanilla-like!
 
