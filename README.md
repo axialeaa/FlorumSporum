@@ -43,7 +43,7 @@
 Check out [the wiki][wiki] for a more in-depth overview of **Florum Sporum**'s features!
 ***
 
-### Get Started
+### Getting Started
 **Florum Sporum** operates on [Kikugie's fork of Stonecutter][stonecutter-kt], allowing for easy multi-version scheming. Every release will be available for most versions since 1.17 when spore blossoms were added, allowing you to get the full experience regardless of your circumstances.
 
 - Make sure you're running a Fabric instance of the game. If you're playing from the vanilla launcher, follow the [Fabric installation guide][fabric-guide]. If you're playing from a third-party launcher like [Prism][prism], you'll need to follow their own instructions which you can often find on their respective websites. For example, [here][prism-guide] is Prism's guide to downloading mods.
