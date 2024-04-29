@@ -12,7 +12,7 @@
   </a>
   <!-- MODRINTH FOLLOWERS --->
   <a href="https://modrinth.com/mod/florum-sporum">
-    <img src="https://img.shields.io/modrinth/game-versions/florum-sporum?label=Modrinth Followers&logo=modrinth&style=flat-square"
+    <img src="https://img.shields.io/modrinth/followers/florum-sporum?label=Modrinth Followers&logo=modrinth&style=flat-square"
        alt="Modrinth Followers">
   </a>
   <!-- GITHUB DOWNLOADS --->
