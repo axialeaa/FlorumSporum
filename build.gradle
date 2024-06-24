@@ -3,23 +3,34 @@ plugins {
 	id 'maven-publish'
 }
 
-version = property("mod.version") + "+" + stonecutter.current.version
-group = property("mod.maven_group")
+def mcVersion = stonecutter.current.version
+
+version = property("mod_version") + "+" + mcVersion
+group = property("maven_group")
 
 base {
-	archivesName = property("mod.archives_name")
+	archivesName = property("archives_base_name")
 }
 
-repositories {
-
+stonecutter {
+	swap("random_import", compare(mcVersion, "1.19.2") >= 0 ? "net.minecraft.util.math.random.Random;" : "java.util.Random;")
+	swap("can_place_at_access_modifier", compare(mcVersion, "1.20.6") >= 0 ? "protected" : "public")
+	swap("world_view_arg", compare(mcVersion, "1.19.3") >= 0 ? "WorldView" : "BlockView")
+	swap("schedule_block_tick",
+		compare(mcVersion, "1.17.1") == 0 ? "world.getBlockTickScheduler().schedule(pos, this, delay);" : // 1.17.1
+		compare(mcVersion, "1.19.3") >= 0 ? "world.scheduleBlockTick(pos, this, delay);" : // 1.19.3+
+		"world.createAndScheduleBlockTick(pos, this, delay);" // 1.18.2-1.19.2
+	)
+	swap("register", compare(mcVersion, "1.19.3") >= 0 ? "Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));" : "Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));")
+	swap("identifier", compare(mcVersion, "1.21") >= 0 ? "Identifier.of(MOD_ID, name);" : "new Identifier(MOD_ID, name);")
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:${stonecutter.current.version}"
-	mappings "net.fabricmc:yarn:${property("mod.yarn_version")}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${property("dependencies.fabric_loader_version")}"
+	mappings "net.fabricmc:yarn:${property("yarn_mappings")}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${property("loader_version")}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${property("dependencies.fabric_api_version")}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}"
 }
 
 processResources {
@@ -27,7 +38,7 @@ processResources {
 
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version,
-				"mc_target": project.property("mod.mc_target_version")
+				"target": project.property("target_version")
 	}
 }
 

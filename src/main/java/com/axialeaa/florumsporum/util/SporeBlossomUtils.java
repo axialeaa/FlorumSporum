@@ -2,7 +2,7 @@ package com.axialeaa.florumsporum.util;
 
 import com.axialeaa.florumsporum.mixin.SporeBlossomBlockMixin;
 import com.axialeaa.florumsporum.registry.FlorumSporumSoundEvents;
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -15,7 +15,6 @@ import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -23,18 +22,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 
-import java.util.Map;
-
-/*? if >1.18.2 {*/
-import net.minecraft.util.math.random.Random;
-/*?} else {*//*
-import java.util.Random;
-*//*?} */
+import /*$ random_import*/ net.minecraft.util.math.random.Random;
 
 /**
  * The purpose of this class is to store static fields and methods used by {@link SporeBlossomBlockMixin SporeBlossomBlockMixin} without needing to make them private. This allows them to be called outside of that mixin.
  */
-public class SporeBlossomStatics {
+public class SporeBlossomUtils {
 
     /**
      * A blockstate property that specifies the age of the spore blossom.
@@ -49,17 +42,17 @@ public class SporeBlossomStatics {
      */
     public static final EnumProperty<Openness> OPENNESS = EnumProperty.of("openness", Openness.class);
 
-    private static final Map<Direction, VoxelShape> SHAPES_FOR_DIRECTION = Util.make(Maps.newHashMap(), map -> {
-        map.put(Direction.DOWN, Block.createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0));
-        map.put(Direction.UP, Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 3.0, 14.0));
-        map.put(Direction.NORTH, Block.createCuboidShape(2.0, 2.0, 13.0, 14.0, 14.0, 16.0));
-        map.put(Direction.EAST, Block.createCuboidShape(0.0, 2.0, 2.0, 3.0, 14.0, 14.0));
-        map.put(Direction.SOUTH, Block.createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 3.0));
-        map.put(Direction.WEST,  Block.createCuboidShape(13.0, 2.0, 2.0, 16.0, 14.0, 14.0));
-    });
+    private static final ImmutableList<VoxelShape> shapes = ImmutableList.of(
+        Block.createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0),  // D
+        Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 3.0, 14.0),    // U
+        Block.createCuboidShape(2.0, 2.0, 13.0, 14.0, 14.0, 16.0),  // N
+        Block.createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 3.0),    // S
+        Block.createCuboidShape(13.0, 2.0, 2.0, 16.0, 14.0, 14.0),  // W
+        Block.createCuboidShape(0.0, 2.0, 2.0, 3.0, 14.0, 14.0)     // E
+    );
 
     public static VoxelShape getShapeForDirection(Direction direction) {
-        return SHAPES_FOR_DIRECTION.get(direction);
+        return shapes.get(direction.getId());
     }
 
     /**
@@ -103,7 +96,7 @@ public class SporeBlossomStatics {
     /**
      * Fully closes the spore blossom (if the current state supports it) and plays a sound.
      * @return true if the closure was successful.
-     * @implNote The return value is used for conditionally scheduling a block tick when this method succeeds, instead of boilerplating the {@link SporeBlossomStatics#isFullyClosed(BlockState)} call.
+     * @implNote The return value is used for conditionally scheduling a block tick when this method succeeds, instead of boilerplating the {@link SporeBlossomUtils#isFullyClosed(BlockState)} call.
      * @see SporeBlossomBlockMixin#onEntityCollision(BlockState, World, BlockPos, Entity)
      */
     public static boolean closeFully(World world, BlockPos pos, BlockState state) {
@@ -135,7 +128,7 @@ public class SporeBlossomStatics {
     /**
      * Opens the spore blossom to the next stage and plays a sound.
      * @return true if the opening was successful.
-     * @implNote The return value is used for conditionally scheduling a block tick when this method succeeds, instead of boilerplating the {@link SporeBlossomStatics#isFullyOpen(BlockState)} call.
+     * @implNote The return value is used for conditionally scheduling a block tick when this method succeeds, instead of boilerplating the {@link SporeBlossomUtils#isFullyOpen(BlockState)} call.
      * @see SporeBlossomBlockMixin#scheduledTick(BlockState, ServerWorld, BlockPos, Random)
      */
     public static boolean openNext(World world, BlockPos pos, BlockState state) {
@@ -165,7 +158,7 @@ public class SporeBlossomStatics {
     /**
      * Increments the spore blossom's age and openness value and plays a sound.
      * @return true if the increment was successful.
-     * @implNote The return value is used for conditionally dropping an item when this method fails, instead of boilerplating the {@link SporeBlossomStatics#isMaxAge(BlockState)} call.
+     * @implNote The return value is used for conditionally dropping an item when this method fails, instead of boilerplating the {@link SporeBlossomUtils#isMaxAge(BlockState)} call.
      * @see SporeBlossomBlockMixin#grow(ServerWorld, Random, BlockPos, BlockState)
      * @see SporeBlossomBlockMixin#randomTick(BlockState, ServerWorld, BlockPos, Random)
      */
@@ -189,8 +182,8 @@ public class SporeBlossomStatics {
     /**
      * Plays a sound at {@code pos}.
      */
-    public static void playSound(World world, BlockPos pos, SoundEvent soundEvent) {
-        world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, MathHelper.nextBetween(world.random, 0.8F, 1.2F));
+    public static void playSound(World world, BlockPos pos, SoundEvent sound) {
+        world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1.0F, MathHelper.nextBetween(world.random, 0.8F, 1.2F));
     }
 
 }

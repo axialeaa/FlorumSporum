@@ -1,7 +1,7 @@
 {
 	"credit": "Made by axialeaa using Blockbench",
-	"ambientocclusion": false,
 	"parent": "block/block",
+	"ambientocclusion": false,
 	"textures": {
 		"particle": "block/spore_blossom",
 		"base": "block/spore_blossom_base"

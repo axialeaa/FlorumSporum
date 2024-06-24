@@ -1,7 +1,7 @@
 package com.axialeaa.florumsporum.mixin;
 
 import com.axialeaa.florumsporum.util.Openness;
-import com.axialeaa.florumsporum.util.SporeBlossomStatics;
+import com.axialeaa.florumsporum.util.SporeBlossomUtils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
@@ -31,26 +31,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/*? if >1.18.2 { */
-import net.minecraft.util.math.random.Random;
-/*? } else { *//*
-import java.util.Random;
-*//*? } */
+import /*$ random_import*/ net.minecraft.util.math.random.Random;
 
-/*? if <1.19.3 { *//*
-import net.minecraft.world.BlockView;
-*//*? } */
+/*? if <=1.19.2*/ /*import net.minecraft.world.BlockView;*/
 
-import static com.axialeaa.florumsporum.util.SporeBlossomStatics.*;
+import static com.axialeaa.florumsporum.util.SporeBlossomUtils.*;
 
 /**
  * This is the main class that handles the modified logic for the spore blossom. It uses extending and overriding as well as interface method implementation so it's incompatible with other mods doing the same thing as me, but there's if you've installed two mods with such similar functionalities, you've probably made a mistake worth a crash report anyway!
  */
-@SuppressWarnings("deprecation")
+/*? if <=1.20.4*/ /*@SuppressWarnings("deprecation")*/
 @Mixin(SporeBlossomBlock.class)
 public abstract class SporeBlossomBlockMixin extends Block implements Fertilizable {
 
-    @Shadow public abstract boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos);
+    @Shadow /*$ can_place_at_access_modifier >>*/ protected abstract boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos);
 
     public SporeBlossomBlockMixin(Settings settings) {
         super(settings);
@@ -76,7 +70,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
         float delta = (float) Math.min(getOpenness(state).ordinal(), getAge(state)) / 3;
 
-        return (int) MathHelper.lerp(delta, 0, constant); // Casting to int here satisfies versions below 1.19.4
+        return /*? if <=1.19.3 >>*/ /*(int)*/ MathHelper.lerp(delta, 0, constant);
     }
 
     @WrapOperation(method = "canPlaceAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;sideCoversSmallSquare(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z"))
@@ -126,13 +120,10 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     }
 
     @Override
-    /*? if <1.19.3 { *//*
-    public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
-    *//*? } elif >=1.19.3 <=1.20.1 { *//*
-    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state, boolean isClient) {
-    *//*? } else { */
-    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
-    /*? } */
+    public boolean isFertilizable(/*$ world_view_arg >>*/ WorldView world, BlockPos pos, BlockState state
+        //? if <=1.20.1
+        /*, boolean isClient*/
+    ) {
         return true;
     }
 
@@ -142,7 +133,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     }
 
     /**
-     * Increases the {@link SporeBlossomStatics#AGE} blockstate property by 1 every time the spore blossom is bonemealed, unless the spore blossom is at the maximum age. In which case, it will drop a new spore blossom as an item.
+     * Increases the {@link SporeBlossomUtils#AGE} blockstate property by 1 every time the spore blossom is bonemealed, unless the spore blossom is at the maximum age. In which case, it will drop a new spore blossom as an item.
      */
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
@@ -156,7 +147,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     }
 
     /**
-     * Increases the {@link SporeBlossomStatics#AGE} blockstate property every 1 in 10 randomTicks, while the spore blossom is resting on moss.
+     * Increases the {@link SporeBlossomUtils#AGE} blockstate property every 1 in 10 randomTicks, while the spore blossom is resting on moss.
      */
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
@@ -165,7 +156,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     }
 
     /**
-     * Adds the {@link SporeBlossomStatics#FACING}, {@link SporeBlossomStatics#AGE} and {@link SporeBlossomStatics#OPENNESS} blockstate properties to the spore blossom.
+     * Adds the {@link SporeBlossomUtils#FACING}, {@link SporeBlossomUtils#AGE} and {@link SporeBlossomUtils#OPENNESS} blockstate properties to the spore blossom.
      */
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -174,13 +165,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @Unique
     private void scheduleBlockTick(World world, BlockPos pos, int delay) {
-        /*? if <1.18.2 { *//*
-        world.getBlockTickScheduler().schedule(pos, this, delay);
-        *//*? } elif >=1.18.2 <=1.19.2 { *//*
-        world.createAndScheduleBlockTick(pos, this, delay);
-        *//*? } else { */
-        world.scheduleBlockTick(pos, this, delay);
-        /*? } */
+        /*$ schedule_block_tick*/ world.scheduleBlockTick(pos, this, delay);
     }
 
 }
