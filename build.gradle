@@ -13,20 +13,20 @@ base {
 }
 
 stonecutter {
-	swap("random_import", compare(mcVersion, "1.19.2") >= 0 ? "net.minecraft.util.math.random.Random;" : "java.util.Random;")
-	swap("can_place_at_access_modifier", compare(mcVersion, "1.20.6") >= 0 ? "protected" : "public")
-	swap("world_view_arg", compare(mcVersion, "1.19.3") >= 0 ? "WorldView" : "BlockView")
+	swap("random_import", eval(mcVersion, ">=1.19.2") ? "net.minecraft.util.math.random.Random;" : "java.util.Random;")
+	swap("can_place_at_access_modifier", eval(mcVersion, ">=1.20.6") ? "protected" : "public")
+	swap("world_view_arg", eval(mcVersion, ">=1.19.3") ? "WorldView" : "BlockView")
 	swap("schedule_block_tick",
-		compare(mcVersion, "1.17.1") == 0 ? "world.getBlockTickScheduler().schedule(pos, this, delay);" : // 1.17.1
-		compare(mcVersion, "1.19.3") >= 0 ? "world.scheduleBlockTick(pos, this, delay);" : // 1.19.3+
+		eval(mcVersion, "1.17.1") ? "world.getBlockTickScheduler().schedule(pos, this, delay);" : // 1.17.1
+		eval(mcVersion, ">=1.19.3") ? "world.scheduleBlockTick(pos, this, delay);" : // 1.19.3+
 		"world.createAndScheduleBlockTick(pos, this, delay);" // 1.18.2-1.19.2
 	)
-	swap("register", compare(mcVersion, "1.19.3") >= 0 ? "Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));" : "Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));")
-	swap("identifier", compare(mcVersion, "1.21") >= 0 ? "Identifier.of(MOD_ID, name);" : "new Identifier(MOD_ID, name);")
+	swap("register", eval(mcVersion, ">=1.19.3") ? "Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));" : "Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));")
+	swap("identifier", eval(mcVersion, ">=1.21") ? "Identifier.of(MOD_ID, name);" : "new Identifier(MOD_ID, name);")
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${stonecutter.current.version}"
+	minecraft "com.mojang:minecraft:${mcVersion}"
 	mappings "net.fabricmc:yarn:${property("yarn_mappings")}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${property("loader_version")}"
 
@@ -34,16 +34,18 @@ dependencies {
 }
 
 processResources {
-	inputs.property "version", project.version
+	inputs.property("version", version)
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version,
+		expand "version": version,
 				"target": project.property("target_version")
 	}
 }
 
+def javaVersion = stonecutter.eval(mcVersion, ">=1.20.6") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = javaVersion.ordinal() + 1
 }
 
 if (stonecutter.current.isActive) { // run configs for non-active version would be invalid
@@ -56,13 +58,10 @@ if (stonecutter.current.isActive) { // run configs for non-active version would 
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = javaVersion
+	targetCompatibility = javaVersion
 }
 
 jar {

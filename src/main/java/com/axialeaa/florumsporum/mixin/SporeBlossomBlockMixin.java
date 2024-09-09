@@ -64,28 +64,31 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
      * @return the number of iterations for which to summon air particles.
      */
     @ModifyConstant(method = "randomDisplayTick", constant = @Constant(intValue = 14))
-    private int modifyIterationCount(int constant, @Local(argsOnly = true) BlockState state) {
-        if (isFullyClosed(state) || getAge(state) == 0)
+    private int modifyIterationCount(int original, @Local(argsOnly = true) BlockState state) {
+        if (isFullyClosed(state))
             return 0;
 
         float delta = (float) Math.min(getOpenness(state).ordinal(), getAge(state)) / 3;
 
-        return /*? if <=1.19.3 >>*/ /*(int)*/ MathHelper.lerp(delta, 0, constant);
+        return /*? if <=1.19.3 >>*/ /*(int)*/ MathHelper.lerp(delta, 0, original);
     }
 
     @WrapOperation(method = "canPlaceAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;sideCoversSmallSquare(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z"))
     private boolean isValidPlacementSurface(WorldView world, BlockPos _pos, Direction side, Operation<Boolean> original, @Local(argsOnly = true) BlockPos pos, @Local(argsOnly = true) BlockState state) {
-        return original.call(world, pos.offset(getFacing(state).getOpposite()), getFacing(state));
+        Direction facing = getFacing(state);
+        return original.call(world, getSupportingPos(pos, state), facing);
     }
 
     @ModifyExpressionValue(method = "getStateForNeighborUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/util/math/Direction;UP:Lnet/minecraft/util/math/Direction;"))
     private Direction getUpdateCheckDirection(Direction original, @Local(argsOnly = true, ordinal = 0) BlockState state) {
-        return getFacing(state).getOpposite();
+        Direction facing = getFacing(state);
+        return facing.getOpposite();
     }
 
     @ModifyReturnValue(method = "getOutlineShape", at = @At("RETURN"))
     private VoxelShape getShapeForState(VoxelShape original, @Local(argsOnly = true) BlockState state) {
-        return getShapeForDirection(getFacing(state));
+        Direction facing = getFacing(state);
+        return getShapeForDirection(facing);
     }
 
     @Override
@@ -102,11 +105,10 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (!hasEntityAt(world, pos)) {
-            if (openNext(world, pos, state))
-                scheduleBlockTick(world, pos, 10);
-        }
-        else scheduleBlockTick(world, pos, 60);
+        if (hasEntityAt(world, pos))
+            scheduleBlockTick(world, pos, 60);
+        else if (openNext(world, pos, state))
+            scheduleBlockTick(world, pos, 10);
     }
 
     @Nullable
@@ -121,8 +123,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @Override
     public boolean isFertilizable(/*$ world_view_arg >>*/ WorldView world, BlockPos pos, BlockState state
-        //? if <=1.20.1
-        /*, boolean isClient*/
+        /*? if <=1.20.1 */ /*, boolean isClient*/
     ) {
         return true;
     }

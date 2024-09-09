@@ -6,20 +6,17 @@ import java.util.Locale;
 
 public enum Openness implements StringIdentifiable {
 
-    CLOSED,
-    AJAR,
-    PARTIAL,
-    FULL;
+    CLOSED, AJAR, PARTIAL, FULL;
 
     @Override
     public String asString() {
-        return toString().toLowerCase(Locale.ROOT);
+        return this.toString().toLowerCase(Locale.ROOT);
     }
 
     /**
      * @return the openness enum value at the specified ordinal.
      */
-    public static Openness get(int ordinal) {
+    public static Openness byOrdinal(int ordinal) {
         return values()[ordinal];
     }
 

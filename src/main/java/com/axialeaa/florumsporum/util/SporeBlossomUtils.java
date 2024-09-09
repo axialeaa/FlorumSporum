@@ -2,12 +2,11 @@ package com.axialeaa.florumsporum.util;
 
 import com.axialeaa.florumsporum.mixin.SporeBlossomBlockMixin;
 import com.axialeaa.florumsporum.registry.FlorumSporumSoundEvents;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -24,35 +23,38 @@ import net.minecraft.world.World;
 
 import /*$ random_import*/ net.minecraft.util.math.random.Random;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 /**
  * The purpose of this class is to store static fields and methods used by {@link SporeBlossomBlockMixin SporeBlossomBlockMixin} without needing to make them private. This allows them to be called outside of that mixin.
  */
 public class SporeBlossomUtils {
 
     /**
-     * A blockstate property that specifies the age of the spore blossom.
+     * A blockstate property that defines the age of the spore blossom.
      */
     public static final IntProperty AGE = Properties.AGE_3;
     /**
-     * A blockstate property that specifies the facing direction of the spore blossom.
+     * A blockstate property that defines the facing direction of the spore blossom.
      */
     public static final DirectionProperty FACING = Properties.FACING;
     /**
-     * A blockstate property that specifies whether the spore blossom is closed.
+     * A blockstate property that defines to what degree a spore blossom is closed.
      */
     public static final EnumProperty<Openness> OPENNESS = EnumProperty.of("openness", Openness.class);
 
-    private static final ImmutableList<VoxelShape> shapes = ImmutableList.of(
-        Block.createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0),  // D
-        Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 3.0, 14.0),    // U
-        Block.createCuboidShape(2.0, 2.0, 13.0, 14.0, 14.0, 16.0),  // N
-        Block.createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 3.0),    // S
-        Block.createCuboidShape(13.0, 2.0, 2.0, 16.0, 14.0, 14.0),  // W
-        Block.createCuboidShape(0.0, 2.0, 2.0, 3.0, 14.0, 14.0)     // E
+    private static final ImmutableMap<Direction, VoxelShape> SHAPES = ImmutableMap.of(
+        Direction.DOWN,  Block.createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0),
+        Direction.UP,    Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 3.0, 14.0),
+        Direction.NORTH, Block.createCuboidShape(2.0, 2.0, 13.0, 14.0, 14.0, 16.0),
+        Direction.SOUTH, Block.createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 3.0),
+        Direction.WEST,  Block.createCuboidShape(13.0, 2.0, 2.0, 16.0, 14.0, 14.0),
+        Direction.EAST,  Block.createCuboidShape(0.0, 2.0, 2.0, 3.0, 14.0, 14.0)
     );
 
     public static VoxelShape getShapeForDirection(Direction direction) {
-        return shapes.get(direction.getId());
+        return SHAPES.get(direction);
     }
 
     /**
@@ -80,6 +82,9 @@ public class SporeBlossomUtils {
      * @return true if the spore blossom (passed through {@code state}) is fully closed.
      */
     public static boolean isFullyClosed(BlockState state) {
+        if (getAge(state) == 0)
+            return true;
+
         return getOpenness(state) == Openness.CLOSED;
     }
 
@@ -103,7 +108,7 @@ public class SporeBlossomUtils {
         if (isFullyClosed(state))
             return false;
 
-        playSound(world, pos, FlorumSporumSoundEvents.SPORE_BLOSSOM_CLOSE);
+        playSound(world, pos, false);
         world.setBlockState(pos, state.with(OPENNESS, Openness.CLOSED));
 
         return true;
@@ -116,11 +121,11 @@ public class SporeBlossomUtils {
      * @see SporeBlossomBlockMixin#neighborUpdate(BlockState, World, BlockPos, Block, BlockPos, boolean)
      */
     public static boolean openFully(World world, BlockPos pos, BlockState state) {
-        if (isFullyOpen(state) || getAge(state) == 0)
+        if (isFullyOpen(state))
             return false;
 
-        playSound(world, pos, FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN);
-        world.setBlockState(pos, state.with(OPENNESS, Openness.get(getAge(state))));
+        playSound(world, pos, true);
+        world.setBlockState(pos, state.with(OPENNESS, Openness.byOrdinal(getAge(state))));
 
         return true;
     }
@@ -132,27 +137,39 @@ public class SporeBlossomUtils {
      * @see SporeBlossomBlockMixin#scheduledTick(BlockState, ServerWorld, BlockPos, Random)
      */
     public static boolean openNext(World world, BlockPos pos, BlockState state) {
-        if (isFullyOpen(state) || getAge(state) == 0)
+        if (isFullyOpen(state))
             return false;
 
-        playSound(world, pos, FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN);
-        world.setBlockState(pos, state.with(OPENNESS, Openness.get(Math.min(getOpenness(state).ordinal() + 1, 3))));
+        playSound(world, pos, true);
+        world.setBlockState(pos, state.with(OPENNESS, Openness.byOrdinal(Math.min(getOpenness(state).ordinal() + 1, 3))));
 
         return true;
+    }
+
+    private static Predicate<LivingEntity> isDetectable() {
+        return entity -> entity.isAlive() && !entity.isSpectator() && !entity.canAvoidTraps();
     }
 
     /**
      * @return true if there is at least one non-spectator entity located at {@code pos}.
      */
     public static boolean hasEntityAt(World world, BlockPos pos) {
-        return !world.getEntitiesByClass(LivingEntity.class, new Box(pos), EntityPredicates.EXCEPT_SPECTATOR).isEmpty();
+        Box box = new Box(pos);
+        List<LivingEntity> entities = world.getEntitiesByClass(LivingEntity.class, box, isDetectable());
+
+        return !entities.isEmpty();
     }
 
     /**
      * @return the block position the spore blossom (passed through {@code state}) is resting on.
      */
     public static BlockPos getSupportingPos(BlockPos pos, BlockState state) {
-        return pos.offset(getFacing(state).getOpposite());
+        Direction facing = getFacing(state);
+        return pos.offset(facing.getOpposite());
+    }
+
+    public static boolean isMaxAge(BlockState state) {
+        return getAge(state) == 3;
     }
 
     /**
@@ -167,22 +184,13 @@ public class SporeBlossomUtils {
             return false;
 
         int i = getAge(state) + 1;
-        world.setBlockState(pos, state.with(AGE, i).with(OPENNESS, Openness.get(i)), Block.NOTIFY_LISTENERS);
+        world.setBlockState(pos, state.with(AGE, i).with(OPENNESS, Openness.byOrdinal(i)), Block.NOTIFY_LISTENERS);
 
         return true;
     }
 
-    /**
-     * @return true if the spore blossom (passed through {@code state}) is the maximum age it can reach.
-     */
-    public static boolean isMaxAge(BlockState state) {
-        return getAge(state) == 3;
-    }
-
-    /**
-     * Plays a sound at {@code pos}.
-     */
-    public static void playSound(World world, BlockPos pos, SoundEvent sound) {
+    public static void playSound(World world, BlockPos pos, boolean open) {
+        SoundEvent sound = open ? FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN : FlorumSporumSoundEvents.SPORE_BLOSSOM_CLOSE;
         world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1.0F, MathHelper.nextBetween(world.random, 0.8F, 1.2F));
     }
 
