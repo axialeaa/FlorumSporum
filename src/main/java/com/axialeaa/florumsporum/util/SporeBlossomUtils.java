@@ -78,13 +78,21 @@ public class SporeBlossomUtils {
         return state.get(OPENNESS);
     }
 
+    public static boolean isFullyGrown(BlockState state) {
+        return getAge(state) == 3;
+    }
+
+    public static boolean isInvalid(BlockState state) {
+        Openness openness = getOpenness(state);
+        int age = getAge(state);
+
+        return openness.ordinal() > age || age > 3;
+    }
+
     /**
      * @return true if the spore blossom (passed through {@code state}) is fully closed.
      */
     public static boolean isFullyClosed(BlockState state) {
-        if (getAge(state) == 0)
-            return true;
-
         return getOpenness(state) == Openness.CLOSED;
     }
 
@@ -92,9 +100,6 @@ public class SporeBlossomUtils {
      * @return true if the spore blossom (passed through {@code state}) is fully open.
      */
     public static boolean isFullyOpen(BlockState state) {
-        if (getAge(state) == 0)
-            return false;
-
         return getOpenness(state).ordinal() == getAge(state);
     }
 
@@ -168,19 +173,15 @@ public class SporeBlossomUtils {
         return pos.offset(facing.getOpposite());
     }
 
-    public static boolean isMaxAge(BlockState state) {
-        return getAge(state) == 3;
-    }
-
     /**
      * Increments the spore blossom's age and openness value and plays a sound.
      * @return true if the increment was successful.
-     * @implNote The return value is used for conditionally dropping an item when this method fails, instead of boilerplating the {@link SporeBlossomUtils#isMaxAge(BlockState)} call.
+     * @implNote The return value is used for conditionally dropping an item when this method fails, instead of boilerplating the {@link SporeBlossomUtils#isFullyGrown(BlockState)} call.
      * @see SporeBlossomBlockMixin#grow(ServerWorld, Random, BlockPos, BlockState)
      * @see SporeBlossomBlockMixin#randomTick(BlockState, ServerWorld, BlockPos, Random)
      */
     public static boolean advanceAge(ServerWorld world, BlockPos pos, BlockState state) {
-        if (isMaxAge(state))
+        if (isFullyGrown(state))
             return false;
 
         int i = getAge(state) + 1;

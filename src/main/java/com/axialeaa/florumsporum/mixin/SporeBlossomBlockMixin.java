@@ -57,7 +57,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @WrapWithCondition(method = "randomDisplayTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V", ordinal = 0))
     private boolean shouldCreateShower(World instance, ParticleEffect parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, @Local(argsOnly = true) BlockState state) {
-        return !isFullyClosed(state) && isMaxAge(state) && getFacing(state) == Direction.DOWN;
+        return !isFullyClosed(state) && isFullyGrown(state) && getFacing(state) == Direction.DOWN;
     }
 
     /**
@@ -99,7 +99,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (world.isReceivingRedstonePower(pos))
+        if (world.isReceivingRedstonePower(pos) || isInvalid(state))
             openFully(world, pos, state);
     }
 
@@ -144,7 +144,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @Override
     public boolean hasRandomTicks(BlockState state) {
-        return !isMaxAge(state);
+        return !isFullyGrown(state);
     }
 
     /**
