@@ -1,7 +1,6 @@
 package com.axialeaa.florumsporum.mixin;
 
 import com.axialeaa.florumsporum.util.Openness;
-import com.axialeaa.florumsporum.util.SporeBlossomUtils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
@@ -56,50 +55,47 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     }
 
     @WrapWithCondition(method = "randomDisplayTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V", ordinal = 0))
-    private boolean shouldCreateShower(World instance, ParticleEffect parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, @Local(argsOnly = true) BlockState state) {
+    private boolean shouldShower(World instance, ParticleEffect parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, @Local(argsOnly = true) BlockState state) {
         return !isFullyClosed(state) && isFullyGrown(state) && getFacing(state) == Direction.DOWN;
     }
 
-    /**
-     * @return the number of iterations for which to summon air particles.
-     */
     @ModifyConstant(method = "randomDisplayTick", constant = @Constant(intValue = 14))
     private int modifyIterationCount(int original, @Local(argsOnly = true) BlockState state) {
         if (isFullyClosed(state))
             return 0;
 
-        float delta = (float) Math.min(getOpenness(state).ordinal(), getAge(state)) / 3;
+        float delta = (float) getOpenness(state).ordinal() / Openness.FULL.ordinal();
 
         return /*? if <=1.19.3 >>*/ /*(int)*/ MathHelper.lerp(delta, 0, original);
     }
 
     @WrapOperation(method = "canPlaceAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;sideCoversSmallSquare(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z"))
     private boolean isValidPlacementSurface(WorldView world, BlockPos _pos, Direction side, Operation<Boolean> original, @Local(argsOnly = true) BlockPos pos, @Local(argsOnly = true) BlockState state) {
-        Direction facing = getFacing(state);
-        return original.call(world, getSupportingPos(pos, state), facing);
+        return original.call(world, getSupportingPos(pos, state), getFacing(state));
     }
 
     @ModifyExpressionValue(method = "getStateForNeighborUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/util/math/Direction;UP:Lnet/minecraft/util/math/Direction;"))
-    private Direction getUpdateCheckDirection(Direction original, @Local(argsOnly = true, ordinal = 0) BlockState state) {
-        Direction facing = getFacing(state);
-        return facing.getOpposite();
+    private Direction modifyUpdateCheckDirection(Direction original, @Local(argsOnly = true, ordinal = 0) BlockState state) {
+        return getFacing(state).getOpposite();
     }
 
     @ModifyReturnValue(method = "getOutlineShape", at = @At("RETURN"))
-    private VoxelShape getShapeForState(VoxelShape original, @Local(argsOnly = true) BlockState state) {
-        Direction facing = getFacing(state);
-        return getShapeForDirection(facing);
+    private VoxelShape modifyShape(VoxelShape original, @Local(argsOnly = true) BlockState state) {
+        return getShapeByDirection(getFacing(state));
     }
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!world.isClient() && hasEntityAt(world, pos) && !world.isReceivingRedstonePower(pos) && closeFully(world, pos, state))
+        if (world.isClient() || !CAUSES_RECOIL.test(entity))
+            return;
+
+        if (!world.isReceivingRedstonePower(pos) && closeFully(world, pos, state))
             scheduleBlockTick(world, pos, 1);
     }
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (world.isReceivingRedstonePower(pos) || isInvalid(state))
+        if (world.isReceivingRedstonePower(pos) || !isValidOpenness(state))
             openFully(world, pos, state);
     }
 
@@ -133,13 +129,11 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
         return true;
     }
 
-    /**
-     * Increases the {@link SporeBlossomUtils#AGE} blockstate property by 1 every time the spore blossom is bonemealed, unless the spore blossom is at the maximum age. In which case, it will drop a new spore blossom as an item.
-     */
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        if (!advanceAge(world, pos, state))
+        if (isFullyGrown(state))
             dropStack(world, pos, new ItemStack(this));
+        else advanceAge(world, pos, state);
     }
 
     @Override
@@ -147,18 +141,14 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
         return !isFullyGrown(state);
     }
 
-    /**
-     * Increases the {@link SporeBlossomUtils#AGE} blockstate property every 1 in 10 randomTicks, while the spore blossom is resting on moss.
-     */
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (random.nextFloat() < 0.1 && world.getBlockState(getSupportingPos(pos, state)).getBlock() instanceof MossBlock)
+        BlockState blockState = world.getBlockState(getSupportingPos(pos, state));
+
+        if (random.nextFloat() < 0.1 && blockState.getBlock() instanceof MossBlock)
             advanceAge(world, pos, state);
     }
 
-    /**
-     * Adds the {@link SporeBlossomUtils#FACING}, {@link SporeBlossomUtils#AGE} and {@link SporeBlossomUtils#OPENNESS} blockstate properties to the spore blossom.
-     */
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING, AGE, OPENNESS);

@@ -1,0 +1,4 @@
+added russian translations
+neighbor updates will now resolve invalid openness + age pairs
+fixed loot tables
+improved code readability (so much so that the javadocs became unnecessary)
