@@ -2,3 +2,8 @@ added russian translations
 neighbor updates will now resolve invalid openness + age pairs
 fixed loot tables
 improved code readability (so much so that the javadocs became unnecessary)
+32x pack
+tweaked some textures
+dead entities will no longer make spore blossoms recoil
+block breaking particle textures will now match the state of the spore blossom
+tweaked mod icon

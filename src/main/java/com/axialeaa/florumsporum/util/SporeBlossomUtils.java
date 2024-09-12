@@ -6,8 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.property.DirectionProperty;
@@ -33,7 +32,7 @@ public class SporeBlossomUtils {
     public static final DirectionProperty FACING = Properties.FACING;
     public static final EnumProperty<Openness> OPENNESS = EnumProperty.of("openness", Openness.class);
 
-    public static final Predicate<Entity> CAUSES_RECOIL = EntityPredicates.VALID_LIVING_ENTITY.and(EntityPredicates.EXCEPT_SPECTATOR).and(entity -> !entity.canAvoidTraps());
+    public static final Predicate<Entity> CAUSES_RECOIL = entity -> entity instanceof LivingEntity && entity.isAlive() && !entity.isSpectator();
 
     private static final ImmutableMap<Direction, VoxelShape> SHAPES = ImmutableMap.of(
         Direction.DOWN,  Block.createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0),
@@ -72,18 +71,15 @@ public class SporeBlossomUtils {
         return getOpenness(state).ordinal() == getAge(state);
     }
 
-    public static boolean isValidOpenness(BlockState state) {
-        return getOpenness(state).ordinal() <= getAge(state);
+    public static boolean isInvalid(BlockState state) {
+        return getOpenness(state).ordinal() > getAge(state);
     }
 
-    public static void advanceAge(ServerWorld world, BlockPos pos, BlockState state) {
-        if (isFullyGrown(state))
-            return;
-
+    public static BlockState advanceAge(BlockState state) {
         BlockState blockState = state.cycle(AGE);
         Openness newOpenness = Openness.byOrdinal(getAge(blockState));
 
-        world.setBlockState(pos, blockState.with(OPENNESS, newOpenness));
+        return blockState.with(OPENNESS, newOpenness);
     }
 
     public static BlockPos getSupportingPos(BlockPos pos, BlockState state) {
@@ -91,36 +87,17 @@ public class SporeBlossomUtils {
         return pos.offset(facing.getOpposite());
     }
 
-    public static boolean closeFully(World world, BlockPos pos, BlockState state) {
-        if (isFullyClosed(state))
-            return false;
-
-        world.setBlockState(pos, state.with(OPENNESS, Openness.CLOSED));
-        playSound(world, pos, false);
-
-        return true;
+    public static BlockState close(BlockState state) {
+        return state.with(OPENNESS, Openness.CLOSED);
     }
 
-    public static boolean openFully(World world, BlockPos pos, BlockState state) {
-        if (isFullyOpen(state))
-            return false;
-
+    public static BlockState openFully(BlockState state) {
         Openness newOpenness = Openness.byOrdinal(getAge(state));
-
-        world.setBlockState(pos, state.with(OPENNESS, newOpenness));
-        playSound(world, pos, true);
-
-        return true;
+        return state.with(OPENNESS, newOpenness);
     }
 
-    public static boolean openNext(World world, BlockPos pos, BlockState state) {
-        if (isFullyOpen(state))
-            return false;
-
-        playSound(world, pos, true);
-        world.setBlockState(pos, state.cycle(OPENNESS));
-
-        return true;
+    public static BlockState openNext(BlockState state) {
+        return state.cycle(OPENNESS);
     }
 
     public static boolean hasEntityAt(World world, BlockPos pos) {

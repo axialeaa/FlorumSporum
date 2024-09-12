@@ -1,4 +1,7 @@
 {
     "parent": "minecraft:block/spore_blossom",
+    "textures": {
+        "particle": "#flower"
+    },
     "ambientocclusion": false
 }

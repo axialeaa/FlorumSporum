@@ -89,22 +89,32 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
         if (world.isClient() || !CAUSES_RECOIL.test(entity))
             return;
 
-        if (!world.isReceivingRedstonePower(pos) && closeFully(world, pos, state))
+        if (!world.isReceivingRedstonePower(pos) && !isFullyClosed(state)) {
+            world.setBlockState(pos, close(state));
+            playSound(world, pos, false);
+
             scheduleBlockTick(world, pos, 1);
+        }
     }
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        if (world.isReceivingRedstonePower(pos) || !isValidOpenness(state))
-            openFully(world, pos, state);
+        if (!isFullyOpen(state) && (world.isReceivingRedstonePower(pos) || isInvalid(state))) {
+            world.setBlockState(pos, openFully(state));
+            playSound(world, pos, true);
+        }
     }
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (hasEntityAt(world, pos))
             scheduleBlockTick(world, pos, 60);
-        else if (openNext(world, pos, state))
+        else if (!isFullyOpen(state)) {
+            world.setBlockState(pos, openNext(state));
+            playSound(world, pos, true);
+
             scheduleBlockTick(world, pos, 10);
+        }
     }
 
     @Nullable
@@ -133,7 +143,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
         if (isFullyGrown(state))
             dropStack(world, pos, new ItemStack(this));
-        else advanceAge(world, pos, state);
+        else advanceAge(state);
     }
 
     @Override
@@ -146,7 +156,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
         BlockState blockState = world.getBlockState(getSupportingPos(pos, state));
 
         if (random.nextFloat() < 0.1 && blockState.getBlock() instanceof MossBlock)
-            advanceAge(world, pos, state);
+            advanceAge(state);
     }
 
     @Override

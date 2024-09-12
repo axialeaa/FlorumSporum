@@ -3,7 +3,7 @@
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "block/spore_blossom",
+		"particle": "#flower",
 		"base": "block/spore_blossom_base"
 	},
 	"elements": [

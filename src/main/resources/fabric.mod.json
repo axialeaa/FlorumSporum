@@ -7,6 +7,9 @@
 	"authors": [
 		"axialeaa"
 	],
+	"contributors": [
+		"mpustovoi"
+	],
 	"contact": {
 		"sources": "https://github.com/axialeaa/FlorumSporum",
 		"issues": "https://github.com/axialeaa/FlorumSporum/issues"
@@ -17,6 +20,9 @@
 	"entrypoints": {
 		"main": [
 			"com.axialeaa.florumsporum.FlorumSporum"
+		],
+		"client": [
+			"com.axialeaa.florumsporum.FlorumSporumClient"
 		]
 	},
 	"custom": {
