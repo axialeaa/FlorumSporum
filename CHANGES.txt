@@ -7,3 +7,4 @@ tweaked some textures
 dead entities will no longer make spore blossoms recoil
 block breaking particle textures will now match the state of the spore blossom
 tweaked mod icon
+spore blossoms will now show up on maps as pink when facing in any other direction than down

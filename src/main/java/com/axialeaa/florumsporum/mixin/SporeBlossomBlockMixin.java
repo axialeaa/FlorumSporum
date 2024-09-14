@@ -56,12 +56,12 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @WrapWithCondition(method = "randomDisplayTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V", ordinal = 0))
     private boolean shouldShower(World instance, ParticleEffect parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, @Local(argsOnly = true) BlockState state) {
-        return !isFullyClosed(state) && isFullyGrown(state) && getFacing(state) == Direction.DOWN;
+        return !isClosed(state) && isMaxAge(state) && getFacing(state) == Direction.DOWN;
     }
 
     @ModifyConstant(method = "randomDisplayTick", constant = @Constant(intValue = 14))
     private int modifyIterationCount(int original, @Local(argsOnly = true) BlockState state) {
-        if (isFullyClosed(state))
+        if (isClosed(state))
             return 0;
 
         float delta = (float) getOpenness(state).ordinal() / Openness.FULL.ordinal();
@@ -76,7 +76,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @ModifyExpressionValue(method = "getStateForNeighborUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/util/math/Direction;UP:Lnet/minecraft/util/math/Direction;"))
     private Direction modifyUpdateCheckDirection(Direction original, @Local(argsOnly = true, ordinal = 0) BlockState state) {
-        return getFacing(state).getOpposite();
+        return getSupportingDir(state);
     }
 
     @ModifyReturnValue(method = "getOutlineShape", at = @At("RETURN"))
@@ -89,7 +89,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
         if (world.isClient() || !CAUSES_RECOIL.test(entity))
             return;
 
-        if (!world.isReceivingRedstonePower(pos) && !isFullyClosed(state)) {
+        if (!world.isReceivingRedstonePower(pos) && !isClosed(state)) {
             world.setBlockState(pos, close(state));
             playSound(world, pos, false);
 
@@ -129,7 +129,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @Override
     public boolean isFertilizable(/*$ world_view_arg >>*/ WorldView world, BlockPos pos, BlockState state
-        /*? if <=1.20.1 */ /*, boolean isClient*/
+        /*? if <=1.20.1*/ /*, boolean isClient*/
     ) {
         return true;
     }
@@ -141,22 +141,25 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        if (isFullyGrown(state))
+        if (isMaxAge(state))
             dropStack(world, pos, new ItemStack(this));
-        else advanceAge(state);
+        else world.setBlockState(pos, advanceAge(state));
     }
 
     @Override
     public boolean hasRandomTicks(BlockState state) {
-        return !isFullyGrown(state);
+        return !isMaxAge(state);
     }
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        BlockState blockState = world.getBlockState(getSupportingPos(pos, state));
+        if (random.nextFloat() > 0.1)
+            return;
 
-        if (random.nextFloat() < 0.1 && blockState.getBlock() instanceof MossBlock)
-            advanceAge(state);
+        BlockState blockState = getSupportingState(world, pos, state);
+
+        if (blockState.getBlock() instanceof MossBlock)
+            world.setBlockState(pos, advanceAge(state));
     }
 
     @Override
