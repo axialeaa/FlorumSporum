@@ -32,14 +32,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import /*$ random_import*/ net.minecraft.util.math.random.Random;
 
-/*? if <=1.19.2*/ /*import net.minecraft.world.BlockView;*/
+//? if <=1.19.2
+/*import net.minecraft.world.BlockView;*/
 
 import static com.axialeaa.florumsporum.util.SporeBlossomUtils.*;
 
 /**
  * This is the main class that handles the modified logic for the spore blossom. It uses extending and overriding as well as interface method implementation so it's incompatible with other mods doing the same thing as me, but there's if you've installed two mods with such similar functionalities, you've probably made a mistake worth a crash report anyway!
  */
-/*? if <=1.20.4*/ /*@SuppressWarnings("deprecation")*/
+//? if <=1.20.4
+/*@SuppressWarnings("deprecation")*/
 @Mixin(SporeBlossomBlock.class)
 public abstract class SporeBlossomBlockMixin extends Block implements Fertilizable {
 
@@ -81,7 +83,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @ModifyReturnValue(method = "getOutlineShape", at = @At("RETURN"))
     private VoxelShape modifyShape(VoxelShape original, @Local(argsOnly = true) BlockState state) {
-        return getShapeByDirection(getFacing(state));
+        return getShapeForState(state);
     }
 
     @Override
@@ -120,16 +122,14 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        World world = ctx.getWorld();
-        BlockPos blockPos = ctx.getBlockPos();
         BlockState blockState = this.getDefaultState().with(FACING, ctx.getSide());
-
-        return blockState.canPlaceAt(world, blockPos) ? blockState : null;
+        return blockState.canPlaceAt(ctx.getWorld(), ctx.getBlockPos()) ? blockState : null;
     }
 
     @Override
     public boolean isFertilizable(/*$ world_view_arg >>*/ WorldView world, BlockPos pos, BlockState state
-        /*? if <=1.20.1*/ /*, boolean isClient*/
+        //? if <=1.20.1
+        /*, boolean isClient*/
     ) {
         return true;
     }

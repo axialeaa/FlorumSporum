@@ -7,7 +7,8 @@ import net.minecraft.util.Identifier;
 //? if >=1.19.3 {
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-/*?} else*/ /*import net.minecraft.util.registry.Registry;*/
+//?} else
+/*import net.minecraft.util.registry.Registry;*/
 
 public class FlorumSporumSoundEvents {
 

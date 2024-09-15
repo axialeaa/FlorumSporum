@@ -19,8 +19,8 @@ stonecutter {
 			"world.createAndScheduleBlockTick(pos, this, delay);" // 1.18.2-1.19.2
 	)
 	swap("random_import",				 eval(mcVersion, ">=1.19.2") ? "net.minecraft.util.math.random.Random;" : "java.util.Random;")
-	swap("translatable",				 eval(mcVersion, ">=1.19.2") ? "Text.translatable(key);" : "new TranslatableText(key);")
-	swap("pack_name",					 eval(mcVersion, ">=1.19.3") ? "translated" : "String.valueOf(translated)")
+	swap("translatable",				 eval(mcVersion, ">=1.19.2") ? "Text::translatable;" : "TranslatableText::new;")
+	swap("pack_name",					 eval(mcVersion, ">=1.19.3") ? "translated," : "String.valueOf(translated),")
 	swap("world_view_arg",				 eval(mcVersion, ">=1.19.3") ? "WorldView" : "BlockView")
 	swap("register",					 eval(mcVersion, ">=1.19.3") ? "Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));" : "Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));")
 	swap("modify_settings_import",		 eval(mcVersion, ">=1.20.1") ? "net.minecraft.block.MapColor;" : "net.minecraft.block.Material;")
