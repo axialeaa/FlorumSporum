@@ -141,8 +141,10 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        if (isMaxAge(state))
-            dropStack(world, pos, new ItemStack(this));
+        if (isMaxAge(state)) {
+            ItemStack itemStack = new ItemStack(this);
+            dropStack(world, pos, itemStack);
+        }
         else world.setBlockState(pos, advanceAge(state));
     }
 
