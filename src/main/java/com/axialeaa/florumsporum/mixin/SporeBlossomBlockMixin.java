@@ -63,11 +63,7 @@ public abstract class SporeBlossomBlockMixin extends Block implements Fertilizab
 
     @ModifyConstant(method = "randomDisplayTick", constant = @Constant(intValue = 14))
     private int modifyIterationCount(int original, @Local(argsOnly = true) BlockState state) {
-        if (isClosed(state))
-            return 0;
-
         float delta = (float) getOpenness(state).ordinal() / Openness.FULL.ordinal();
-
         return /*? if <=1.19.3 >>*/ /*(int)*/ MathHelper.lerp(delta, 0, original);
     }
 
