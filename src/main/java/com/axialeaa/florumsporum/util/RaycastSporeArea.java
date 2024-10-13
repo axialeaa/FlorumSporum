@@ -115,10 +115,5 @@ public record RaycastSporeArea(BlockState state, BlockPos center, int range) {
         return blockPos.equals(this.center) || blockHitResult.getType() == HitResult.Type.MISS;
     }
 
-    @Override
-    public String toString() {
-        return "RaycastSporeArea[state=%s, center=%s, range=%s]".formatted(state, center, range);
-    }
-
 
 }
