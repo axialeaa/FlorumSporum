@@ -17,7 +17,7 @@ public class FlorumSporumSoundEvents {
 
     private static SoundEvent register(String name) {
         Identifier id = FlorumSporum.id(name);
-        return /*$ register*/ Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
+        return /*$ register_sound*/ Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
 
     public static void init() {

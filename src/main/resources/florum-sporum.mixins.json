@@ -4,9 +4,18 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BlocksMixin",
-    "SporeBlossomBlockMixin"
+    "BoneMealItemMixin",
+    "SporeBlossomBlockMixin",
+    "accessor.BlockAccessor",
+    "impl.AbstractBlockImplMixin",
+    "impl.BlockImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "WaterSuspendParticleMixin",
+    "accessor.ParticleAccessor",
+    "impl.ParticleImplMixin"
+  ]
 }

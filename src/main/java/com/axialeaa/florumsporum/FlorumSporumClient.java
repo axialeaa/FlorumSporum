@@ -16,7 +16,7 @@ import java.util.function.Function;
 public class FlorumSporumClient implements ClientModInitializer {
 
     //? if >1.17.1 {
-    private static final Function<String, Text> translation = /*$ translatable >>*/ Text::translatable;
+    private static final Function<String, Text> translation = /*$ translatable >>*/ Text::translatable ;
     //?}
 
     @Override
@@ -32,7 +32,7 @@ public class FlorumSporumClient implements ClientModInitializer {
 
         ResourceManagerHelper.registerBuiltinResourcePack(id, FlorumSporum.CONTAINER,
             //? if >1.17.1
-            /*$ pack_name >>*/ translated,
+            /*$ pack_name >>*/ translated ,
             ResourcePackActivationType.NORMAL
         );
 

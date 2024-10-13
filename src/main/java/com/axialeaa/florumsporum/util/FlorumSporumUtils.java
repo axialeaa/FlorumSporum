@@ -28,7 +28,16 @@ import java.util.function.Predicate;
 /**
  * The purpose of this class is to store static fields and methods used by {@link SporeBlossomBlockMixin SporeBlossomBlockMixin} without needing to make them private. This allows them to be called outside of that mixin.
  */
-public class SporeBlossomUtils {
+public class FlorumSporumUtils {
+
+    /**
+     * The number of ticks between checking whether there is currently an entity colliding with the spore blossom.
+     */
+    public static final int ENTITY_CHECK_INTERVAL = 20 * 3;
+    /**
+     * The time between unfurling stages in ticks.
+     */
+    public static final int UNFURL_INTERVAL = 10;
 
     public static final IntProperty AGE = Properties.AGE_3;
     public static final DirectionProperty FACING = Properties.FACING;
@@ -41,7 +50,7 @@ public class SporeBlossomUtils {
     /**
      * Tests if an entity is capable of making a spore blossom recoil.
      * <br>The entity (if animate) must be living and not in spectator mode.
-     * @see SporeBlossomUtils#hasEntityAt(World, BlockPos)
+     * @see FlorumSporumUtils#hasEntityAt(World, BlockPos)
      */
     public static final Predicate<Entity> CAUSES_RECOIL = entity -> entity.isAlive() && !entity.isSpectator();
 
@@ -53,9 +62,9 @@ public class SporeBlossomUtils {
 
     /**
      * Defines the spore blossom outline shapes for each possible facing direction.
-     * @see SporeBlossomUtils#getShapeForState(BlockState)
+     * @see FlorumSporumUtils#getShapeForState(BlockState)
      */
-    private static final EnumMap<Direction, VoxelShape> SHAPES = Util.make(new EnumMap<>(Direction.class), shapes -> {
+    private static final EnumMap<Direction, VoxelShape> FACING_DIR_TO_SHAPE_MAP = Util.make(new EnumMap<>(Direction.class), shapes -> {
         shapes.put(Direction.DOWN,  Block.createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0));
         shapes.put(Direction.UP,    Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 3.0, 14.0));
         shapes.put(Direction.NORTH, Block.createCuboidShape(2.0, 2.0, 13.0, 14.0, 14.0, 16.0));
@@ -66,16 +75,16 @@ public class SporeBlossomUtils {
 
     /**
      * @param state The spore blossom block state.
-     * @return a {@link VoxelShape} outlining the spore blossom exclusive to its facing direction extracted from {@link SporeBlossomUtils#SHAPES}.
+     * @return a {@link VoxelShape} outlining the spore blossom exclusive to its facing direction extracted from {@link FlorumSporumUtils#FACING_DIR_TO_SHAPE_MAP}.
      */
     public static VoxelShape getShapeForState(BlockState state) {
         Direction facing = getFacing(state);
-        return SHAPES.get(facing);
+        return FACING_DIR_TO_SHAPE_MAP.get(facing);
     }
 
     /**
      * @param state The spore blossom block state.
-     * @return the {@link SporeBlossomUtils#AGE} property of {@code state}.
+     * @return the {@link FlorumSporumUtils#AGE} property of {@code state}.
      */
     public static int getAge(BlockState state) {
         return state.get(AGE);
@@ -83,7 +92,7 @@ public class SporeBlossomUtils {
 
     /**
      * @param state The spore blossom block state.
-     * @return the {@link SporeBlossomUtils#FACING} property of {@code state}.
+     * @return the {@link FlorumSporumUtils#FACING} property of {@code state}.
      */
     public static Direction getFacing(BlockState state) {
         return state.get(FACING);
@@ -91,7 +100,7 @@ public class SporeBlossomUtils {
 
     /**
      * @param state The spore blossom block state.
-     * @return the {@link SporeBlossomUtils#OPENNESS} property of {@code state}.
+     * @return the {@link FlorumSporumUtils#OPENNESS} property of {@code state}.
      */
     public static Openness getOpenness(BlockState state) {
         return state.get(OPENNESS);
@@ -115,7 +124,7 @@ public class SporeBlossomUtils {
 
     /**
      * @param state The spore blossom block state.
-     * @return true if the spore blossom is as open as it can be for its current {@link SporeBlossomUtils#AGE}.
+     * @return true if the spore blossom is as open as it can be for its current {@link FlorumSporumUtils#AGE}.
      */
     public static boolean isFullyOpen(BlockState state) {
         return getOpenness(state).ordinal() == getAge(state);
@@ -141,7 +150,7 @@ public class SporeBlossomUtils {
      * @param pos The position of the spore blossom.
      * @param state The spore blossom block state.
      * @return the position of the supporting block.
-     * @see SporeBlossomUtils#getSupportingDir(BlockState)
+     * @see FlorumSporumUtils#getSupportingDir(BlockState)
      */
     public static BlockPos getSupportingPos(BlockPos pos, BlockState state) {
         return pos.offset(getSupportingDir(state));
@@ -152,7 +161,7 @@ public class SporeBlossomUtils {
      * @param pos The position of the spore blossom.
      * @param state The spore blossom block state.
      * @return the state of the block supporting the spore blossom.
-     * @see SporeBlossomUtils#getSupportingPos(BlockPos, BlockState)
+     * @see FlorumSporumUtils#getSupportingPos(BlockPos, BlockState)
      */
     public static BlockState getSupportingState(World world, BlockPos pos, BlockState state) {
         return world.getBlockState(getSupportingPos(pos, state));
@@ -160,8 +169,8 @@ public class SporeBlossomUtils {
 
     /**
      * @param state The spore blossom block state.
-     * @return a block state (initially {@code state}) with an incremented {@link SporeBlossomUtils#AGE} property and the maximum {@link SporeBlossomUtils#OPENNESS} for the new age.
-     * @see SporeBlossomUtils#openFully(BlockState)
+     * @return a block state (initially {@code state}) with an incremented {@link FlorumSporumUtils#AGE} property and the maximum {@link FlorumSporumUtils#OPENNESS} for the new age.
+     * @see FlorumSporumUtils#openFully(BlockState)
      */
     public static BlockState advanceAge(BlockState state) {
         return openFully(state.cycle(AGE));
@@ -169,7 +178,7 @@ public class SporeBlossomUtils {
 
     /**
      * @param state The spore blossom block state.
-     * @return a block state (initially {@code state}) with an {@link SporeBlossomUtils#OPENNESS} value of {@link Openness#CLOSED}.
+     * @return a block state (initially {@code state}) with an {@link FlorumSporumUtils#OPENNESS} value of {@link Openness#CLOSED}.
      */
     public static BlockState close(BlockState state) {
         return state.with(OPENNESS, Openness.CLOSED);
@@ -177,7 +186,7 @@ public class SporeBlossomUtils {
 
     /**
      * @param state The spore blossom block state.
-     * @return a block state (initially {@code state}) with the maximum {@link SporeBlossomUtils#OPENNESS} for its age.
+     * @return a block state (initially {@code state}) with the maximum {@link FlorumSporumUtils#OPENNESS} for its age.
      */
     public static BlockState openFully(BlockState state) {
         int age = getAge(state);
@@ -186,7 +195,7 @@ public class SporeBlossomUtils {
 
     /**
      * @param state The spore blossom block state.
-     * @return a block state (initially {@code state}) with an incremented {@link SporeBlossomUtils#OPENNESS} value.
+     * @return a block state (initially {@code state}) with an incremented {@link FlorumSporumUtils#OPENNESS} value.
      * @implNote This is used for slowly unfurling the spore blossom with a scheduled tick loop.
      */
     public static BlockState openNext(BlockState state) {
@@ -196,7 +205,7 @@ public class SporeBlossomUtils {
     /**
      * @param world The world the spore blossom is in.
      * @param pos The position of the spore blossom.
-     * @return true if there is at least 1 entity matching the {@link SporeBlossomUtils#CAUSES_RECOIL} predicate whose collision box intersects with {@code pos}.
+     * @return true if there is at least 1 entity matching the {@link FlorumSporumUtils#CAUSES_RECOIL} predicate whose collision box intersects with {@code pos}.
      */
     public static boolean hasEntityAt(World world, BlockPos pos) {
         Box box = new Box(pos);
@@ -214,6 +223,14 @@ public class SporeBlossomUtils {
     public static void playSound(World world, BlockPos pos, boolean open) {
         SoundEvent sound = open ? FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN : FlorumSporumSoundEvents.SPORE_BLOSSOM_CLOSE;
         world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1.0F, MathHelper.nextBetween(world.getRandom(), 0.8F, 1.2F));
+    }
+
+    public static int lerp(float delta, int end) {
+        return lerp(delta, 0, end);
+    }
+
+    public static int lerp(float delta, int start, int end) {
+        return /*? if <=1.19.3 >>*/ /*(int)*/ MathHelper.lerp(delta, start, end);
     }
 
 }

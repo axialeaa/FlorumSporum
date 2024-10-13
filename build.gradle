@@ -14,19 +14,20 @@ base {
 
 stonecutter {
 	swap("schedule_block_tick",
-		eval(mcVersion,   "1.17.1") ? "world.getBlockTickScheduler().schedule(pos, this, delay);" : // 1.17.1
-		eval(mcVersion, ">=1.19.3") ? "world.scheduleBlockTick(pos, this, delay);" : // 1.19.3+
-			"world.createAndScheduleBlockTick(pos, this, delay);" // 1.18.2-1.19.2
+		eval(mcVersion,   "1.17.1") ? "world.getBlockTickScheduler().schedule(pos, thisBlock, delay);" : // 1.17.1
+		eval(mcVersion, ">=1.19.3") ? "world.scheduleBlockTick(pos, thisBlock, delay);" : // 1.19.3+
+			"world.createAndScheduleBlockTick(pos, thisBlock, delay);" // 1.18.2-1.19.2
 	)
-	swap("random_import",				 eval(mcVersion, ">=1.19.2") ? "net.minecraft.util.math.random.Random;" : "java.util.Random;")
-	swap("translatable",				 eval(mcVersion, ">=1.19.2") ? "Text::translatable;" : "TranslatableText::new;")
-	swap("pack_name",					 eval(mcVersion, ">=1.19.3") ? "translated," : "String.valueOf(translated),")
-	swap("world_view_arg",				 eval(mcVersion, ">=1.19.3") ? "WorldView" : "BlockView")
-	swap("register",					 eval(mcVersion, ">=1.19.3") ? "Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));" : "Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));")
-	swap("modify_settings_import",		 eval(mcVersion, ">=1.20.1") ? "net.minecraft.block.MapColor;" : "net.minecraft.block.Material;")
-	swap("modify_settings_target",	 	 eval(mcVersion, ">=1.20.1") ? "\"mapColor(Lnet/minecraft/block/MapColor;)\"" : "\"of(Lnet/minecraft/block/Material;)\"")
-	swap("can_place_at_access_modifier", eval(mcVersion, ">=1.20.6") ? "protected" : "public")
-	swap("identifier", 					 eval(mcVersion, ">=1.21"  ) ? "Identifier.of(MOD_ID, name);" : "new Identifier(MOD_ID, name);")
+	swap("random_import",		   eval(mcVersion, ">=1.19.2") ? "net.minecraft.util.math.random.Random" : "java.util.Random")
+	swap("translatable",		   eval(mcVersion, ">=1.19.2") ? "Text::translatable" : "TranslatableText::new")
+	swap("pack_name",			   eval(mcVersion, ">=1.19.3") ? "translated" : "String.valueOf(translated)")
+	swap("register_sound",		   eval(mcVersion, ">=1.19.3") ? "Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));" : "Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));")
+	swap("modify_settings_import", eval(mcVersion, ">=1.20.1") ? "net.minecraft.block.MapColor" : "net.minecraft.block.Material")
+	swap("modify_settings_target", eval(mcVersion, ">=1.20.1") ? "\"mapColor(Lnet/minecraft/block/MapColor;)\"" : "\"of(Lnet/minecraft/block/Material;)\"")
+	swap("fifth_raycast_arg", 	   eval(mcVersion, ">=1.20.4") ? "ShapeContext.absent()" : "MinecraftClient.getInstance().player")
+	swap("fifth_raycast_import",   eval(mcVersion, ">=1.20.4") ? "net.minecraft.block.ShapeContext" : "net.minecraft.client.MinecraftClient")
+	swap("particle_group_import",  eval(mcVersion, ">=1.21.1") ? "net.minecraft.particle.ParticleGroup" : "net.minecraft.client.particle.ParticleGroup")
+	swap("identifier", 			   eval(mcVersion, ">=1.21.1") ? "Identifier.of(MOD_ID, name);" : "new Identifier(MOD_ID, name);")
 }
 
 dependencies {
