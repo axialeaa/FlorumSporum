@@ -2,46 +2,46 @@ package com.axialeaa.florumsporum.mixin;
 
 import com.axialeaa.florumsporum.mixin.accessor.ParticleAccessor;
 import com.axialeaa.florumsporum.mixin.impl.ParticleImplMixin;
+import com.axialeaa.florumsporum.util.FragileParticle;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.WaterSuspendParticle;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.Box;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.Optional;
-
 //? if >1.17.1
 import com.google.common.collect.Iterables;
 
-import /*$ particle_group_import >>*/ net.minecraft.particle.ParticleGroup ;
-
 @Mixin(WaterSuspendParticle.class)
-public class WaterSuspendParticleMixin extends ParticleImplMixin {
+public abstract class WaterSuspendParticleMixin extends ParticleImplMixin implements FragileParticle {
 
-    @Unique private final Particle thisParticle = Particle.class.cast(this);
+    @Unique private boolean discardOnCollision = false;
+
+    @Unique private final Particle asParticle = Particle.class.cast(this);
+    @Unique private final ParticleAccessor asAccessedParticle = (ParticleAccessor) this.asParticle;
 
     @Override
     public void moveImpl(double dx, double dy, double dz, Operation<Void> original) {
-        super.moveImpl(dx, dy, dz, original);
-
-        Optional<ParticleGroup> optional = thisParticle.getGroup();
-
-        if (optional.isEmpty() || optional.get() != ParticleGroup.SPORE_BLOSSOM_AIR)
+        if (!this.discardOnCollision)
             return;
 
-        ClientWorld world = ((ParticleAccessor) thisParticle).getWorld();
-        Box boundingBox = thisParticle.getBoundingBox();
-
-        var collisions = world.getBlockCollisions(null, boundingBox);
+        Box box = this.asParticle.getBoundingBox();
+        var collisions = this.asAccessedParticle.getWorld().getBlockCollisions(null, box);
 
         //? if >1.17.1 {
         if (!Iterables.isEmpty(collisions))
         //?} else {
-        /*if (!collisions.toList().isEmpty())
+        /*if (collisions.findAny().isPresent())
         *///?}
-            thisParticle.markDead();
+            this.asParticle.markDead();
+
+        super.moveImpl(dx, dy, dz, original);
+    }
+
+    @Override
+    public void setDiscardOnCollision(boolean discardOnCollision) {
+        this.discardOnCollision = discardOnCollision;
     }
 
 }

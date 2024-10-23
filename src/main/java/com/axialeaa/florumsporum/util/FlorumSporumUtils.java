@@ -8,7 +8,6 @@ import net.minecraft.block.MapColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
@@ -25,6 +24,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+//? if <=1.21.1
+/*import net.minecraft.state.property.DirectionProperty;*/
+
 /**
  * The purpose of this class is to store static fields and methods used by {@link SporeBlossomBlockMixin SporeBlossomBlockMixin} without needing to make them private. This allows them to be called outside of that mixin.
  */
@@ -38,9 +40,13 @@ public class FlorumSporumUtils {
      * The time between unfurling stages in ticks.
      */
     public static final int UNFURL_INTERVAL = 10;
+    /**
+     * The chance per random tick of the spore blossom growing one stage.
+     */
+    public static final float GROW_CHANCE = 0.1F;
 
     public static final IntProperty AGE = Properties.AGE_3;
-    public static final DirectionProperty FACING = Properties.FACING;
+    public static final /*$ direction_property >>*/ EnumProperty<Direction> FACING = Properties.FACING;
 
     /**
      * A property that specifies how open a spore blossom is.

@@ -3,7 +3,7 @@ package com.axialeaa.florumsporum.mixin;
 import com.axialeaa.florumsporum.mixin.accessor.BlockAccessor;
 import com.axialeaa.florumsporum.mixin.impl.BlockImplMixin;
 import com.axialeaa.florumsporum.util.Openness;
-import com.axialeaa.florumsporum.util.RaycastSporeArea;
+import com.axialeaa.florumsporum.util.RaycastedSporeArea;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
@@ -25,8 +25,13 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+//? if >=1.21.2
+import net.minecraft.world.block.WireOrientation;
 
 import /*$ random_import >>*/ net.minecraft.util.math.random.Random ;
 
@@ -47,22 +52,20 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
         return !isClosed(state) && isMaxAge(state) && getFacing(state) == Direction.DOWN;
     }
 
-    @Inject(method = "randomDisplayTick", at = @At(value = "NEW", target = "()Lnet/minecraft/util/math/BlockPos$Mutable;", shift = At.Shift.BEFORE), cancellable = true)
-    public void addSporeArea(BlockState state, World world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (isClosed(state)) {
-            ci.cancel();
-            return;
-        }
+    @ModifyConstant(method = "randomDisplayTick", constant = @Constant(intValue = 14))
+    public int addSporeArea(int constant, @Local(argsOnly = true) BlockState state, @Local(argsOnly = true) World world, @Local(argsOnly = true) BlockPos pos, @Local(argsOnly = true) Random random) {
+        if (isClosed(state))
+            return 0;
 
         float delta = (float) getAge(state) / 3;
 
-        int count = lerp(delta, RaycastSporeArea.MAX_SPORE_COUNT);
-        int range = lerp(delta, RaycastSporeArea.MAX_SPORE_RANGE);
+        int count = lerp(delta, constant);
+        int range = lerp(delta, RaycastedSporeArea.MAX_SPORE_RANGE);
 
-        RaycastSporeArea sporeArea = new RaycastSporeArea(state, pos, range);
+        RaycastedSporeArea sporeArea = new RaycastedSporeArea(state, pos, range);
         sporeArea.addParticles(world, random, count);
 
-        ci.cancel();
+        return 0;
     }
 
     @WrapOperation(method = "canPlaceAt", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;sideCoversSmallSquare(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z"))
@@ -93,13 +96,13 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
     }
 
     @Override
-    public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, Operation<Void> original) {
+    public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, /*? if <=1.21.1 {*/ /*BlockPos sourcePos *//*?} else {*/ WireOrientation wireOrientation /*?}*/, boolean notify, Operation<Void> original) {
         if (!isFullyOpen(state) && (world.isReceivingRedstonePower(pos) || isInvalid(state))) {
             world.setBlockState(pos, openFully(state));
             playSound(world, pos, true);
         }
 
-        super.neighborUpdateImpl(state, world, pos, sourceBlock, sourcePos, notify, original);
+        super.neighborUpdateImpl(state, world, pos, sourceBlock, /*? if <=1.21.1 {*/ /*sourcePos *//*?} else {*/ wireOrientation /*?}*/, notify, original);
     }
 
     @Override
@@ -130,12 +133,12 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
 
     @Override
     public void randomTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, Operation<Void> original) {
-        if (random.nextFloat() > 0.1)
+        if (random.nextFloat() > GROW_CHANCE)
             return;
 
         BlockState blockState = getSupportingState(world, pos, state);
 
-        if (blockState.getBlock() instanceof MossBlock)
+        if (!blockState.isOf(Blocks.MOSS_BLOCK))
             world.setBlockState(pos, advanceAge(state));
 
         super.randomTickImpl(state, world, pos, random, original);

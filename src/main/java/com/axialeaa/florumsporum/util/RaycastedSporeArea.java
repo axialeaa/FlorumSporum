@@ -8,22 +8,27 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+//? if >=1.20.4 {
+import net.minecraft.block.ShapeContext;
+//?} else {
+/*import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.MinecraftClient;
+*///?}
 
 import /*$ random_import >>*/ net.minecraft.util.math.random.Random ;
-import /*$ fifth_raycast_import >>*/ net.minecraft.block.ShapeContext ;
 
 /**
  * Creates a box and spawns a certain number of {@link ParticleTypes#SPORE_BLOSSOM_AIR} particles inside it, making sure
  * there is a direct line of sight from the spore blossom to the particle position. This prevents particles being
  * created past walls; if the spore blossom is outside, the particles will stay outside.
- * @param state  The spore blossom block state.
+ * @param state The spore blossom block state.
  * @param center The spore blossom position around which to spawn particles.
- * @see SporeBlossomBlockMixin#addSporeArea(BlockState, World, BlockPos, Random, CallbackInfo)
+ * @param range The range around the spore blossom to spawn spore particles within.
+ * @see SporeBlossomBlockMixin#addSporeArea(int, BlockState, World, BlockPos, Random)
  */
-public record RaycastSporeArea(BlockState state, BlockPos center, int range) {
+public record RaycastedSporeArea(BlockState state, BlockPos center, int range) {
 
-    public static final int MAX_SPORE_COUNT = 14;
     public static final int MAX_SPORE_RANGE = 10;
 
     /**
@@ -33,7 +38,7 @@ public record RaycastSporeArea(BlockState state, BlockPos center, int range) {
      * @param world  The world instance.
      * @param random The random instance.
      * @param count  The number of particles to spawn.
-     * @see RaycastSporeArea#hasLineOfSight(World, Vec3d)
+     * @see RaycastedSporeArea#hasLineOfSight(World, Vec3d)
      */
     public void addParticles(World world, Random random, int count) {
         for (int i = 0; i < count; i++) {
@@ -55,7 +60,7 @@ public record RaycastSporeArea(BlockState state, BlockPos center, int range) {
     }
 
     /**
-     * Calculates a box measuring {@link RaycastSporeArea#range}^3, shrunk in accordance with the direction of the block
+     * Calculates a box measuring ({@link RaycastedSporeArea#range} * 2) ^ 3, shrunk in accordance with the direction of the block
      * the spore blossom is resting on. This prevents particles from attempting to spawn behind the spore blossom.
      */
     private Box calculateOrGetBox() {
@@ -72,7 +77,7 @@ public record RaycastSporeArea(BlockState state, BlockPos center, int range) {
     /**
      * @param random The random instance.
      * @return A set of three doubles representing the coordinates of a random position inside the box calculated by
-     * {@link RaycastSporeArea#calculateOrGetBox()}.
+     * {@link RaycastedSporeArea#calculateOrGetBox()}.
      */
     private Vec3d getRandomPosInBox(Random random) {
         Box box = this.calculateOrGetBox();
@@ -100,13 +105,14 @@ public record RaycastSporeArea(BlockState state, BlockPos center, int range) {
      * collidable blocks along the way.
      */
     private boolean hasLineOfSight(World world, Vec3d pos) {
-        Vec3d center = Vec3d.ofCenter(this.center);
-
         //? if <1.20.4 {
-        /*if (MinecraftClient.getInstance().player == null)
+        /*ClientPlayerEntity player = MinecraftClient.getInstance().player;
+
+        if (player == null)
             return false;
         *///?}
 
+        Vec3d center = Vec3d.ofCenter(this.center);
         RaycastContext ctx = new RaycastContext(pos, center, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, /*$ fifth_raycast_arg >>*/ ShapeContext.absent() );
 
         BlockHitResult blockHitResult = world.raycast(ctx);
