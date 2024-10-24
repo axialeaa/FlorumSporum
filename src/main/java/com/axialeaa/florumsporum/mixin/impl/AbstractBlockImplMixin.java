@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
-//? if >=1.21.2
+//? if >=1.21.3
 import net.minecraft.world.block.WireOrientation;
 
 import /*$ random_import >>*/ net.minecraft.util.math.random.Random ;
@@ -35,15 +35,15 @@ public class AbstractBlockImplMixin {
     }
 
     @WrapMethod(method = "neighborUpdate")
-        //? if <=1.21.1 {
-    /*public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, Operation<Void> original) {
-        original.call(state, world, pos, sourceBlock, sourcePos, notify);
-    }
-    *///?} else {
+    //? if >=1.21.3 {
     public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify, Operation<Void> original) {
         original.call(state, world, pos, sourceBlock, wireOrientation, notify);
     }
-    //?}
+    //?} else {
+    /*public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, Operation<Void> original) {
+        original.call(state, world, pos, sourceBlock, sourcePos, notify);
+    }
+    *///?}
 
     //? if >1.20.4 {
     @WrapMethod(method = "hasRandomTicks")

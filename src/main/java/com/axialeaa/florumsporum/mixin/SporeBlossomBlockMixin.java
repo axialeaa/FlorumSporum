@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-//? if >=1.21.2
+//? if >=1.21.3
 import net.minecraft.world.block.WireOrientation;
 
 import /*$ random_import >>*/ net.minecraft.util.math.random.Random ;
