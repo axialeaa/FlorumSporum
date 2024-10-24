@@ -95,15 +95,19 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
         super.onEntityCollisionImpl(state, world, pos, entity, original);
     }
 
+    //? if >=1.21.3 {
     @Override
-    public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, /*? if <=1.21.1 {*/ /*BlockPos sourcePos *//*?} else {*/ WireOrientation wireOrientation /*?}*/, boolean notify, Operation<Void> original) {
-        if (!isFullyOpen(state) && (world.isReceivingRedstonePower(pos) || isInvalid(state))) {
-            world.setBlockState(pos, openFully(state));
-            playSound(world, pos, true);
-        }
-
-        super.neighborUpdateImpl(state, world, pos, sourceBlock, /*? if <=1.21.1 {*/ /*sourcePos *//*?} else {*/ wireOrientation /*?}*/, notify, original);
+    public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify, Operation<Void> original) {
+        neighborUpdate(state, world, pos);
+        super.neighborUpdateImpl(state, world, pos, sourceBlock, wireOrientation, notify, original);
     }
+    //?} else {
+    /*@Override
+    public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, Operation<Void> original) {
+        neighborUpdate(state, world, pos);
+        super.neighborUpdateImpl(state, world, pos, sourceBlock, sourcePos, notify, original);
+    }
+    *///?}
 
     @Override
     public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, Operation<Void> original) {
@@ -153,6 +157,14 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
     @Unique
     private void scheduleBlockTick(World world, BlockPos pos, int delay) {
         /*$ schedule_block_tick*/ world.scheduleBlockTick(pos, thisBlock, delay);
+    }
+
+    @Unique
+    private static void neighborUpdate(BlockState state, World world, BlockPos pos) {
+        if (!isFullyOpen(state) && (world.isReceivingRedstonePower(pos) || isInvalid(state))) {
+            world.setBlockState(pos, openFully(state));
+            playSound(world, pos, true);
+        }
     }
 
 }
