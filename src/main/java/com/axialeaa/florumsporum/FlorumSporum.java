@@ -23,8 +23,8 @@ public class FlorumSporum implements ModInitializer {
         FlorumSporumSoundEvents.init();
     }
 
-    public static Identifier id(String name) {
-        return /*$ identifier*/ Identifier.of(MOD_ID, name);
+    public static Identifier id(String path) {
+        return /*$ identifier*/ Identifier.of(MOD_ID, path);
     }
 
 }

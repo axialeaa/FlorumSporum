@@ -1,2 +1,0 @@
-check and fix placed_feature and loot_table files (may need full versioning)
-add 32x pack

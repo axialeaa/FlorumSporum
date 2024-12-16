@@ -1,25 +1,22 @@
 plugins {
 	id 'fabric-loom' version '1.8-SNAPSHOT'
 	id 'maven-publish'
+	id "me.modmuss50.mod-publish-plugin" version "0.8.3"
 }
 
 def mcVersion = stonecutter.current.version
 
-version = property("mod_version") + "+" + mcVersion
+version = "${property("mod_version")}+$mcVersion"
 group = property("maven_group")
 
 base {
-	archivesName = property("archives_base_name")
+	archivesName = property("mod_id")
 }
 
 stonecutter {
-	swap("random_import",		   eval(mcVersion, ">=1.19.2") ? "net.minecraft.util.math.random.Random" : "java.util.Random")
-	swap("translatable",		   eval(mcVersion, ">=1.19.2") ? "Text::translatable" : "TranslatableText::new")
-	swap("pack_name",			   eval(mcVersion, ">=1.19.3") ? "translated" : "String.valueOf(translated)")
-	swap("register_sound",		   eval(mcVersion, ">=1.19.3") ? "Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));" : "Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));")
 	swap("modify_settings_target", eval(mcVersion, ">=1.20.1") ? "\"mapColor(Lnet/minecraft/block/MapColor;)\"" : "\"of(Lnet/minecraft/block/Material;)\"")
 	swap("fifth_raycast_arg", 	   eval(mcVersion, ">=1.20.4") ? "ShapeContext.absent()" : "player")
-	swap("identifier",			   eval(mcVersion, ">=1.21.1") ? "Identifier.of(MOD_ID, name);" : "new Identifier(MOD_ID, name);")
+	swap("identifier",			   eval(mcVersion, ">=1.21.1") ? "Identifier.of(MOD_ID, path);" : "new Identifier(MOD_ID, path);")
 	swap("direction_property",     eval(mcVersion, ">=1.21.2") ? "EnumProperty<Direction>" : "DirectionProperty")
 
 	def simpleParticleType = eval(mcVersion, ">=1.20.6") ? "SimpleParticleType" : "DefaultParticleType"
@@ -29,56 +26,90 @@ stonecutter {
 
 	def netMc = "net.minecraft."
 
-	swap("modify_settings_import", netMc + "block." + (eval(mcVersion, ">=1.20.1") ? "MapColor" : "Material"))
+	swap("modify_settings_import", "${netMc}block.${eval(mcVersion, ">=1.20.1") ? "MapColor" : "Material"}")
 
-	def scheduleBlockTick
+	swap("particle_group_import") {
+		def particleGroupImport = netMc
 
-	if (eval(mcVersion, "1.17.1"))
-		scheduleBlockTick = "world.getBlockTickScheduler().schedule(pos, thisBlock, delay);"
-	else if (eval(mcVersion, "<=1.19.2"))
-		scheduleBlockTick = "world.createAndScheduleBlockTick(pos, thisBlock, delay);"
-	else scheduleBlockTick = "world.scheduleBlockTick(pos, thisBlock, delay);"
+		if (eval(mcVersion, "<1.21.1"))
+			particleGroupImport += "client."
 
-	swap("schedule_block_tick", scheduleBlockTick)
+		particleGroupImport + "particle.ParticleGroup"
+	}
+}
 
-	def particleGroupImport = netMc
+publishMods {
+	file = remapJar.archiveFile
+	changelog = rootProject.file("CHANGELOG.md").text
+	type = STABLE
+	displayName = "${property("mod_name")} ${property("mod_version")} ($mcVersion) - ${property("update_name")}"
+	modLoaders.add("fabric")
+	version = property("mod_version")
 
-	if (eval(mcVersion, "<1.21.1"))
-		particleGroupImport += "client."
+	modrinth {
+		accessToken = providers.gradleProperty("secrets.modrinth_token")
+		projectId = property("modrinth_project_id")
 
-	particleGroupImport += "particle.ParticleGroup"
+		for (String version : property("modrinth_versions").toString().split(' '))
+			minecraftVersions.add(version)
 
-	swap("particle_group_import", particleGroupImport)
+		requires {
+			slug = "fabric-api" // 🐌
+		}
+	}
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${mcVersion}"
+	minecraft "com.mojang:minecraft:$mcVersion"
 	mappings "net.fabricmc:yarn:${property("yarn_mappings")}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${property("loader_version")}"
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}"
 }
 
+def javaVersion = stonecutter.eval(mcVersion, ">=1.20.6") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+def javaVersionNumber = javaVersion.ordinal() + 1
+
+tasks.register('copyBuild', Copy) {
+	from("${layout.buildDirectory.get()}/libs")
+	into("${rootDir}/libs")
+}
+
+tasks.build.finalizedBy("copyBuild")
+
 processResources {
-	inputs.property("version", version)
+	inputs.property("id", project.property("mod_id"))
+	inputs.property("name", project.property("mod_name"))
+	inputs.property("version", project.property("mod_version"))
+	inputs.property("target", project.property("target_version"))
+	inputs.property("java_version", javaVersionNumber)
+
+	def map = [
+		"id": project.property("mod_id"),
+		"name": project.property("mod_name"),
+		"version": project.property("mod_version"),
+		"target": project.property("target_version"),
+		"java_version": javaVersionNumber
+	]
 
 	filesMatching("fabric.mod.json") {
-		expand "version": version,
-				"target": project.property("target_version")
+		expand map
 	}
 }
 
-def javaVersion = stonecutter.eval(mcVersion, ">=1.20.6") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
-
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = javaVersion.ordinal() + 1
+	it.options.release = javaVersionNumber
 }
 
-if (stonecutter.current.isActive) { // run configs for non-active version would be invalid
+if (stonecutter.current.isActive) {
 	loom {
 		runConfigs.all {
-			ideConfigGenerated = true // generate IDE tasks for running client, server and testmod, datagen if those are present
-			runDir "../../run" // use a global run directory for all versions
+			ideConfigGenerated = true
+			vmArgs("-Dmixin.debug.export=true")
+			runDir "../../run"
+
+			if (environment == "client")
+				programArgs("--username=axialeaa")
 		}
 	}
 }

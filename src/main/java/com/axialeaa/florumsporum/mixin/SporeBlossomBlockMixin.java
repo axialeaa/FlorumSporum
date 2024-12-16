@@ -18,6 +18,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
@@ -33,14 +35,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 //? if >=1.21.3
 import net.minecraft.world.block.WireOrientation;
 
-import /*$ random_import >>*/ net.minecraft.util.math.random.Random ;
-
 import static com.axialeaa.florumsporum.util.FlorumSporumUtils.*;
 
 @Mixin(SporeBlossomBlock.class)
 public class SporeBlossomBlockMixin extends BlockImplMixin {
 
-    @Unique private final Block thisBlock = Block.class.cast(this);
+    @Unique private final Block thisBlock = (Block) (Object) this;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void registerDefaultState(AbstractBlock.Settings settings, CallbackInfo ci) {
@@ -54,16 +54,15 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
 
     @ModifyConstant(method = "randomDisplayTick", constant = @Constant(intValue = 14))
     public int addSporeArea(int constant, @Local(argsOnly = true) BlockState state, @Local(argsOnly = true) World world, @Local(argsOnly = true) BlockPos pos, @Local(argsOnly = true) Random random) {
-        if (isClosed(state))
-            return 0;
+        if (!isClosed(state)) {
+            float delta = (float) getAge(state) / 3;
 
-        float delta = (float) getAge(state) / 3;
+            int count = MathHelper.lerp(delta, 0, constant);
+            int range = MathHelper.lerp(delta, 0, RaycastedSporeArea.MAX_SPORE_RANGE);
 
-        int count = lerp(delta, constant);
-        int range = lerp(delta, RaycastedSporeArea.MAX_SPORE_RANGE);
-
-        RaycastedSporeArea sporeArea = new RaycastedSporeArea(state, pos, range);
-        sporeArea.addParticles(world, random, count);
+            RaycastedSporeArea sporeArea = new RaycastedSporeArea(state, pos, range);
+            sporeArea.addParticles(world, random, count);
+        }
 
         return 0;
     }
@@ -156,7 +155,7 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
 
     @Unique
     private void scheduleBlockTick(World world, BlockPos pos, int delay) {
-        /*$ schedule_block_tick*/ world.scheduleBlockTick(pos, thisBlock, delay);
+        world.scheduleBlockTick(pos, thisBlock, delay);
     }
 
     @Unique

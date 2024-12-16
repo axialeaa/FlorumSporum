@@ -6,6 +6,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
@@ -16,7 +17,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.client.MinecraftClient;
 *///?}
 
-import /*$ random_import >>*/ net.minecraft.util.math.random.Random ;
+import static com.axialeaa.florumsporum.util.FlorumSporumUtils.*;
 
 /**
  * Creates a box and spawns a certain number of {@link ParticleTypes#SPORE_BLOSSOM_AIR} particles inside it, making sure
@@ -65,7 +66,7 @@ public record RaycastedSporeArea(BlockState state, BlockPos center, int range) {
      */
     private Box calculateOrGetBox() {
         Box box = new Box(-this.range, -this.range, -this.range, this.range, this.range, this.range);
-        Direction supporting = FlorumSporumUtils.getSupportingDir(this.state);
+        Direction supporting = getSupportingDir(this.state);
 
         return box.shrink(
             supporting.getOffsetX() * this.range,

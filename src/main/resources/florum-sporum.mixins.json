@@ -10,13 +10,13 @@
     "impl.AbstractBlockImplMixin",
     "impl.BlockImplMixin"
   ],
-  "injectors": {
-    "defaultRequire": 1
-  },
   "client": [
     "SporeBlossomAirFactoryMixin",
     "WaterSuspendParticleMixin",
     "accessor.ParticleAccessor",
     "impl.ParticleImplMixin"
-  ]
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

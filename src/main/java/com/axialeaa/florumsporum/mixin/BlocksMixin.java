@@ -1,6 +1,5 @@
 package com.axialeaa.florumsporum.mixin;
 
-import com.axialeaa.florumsporum.util.FlorumSporumUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.AbstractBlock;
@@ -11,18 +10,14 @@ import org.spongepowered.asm.mixin.injection.Slice;
 
 import /*$ modify_settings_import >>*/ net.minecraft.block.MapColor ;
 
+import static com.axialeaa.florumsporum.util.FlorumSporumUtils.*;
+
 @Mixin(Blocks.class)
 public class BlocksMixin {
 
     @WrapOperation(method = "<clinit>", slice = @Slice(from = @At(value = "CONSTANT", args = "stringValue=spore_blossom")), at = @At(value = "INVOKE", target = "Lnet/minecraft/block/AbstractBlock$Settings;" + /*$ modify_settings_target >>*/ "mapColor(Lnet/minecraft/block/MapColor;)" + "Lnet/minecraft/block/AbstractBlock$Settings;", ordinal = 0))
-    private static AbstractBlock.Settings modifySettings(
-        //? if >=1.20.1 {
-        AbstractBlock.Settings instance, MapColor color, Operation<AbstractBlock.Settings> original) {
-        return original.call(instance, color).mapColor(FlorumSporumUtils.MAP_COLOR).ticksRandomly();
-        //?} else {
-        /*Material material, Operation<AbstractBlock.Settings> original) {
-        return AbstractBlock.Settings.of(material, FlorumSporumUtils.MAP_COLOR).ticksRandomly();
-        *///?}
+    private static AbstractBlock.Settings modifySettings(AbstractBlock.Settings instance, MapColor color, Operation<AbstractBlock.Settings> original) {
+        return original.call(instance, color).mapColor(MAP_COLOR).ticksRandomly();
     }
 
 }

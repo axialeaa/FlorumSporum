@@ -8,13 +8,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
 //? if >=1.21.3
 import net.minecraft.world.block.WireOrientation;
-
-import /*$ random_import >>*/ net.minecraft.util.math.random.Random ;
 
 @Mixin(AbstractBlock.class)
 public class AbstractBlockImplMixin {

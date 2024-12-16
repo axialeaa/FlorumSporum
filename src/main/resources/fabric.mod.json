@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "florum-sporum",
+	"id": "${id}",
 	"version": "${version}",
-	"name": "Florum Sporum",
+	"name": "${name}",
 	"description": "Breathing new life into the spore blossom without undoing any of Mojang's work!",
 	"authors": [
 		"axialeaa"
@@ -40,6 +40,6 @@
 		"fabricloader": ">=0.16.7",
 		"fabric": "*",
 		"minecraft": "${target}",
-		"java": ">=17"
+		"java": ">=${java_version}"
     }
 }

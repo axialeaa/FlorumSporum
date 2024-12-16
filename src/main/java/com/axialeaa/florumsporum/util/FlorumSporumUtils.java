@@ -2,6 +2,7 @@ package com.axialeaa.florumsporum.util;
 
 import com.axialeaa.florumsporum.mixin.SporeBlossomBlockMixin;
 import com.axialeaa.florumsporum.registry.FlorumSporumSoundEvents;
+import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.MapColor;
@@ -70,13 +71,13 @@ public class FlorumSporumUtils {
      * Defines the spore blossom outline shapes for each possible facing direction.
      * @see FlorumSporumUtils#getShapeForState(BlockState)
      */
-    private static final EnumMap<Direction, VoxelShape> FACING_DIR_TO_SHAPE_MAP = Util.make(new EnumMap<>(Direction.class), shapes -> {
-        shapes.put(Direction.DOWN,  Block.createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0));
-        shapes.put(Direction.UP,    Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 3.0, 14.0));
-        shapes.put(Direction.NORTH, Block.createCuboidShape(2.0, 2.0, 13.0, 14.0, 14.0, 16.0));
-        shapes.put(Direction.SOUTH, Block.createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 3.0));
-        shapes.put(Direction.WEST,  Block.createCuboidShape(13.0, 2.0, 2.0, 16.0, 14.0, 14.0));
-        shapes.put(Direction.EAST,  Block.createCuboidShape(0.0, 2.0, 2.0, 3.0, 14.0, 14.0));
+    private static final EnumMap<Direction, VoxelShape> FACING_DIR_TO_SHAPE_MAP = Util.make(Maps.newEnumMap(Direction.class), map -> {
+        map.put(Direction.DOWN,  Block.createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0));
+        map.put(Direction.UP,    Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 3.0, 14.0));
+        map.put(Direction.NORTH, Block.createCuboidShape(2.0, 2.0, 13.0, 14.0, 14.0, 16.0));
+        map.put(Direction.SOUTH, Block.createCuboidShape(2.0, 2.0, 0.0, 14.0, 14.0, 3.0));
+        map.put(Direction.WEST,  Block.createCuboidShape(13.0, 2.0, 2.0, 16.0, 14.0, 14.0));
+        map.put(Direction.EAST,  Block.createCuboidShape(0.0, 2.0, 2.0, 3.0, 14.0, 14.0));
     });
 
     /**
@@ -229,14 +230,6 @@ public class FlorumSporumUtils {
     public static void playSound(World world, BlockPos pos, boolean open) {
         SoundEvent sound = open ? FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN : FlorumSporumSoundEvents.SPORE_BLOSSOM_CLOSE;
         world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1.0F, MathHelper.nextBetween(world.getRandom(), 0.8F, 1.2F));
-    }
-
-    public static int lerp(float delta, int end) {
-        return lerp(delta, 0, end);
-    }
-
-    public static int lerp(float delta, int start, int end) {
-        return /*? if <=1.19.3 >>*/ /*(int)*/ MathHelper.lerp(delta, start, end);
     }
 
 }
