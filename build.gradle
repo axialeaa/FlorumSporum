@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.8-SNAPSHOT'
+	id 'fabric-loom' version '1.9-SNAPSHOT'
 	id 'maven-publish'
 	id "me.modmuss50.mod-publish-plugin" version "0.8.3"
 }
@@ -14,9 +14,14 @@ base {
 }
 
 stonecutter {
+	swap("mod_id", "\"${property("mod_id")}\";")
+	swap("mod_name", "\"${property("mod_name")}\";")
+
+	def netMc = "net.minecraft."
+
 	swap("modify_settings_target", eval(mcVersion, ">=1.20.1") ? "\"mapColor(Lnet/minecraft/block/MapColor;)\"" : "\"of(Lnet/minecraft/block/Material;)\"")
-	swap("fifth_raycast_arg", 	   eval(mcVersion, ">=1.20.4") ? "ShapeContext.absent()" : "player")
 	swap("identifier",			   eval(mcVersion, ">=1.21.1") ? "Identifier.of(MOD_ID, path);" : "new Identifier(MOD_ID, path);")
+	swap("tooltip_type_import",    netMc + (eval(mcVersion, ">=1.21.1") ? "item.tooltip.TooltipType" : "client.item.TooltipType"))
 	swap("direction_property",     eval(mcVersion, ">=1.21.2") ? "EnumProperty<Direction>" : "DirectionProperty")
 
 	def simpleParticleType = eval(mcVersion, ">=1.20.6") ? "SimpleParticleType" : "DefaultParticleType"
@@ -24,9 +29,8 @@ stonecutter {
 	swap("simple_particle_type", simpleParticleType)
 	swap("simple_particle_type_str", "\"$simpleParticleType\"")
 
-	def netMc = "net.minecraft."
-
 	swap("modify_settings_import", "${netMc}block.${eval(mcVersion, ">=1.20.1") ? "MapColor" : "Material"}")
+	swap("copy_state_function_import", "${netMc}loot.function.${eval(mcVersion, ">=1.20.6") ? "CopyStateLootFunction" : "CopyStateFunction"}")
 
 	swap("particle_group_import") {
 		def particleGroupImport = netMc
@@ -72,7 +76,7 @@ def javaVersionNumber = javaVersion.ordinal() + 1
 
 tasks.register('copyBuild', Copy) {
 	from("${layout.buildDirectory.get()}/libs")
-	into("${rootDir}/libs")
+	into("$rootDir/libs/${project.property("mod_version")}")
 }
 
 tasks.build.finalizedBy("copyBuild")
@@ -95,6 +99,25 @@ processResources {
 	filesMatching("fabric.mod.json") {
 		expand map
 	}
+
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+clean {
+	delete("$projectDir/src/main/generated")
+}
+
+if (stonecutter.eval(mcVersion, ">=1.21.4")) {
+	fabricApi {
+		configureDataGeneration() {
+			client = true
+		}
+	}
+}
+else {
+	fabricApi {
+		configureDataGeneration()
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -102,14 +125,29 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 if (stonecutter.current.isActive) {
+	rootProject.tasks.register("runActiveClient") {
+		group = "fabric"
+		dependsOn(tasks.named("runClient"))
+	}
+
 	loom {
+		runs {
+			client {
+				programArgs(["--username", "axialeaa", "--uuid", "dabdffa7-fdd2-4798-9f94-a518c7856163"])
+			}
+		}
 		runConfigs.all {
 			ideConfigGenerated = true
 			vmArgs("-Dmixin.debug.export=true")
 			runDir "../../run"
-
-			if (environment == "client")
-				programArgs("--username=axialeaa")
+		}
+		sourceSets {
+			main {
+				resources {
+					srcDir(project.file("src/main/generated"))
+					exclude(".cache")
+				}
+			}
 		}
 	}
 }
@@ -120,6 +158,8 @@ java {
 	sourceCompatibility = javaVersion
 	targetCompatibility = javaVersion
 }
+
+tasks.sourcesJar.duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
 jar {
 	from("LICENSE") {

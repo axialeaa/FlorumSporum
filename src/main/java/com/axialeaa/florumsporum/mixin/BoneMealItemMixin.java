@@ -27,7 +27,7 @@ public class BoneMealItemMixin {
 
         if (isMaxAge(blockState))
             Block.dropStack(world, pos, new ItemStack(block));
-        else world.setBlockState(pos, advanceAge(blockState));
+        else world.setBlockState(pos, advanceAge(world, pos, blockState));
     }
 
 }

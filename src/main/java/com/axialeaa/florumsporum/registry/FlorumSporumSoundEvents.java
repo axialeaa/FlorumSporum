@@ -8,16 +8,16 @@ import net.minecraft.util.Identifier;
 
 public class FlorumSporumSoundEvents {
 
-    public static SoundEvent SPORE_BLOSSOM_CLOSE = register("block.spore_blossom.close");
-    public static SoundEvent SPORE_BLOSSOM_OPEN = register("block.spore_blossom.open");
+    public static final SoundEvent SPORE_BLOSSOM_CLOSE = of("block.spore_blossom.close");
+    public static final SoundEvent SPORE_BLOSSOM_OPEN = of("block.spore_blossom.open");
 
-    private static SoundEvent register(String path) {
+    private static SoundEvent of(String path) {
         Identifier id = FlorumSporum.id(path);
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
 
     public static void init() {
-        FlorumSporum.LOGGER.info("Registered {} sound events!", FlorumSporum.MOD_NAME);
+        FlorumSporum.logRegistryInit("sound events");
     }
 
 }

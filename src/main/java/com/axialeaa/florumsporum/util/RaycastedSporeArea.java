@@ -25,64 +25,58 @@ import static com.axialeaa.florumsporum.util.FlorumSporumUtils.*;
  * created past walls; if the spore blossom is outside, the particles will stay outside.
  * @param state The spore blossom block state.
  * @param center The spore blossom position around which to spawn particles.
- * @param range The range around the spore blossom to spawn spore particles within.
  * @see SporeBlossomBlockMixin#addSporeArea(int, BlockState, World, BlockPos, Random)
  */
-public record RaycastedSporeArea(BlockState state, BlockPos center, int range) {
+public record RaycastedSporeArea(BlockState state, BlockPos center) {
 
-    public static final int MAX_SPORE_RANGE = 10;
+    public static final int SPORE_RANGE = 10;
+
+    public void addParticles(World world, Random random, int count) {
+        for (int i = 0; i < count; i++)
+            this.addParticle(world, random);
+    }
 
     /**
-     * Spawns {@code count} spore particles inside the box as long as there is a direct line of sight from the spore
+     * Spawns a spore particle inside the box as long as there is a direct line of sight from the spore
      * blossom to the particle spawn position.
      *
      * @param world  The world instance.
      * @param random The random instance.
-     * @param count  The number of particles to spawn.
-     * @see RaycastedSporeArea#hasLineOfSight(World, Vec3d)
+     * @see RaycastedSporeArea#hasUnblockedLineOfSight(World, Vec3d)
      */
-    public void addParticles(World world, Random random, int count) {
-        for (int i = 0; i < count; i++) {
-            Vec3d pos = this.getRandomPosInBox(random);
+    private void addParticle(World world, Random random) {
+        Vec3d pos = this.getRandomPosInBox(random, this.calculateBox());
 
-            if (!this.hasLineOfSight(world, pos))
-                continue;
+        if (!this.hasUnblockedLineOfSight(world, pos))
+            return;
 
-            world.addParticle(
-                ParticleTypes.SPORE_BLOSSOM_AIR,
-                pos.getX(),
-                pos.getY(),
-                pos.getZ(),
-                0.0,
-                0.0,
-                0.0
-            );
-        }
-    }
-
-    /**
-     * Calculates a box measuring ({@link RaycastedSporeArea#range} * 2) ^ 3, shrunk in accordance with the direction of the block
-     * the spore blossom is resting on. This prevents particles from attempting to spawn behind the spore blossom.
-     */
-    private Box calculateOrGetBox() {
-        Box box = new Box(-this.range, -this.range, -this.range, this.range, this.range, this.range);
-        Direction supporting = getSupportingDir(this.state);
-
-        return box.shrink(
-            supporting.getOffsetX() * this.range,
-            supporting.getOffsetY() * this.range,
-            supporting.getOffsetZ() * this.range
+        world.addParticle(
+            ParticleTypes.SPORE_BLOSSOM_AIR,
+            pos.getX(),
+            pos.getY(),
+            pos.getZ(),
+            0.0,
+            0.0,
+            0.0
         );
     }
 
     /**
-     * @param random The random instance.
-     * @return A set of three doubles representing the coordinates of a random position inside the box calculated by
-     * {@link RaycastedSporeArea#calculateOrGetBox()}.
+     * Calculates a box measuring ({@link RaycastedSporeArea#SPORE_RANGE} * 2) ^ 3, shrunk in accordance with the direction of the block
+     * the spore blossom is resting on. This prevents particles from attempting to spawn behind the spore blossom.
      */
-    private Vec3d getRandomPosInBox(Random random) {
-        Box box = this.calculateOrGetBox();
+    private Box calculateBox() {
+        Box box = new Box(-SPORE_RANGE, -SPORE_RANGE, -SPORE_RANGE, SPORE_RANGE, SPORE_RANGE, SPORE_RANGE);
+        Direction supporting = getSupportingDir(this.state);
 
+        return box.shrink(
+            supporting.getOffsetX() * SPORE_RANGE,
+            supporting.getOffsetY() * SPORE_RANGE,
+            supporting.getOffsetZ() * SPORE_RANGE
+        );
+    }
+
+    private Vec3d getRandomPosInBox(Random random, Box box) {
         Direction.Axis xAxis = Direction.Axis.X;
         Direction.Axis yAxis = Direction.Axis.Y;
         Direction.Axis zAxis = Direction.Axis.Z;
@@ -90,22 +84,15 @@ public record RaycastedSporeArea(BlockState state, BlockPos center, int range) {
         double minX = box.getMin(xAxis), minY = box.getMin(yAxis), minZ = box.getMin(zAxis);
         double maxX = box.getMax(xAxis), maxY = box.getMax(yAxis), maxZ = box.getMax(zAxis);
 
-        Vec3d vec3d = Vec3d.ofCenter(this.center);
-
-        return vec3d.add(
+        return Vec3d.add(
+            this.center,
             MathHelper.nextDouble(random, minX, maxX),
             MathHelper.nextDouble(random, minY, maxY),
             MathHelper.nextDouble(random, minZ, maxZ)
         );
     }
 
-    /**
-     * @param world The world instance.
-     * @param pos   The particle spawn position.
-     * @return true if there is an unobstructed line of sight from the spore blossom to {@code pos}, taking into account
-     * collidable blocks along the way.
-     */
-    private boolean hasLineOfSight(World world, Vec3d pos) {
+    private boolean hasUnblockedLineOfSight(World world, Vec3d pos) {
         //? if <1.20.4 {
         /*ClientPlayerEntity player = MinecraftClient.getInstance().player;
 
@@ -113,8 +100,12 @@ public record RaycastedSporeArea(BlockState state, BlockPos center, int range) {
             return false;
         *///?}
 
-        Vec3d center = Vec3d.ofCenter(this.center);
-        RaycastContext ctx = new RaycastContext(pos, center, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, /*$ fifth_raycast_arg >>*/ ShapeContext.absent() );
+        RaycastContext ctx = new RaycastContext(pos, Vec3d.of(this.center), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE,
+            //? if >=1.20.4 {
+            ShapeContext.absent()
+            //?} else
+            /*player*/
+        );
 
         BlockHitResult blockHitResult = world.raycast(ctx);
         BlockPos blockPos = blockHitResult.getBlockPos();

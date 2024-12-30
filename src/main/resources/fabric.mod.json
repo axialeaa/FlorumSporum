@@ -18,6 +18,9 @@
 	"icon": "assets/florum-sporum/icon.png",
 	"environment": "*",
 	"entrypoints": {
+		"fabric-datagen": [
+			"com.axialeaa.florumsporum.data.FlorumSporumDataGenerator"
+		],
 		"main": [
 			"com.axialeaa.florumsporum.FlorumSporum"
 		],
@@ -37,7 +40,7 @@
       "florum-sporum.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.16.7",
+		"fabricloader": ">=0.16.9",
 		"fabric": "*",
 		"minecraft": "${target}",
 		"java": ">=${java_version}"

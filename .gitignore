@@ -40,3 +40,4 @@ replay_*.log
 *.jfr
 /.github/workflows/build.yml
 /libs/
+/versions/*/src/main/generated/.cache/

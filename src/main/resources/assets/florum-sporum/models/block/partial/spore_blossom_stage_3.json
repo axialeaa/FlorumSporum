@@ -1,6 +1,0 @@
-{
-    "parent": "florum-sporum:block/template_spore_blossom_partial",
-    "textures": {
-        "flower": "block/spore_blossom"
-    }
-}
