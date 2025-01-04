@@ -5,10 +5,20 @@
 	"name": "${name}",
 	"description": "Breathing new life into the spore blossom without undoing any of Mojang's work!",
 	"authors": [
-		"axialeaa"
+		{
+			"name": "axialeaa",
+			"contact": {
+				"homepage": "https://github.com/axialeaa"
+			}
+		}
 	],
 	"contributors": [
-		"mpustovoi"
+		{
+			"name": "mpustovoi (ru_RU translations)",
+			"contact": {
+				"homepage": "https://github.com/mpustovoi"
+			}
+		}
 	],
 	"contact": {
 		"sources": "https://github.com/axialeaa/FlorumSporum",
@@ -32,7 +42,8 @@
 		"modmenu": {
 			"links": {
 				"modmenu.github_releases": "https://github.com/axialeaa/FlorumSporum/releases",
-				"modmenu.modrinth": "https://modrinth.com/mod/florum-sporum"
+				"modmenu.modrinth": "https://modrinth.com/mod/florum-sporum",
+				"modmenu.discord": "https://discord.gg/hfVmpeQhe8"
 			}
 		}
 	},

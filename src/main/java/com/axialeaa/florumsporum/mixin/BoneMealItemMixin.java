@@ -20,13 +20,12 @@ public class BoneMealItemMixin {
     @Inject(method = "useOnFertilizable", at = @At("TAIL"))
     private static void fertilizeSporeBlossom(ItemStack stack, World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         BlockState blockState = world.getBlockState(pos);
-        Block block = blockState.getBlock();
 
-        if (!(block instanceof SporeBlossomBlock))
+        if (!(blockState.getBlock() instanceof SporeBlossomBlock))
             return;
 
         if (isMaxAge(blockState))
-            Block.dropStack(world, pos, new ItemStack(block));
+            Block.dropStack(world, pos, createSporeBlossomStack(0));
         else world.setBlockState(pos, advanceAge(world, pos, blockState));
     }
 

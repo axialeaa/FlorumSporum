@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import net.minecraft.world.block.WireOrientation;
 
 //? if >=1.21.4 {
-/*import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldView;
-*///?}
+//?}
 
 @Mixin(AbstractBlock.class)
 public class AbstractBlockImplMixin {
@@ -39,11 +39,11 @@ public class AbstractBlockImplMixin {
     }
 
     //? if >=1.21.4 {
-    /*@WrapMethod(method = "getPickStack")
+    @WrapMethod(method = "getPickStack")
     public ItemStack getPickStackImpl(WorldView world, BlockPos pos, BlockState state, boolean includeData, Operation<ItemStack> original) {
         return original.call(world, pos, state, includeData);
     }
-    *///?}
+    //?}
 
     @WrapMethod(method = "neighborUpdate")
     //? if >=1.21.3 {

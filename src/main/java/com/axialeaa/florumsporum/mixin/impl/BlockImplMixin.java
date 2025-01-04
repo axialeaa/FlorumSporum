@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import java.util.List;
 
 //? if <1.21.4 >=1.20.4
-import net.minecraft.world.WorldView;
+/*import net.minecraft.world.WorldView;*/
 
 //? if >=1.20.6 {
 import net.minecraft.item.Item;
@@ -62,11 +62,11 @@ public class BlockImplMixin extends AbstractBlockImplMixin {
         return original.call(world, pos, state);
     }
     *///?} elif <1.21.4 {
-    @WrapMethod(method = "getPickStack")
+    /*@WrapMethod(method = "getPickStack")
     public ItemStack getPickStackImpl(WorldView world, BlockPos pos, BlockState state, Operation<ItemStack> original) {
         return original.call(world, pos, state);
     }
-    //?}
+    *///?}
 
     //? <=1.20.4 {
     /*@WrapMethod(method = "hasRandomTicks")

@@ -10,11 +10,11 @@ import net.minecraft.recipe.book.RecipeCategory;
 /*import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import java.util.function.Consumer;
 *///?} elif <1.21.4 {
-import net.minecraft.data.server.recipe.RecipeExporter;
-//?} else {
-/*import net.minecraft.data.recipe.RecipeExporter;
+/*import net.minecraft.data.server.recipe.RecipeExporter;
+*///?} else {
+import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.data.recipe.RecipeGenerator;
-*///?}
+//?}
 
 //? if >=1.20.6 {
 import net.minecraft.registry.RegistryWrapper;
@@ -29,7 +29,7 @@ import net.minecraft.registry.RegistryKeys;
 //? if <1.21.3 {
 /*import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 *///?} elif 1.21.3
-import net.minecraft.data.server.recipe.RecipeGenerator;
+/*import net.minecraft.data.server.recipe.RecipeGenerator;*/
 
 public class RecipeProvider extends FabricRecipeProvider {
 

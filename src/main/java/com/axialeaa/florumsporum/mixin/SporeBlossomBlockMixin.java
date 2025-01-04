@@ -111,9 +111,9 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
     *///?} else {
     public ItemStack getPickStackImpl(WorldView world, BlockPos pos, BlockState state,
                                       //? if >=1.21.4
-                                      /*boolean includeData,*/
+                                      boolean includeData,
                                       Operation<ItemStack> original) {
-        ItemStack itemStack = super.getPickStackImpl(world, pos, state, /*? if >=1.21.4 >>*/ /*includeData,*/ original);
+        ItemStack itemStack = super.getPickStackImpl(world, pos, state, /*? if >=1.21.4 >>*/ includeData, original);
         return addDataForAge(itemStack, getAge(state));
     }
     //?}

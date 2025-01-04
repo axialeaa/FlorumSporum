@@ -1,7 +1,7 @@
 {
   "block.spore_blossom.growth_stage": "Growth Stage: %d",
   "resourcePack.florum-sporum:32x_upscale.description": "Based on §8§nhttps://faithfulpack.net",
-  "resourcePack.florum-sporum:32x_upscale.name": "Florum Sporum: 32x Upscale",
+  "resourcePack.florum-sporum:32x_upscale.name": "%s: 32x Upscale",
   "subtitles.block.spore_blossom.close": "Spore blossom recoils",
   "subtitles.block.spore_blossom.open": "Spore blossom unfurls"
 }

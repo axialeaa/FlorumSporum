@@ -10,17 +10,17 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 
 //? if >=1.21.4 {
-/*import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.util.Util;
 import net.minecraft.client.data.*;
 import net.minecraft.client.render.item.model.ItemModel;
 import java.util.HashMap;
-*///?} else {
-import net.minecraft.data.client.*;
+//?} else {
+/*import net.minecraft.data.client.*;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-//?}
+*///?}
 
 public class ModelProvider extends FabricModelProvider {
 
@@ -43,7 +43,7 @@ public class ModelProvider extends FabricModelProvider {
         );
 
         //? if >=1.21.4 {
-        /*generator.itemModelOutput.accept(Items.SPORE_BLOSSOM, ItemModels.select(
+        generator.itemModelOutput.accept(Items.SPORE_BLOSSOM, ItemModels.select(
             FlorumSporumUtils.AGE,
             getItemModelForAge(3),
             Util.make(new HashMap<>(4), map -> {
@@ -51,14 +51,14 @@ public class ModelProvider extends FabricModelProvider {
                     map.put(age, getItemModelForAge(age));
             })
         ));
-        *///?} else
-        generator.excludeFromSimpleItemModelGeneration(Blocks.SPORE_BLOSSOM);
+        //?} else
+        /*generator.excludeFromSimpleItemModelGeneration(Blocks.SPORE_BLOSSOM);*/
     }
 
     @Override
     public void generateItemModels(ItemModelGenerator generator) {
         //? if <1.21.4 {
-        generator.writer.accept(ModelIds.getItemModelId(Items.SPORE_BLOSSOM), () -> {
+        /*generator.writer.accept(ModelIds.getItemModelId(Items.SPORE_BLOSSOM), () -> {
             JsonObject root = new JsonObject();
             JsonArray overrides = new JsonArray();
 
@@ -80,7 +80,7 @@ public class ModelProvider extends FabricModelProvider {
 
             return root;
         });
-        //?}
+        *///?}
     }
 
     private static BlockStateVariantMap getBlockStates() {
@@ -102,10 +102,10 @@ public class ModelProvider extends FabricModelProvider {
     }
 
     //? if >=1.21.4 {
-    /*private static ItemModel.Unbaked getItemModelForAge(int age) {
+    private static ItemModel.Unbaked getItemModelForAge(int age) {
         return ItemModels.basic(getId(age));
     }
-    *///?}
+    //?}
 
     private static void setModelIds(BlockStateModelGenerator generator) {
         for (int age = 0; age <= 3; age++) {

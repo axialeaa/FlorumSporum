@@ -6,12 +6,12 @@ import com.axialeaa.florumsporum.util.Openness;
 import java.util.Optional;
 
 //? if >=1.21.4 {
-/*import net.minecraft.client.data.Model;
+import net.minecraft.client.data.Model;
 import net.minecraft.client.data.TextureKey;
-*///?} else {
-import net.minecraft.data.client.Model;
+//?} else {
+/*import net.minecraft.data.client.Model;
 import net.minecraft.data.client.TextureKey;
-//?}
+*///?}
 
 public class FlorumSporumModels {
 
