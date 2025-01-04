@@ -58,7 +58,7 @@ publishMods {
 			minecraftVersions.add(version)
 
 		requires {
-			slug = "fabric-api" // 🐌
+			slug = "fabric-api"
 		}
 	}
 }
