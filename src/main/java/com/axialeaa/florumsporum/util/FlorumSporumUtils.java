@@ -23,6 +23,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -121,15 +122,17 @@ public class FlorumSporumUtils {
     }
 
     public static BlockState advanceAge(World world, BlockPos pos, BlockState state) {
-        return openFullyWithSound(world, pos, state.cycle(AGE));
+        return openFullyWithSoundEmitEvent(world, pos, state.cycle(AGE));
     }
 
     public static BlockState recoil(BlockState state) {
         return state.with(OPENNESS, Openness.CLOSED);
     }
 
-    public static BlockState recoilWithSound(World world, BlockPos pos, BlockState state) {
+    public static BlockState recoilWithSoundEmitEvent(World world, BlockPos pos, BlockState state) {
+        world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
         playSound(world, pos, false);
+
         return recoil(state);
     }
 
@@ -137,8 +140,10 @@ public class FlorumSporumUtils {
         return state.with(OPENNESS, Openness.byAge(state));
     }
 
-    public static BlockState openFullyWithSound(World world, BlockPos pos, BlockState state) {
+    public static BlockState openFullyWithSoundEmitEvent(World world, BlockPos pos, BlockState state) {
+        world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
         playSound(world, pos, true);
+
         return openFully(state);
     }
 
@@ -146,8 +151,10 @@ public class FlorumSporumUtils {
         return state.cycle(OPENNESS);
     }
 
-    public static BlockState unfurlWithSound(World world, BlockPos pos, BlockState state) {
+    public static BlockState unfurlWithSoundEmitEvent(World world, BlockPos pos, BlockState state) {
+        world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
         playSound(world, pos, true);
+
         return unfurl(state);
     }
 

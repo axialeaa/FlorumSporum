@@ -50,7 +50,7 @@ public class RecipeProvider extends FabricRecipeProvider {
 
             @Override
             public void generate() {
-                this.createShapeless(RecipeCategory.MISC, Items.PINK_DYE, 2)
+                this.createShapeless(RecipeCategory.MISC, Items.PINK_DYE)
                     .input(Items.SPORE_BLOSSOM)
                     .group("pink_dye")
                     .criterion(hasItem(Items.SPORE_BLOSSOM), this.conditionsFromItem(Items.SPORE_BLOSSOM))
@@ -67,7 +67,7 @@ public class RecipeProvider extends FabricRecipeProvider {
         ^///?} else
         RecipeExporter exporter
     ) {
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, Items.PINK_DYE, 2)
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, Items.PINK_DYE)
             .input(Items.SPORE_BLOSSOM)
             .criterion(hasItem(Items.SPORE_BLOSSOM), conditionsFromItem(Items.SPORE_BLOSSOM))
             .group("pink_dye")

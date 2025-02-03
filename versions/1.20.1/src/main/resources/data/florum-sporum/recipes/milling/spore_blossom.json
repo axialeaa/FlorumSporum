@@ -8,16 +8,12 @@
   "processingTime": 100,
   "results": [
     {
-      "count": 3,
+      "count": 2,
       "item": "minecraft:pink_dye"
     },
     {
-      "chance": 0.25,
+      "chance": 0.05,
       "item": "minecraft:yellow_dye"
-    },
-    {
-      "chance": 0.25,
-      "item": "minecraft:pink_dye"
     }
   ],
   "fabric:load_conditions": [

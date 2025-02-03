@@ -151,7 +151,7 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
     @Override
     public void onEntityCollisionImpl(BlockState state, World world, BlockPos pos, Entity entity, Operation<Void> original) {
         if (!world.isClient() && CAUSES_RECOIL.test(entity) && !world.isReceivingRedstonePower(pos) && !isClosed(state)) {
-            world.setBlockState(pos, recoilWithSound(world, pos, state));
+            world.setBlockState(pos, recoilWithSoundEmitEvent(world, pos, state));
             world.scheduleBlockTick(pos, this.asBlock, 1);
         }
 
@@ -177,7 +177,7 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
         if (hasEntityAt(world, pos))
             world.scheduleBlockTick(pos, this.asBlock, ENTITY_CHECK_INTERVAL);
         else if (!isFullyOpen(state)) {
-            world.setBlockState(pos, unfurlWithSound(world, pos, state));
+            world.setBlockState(pos, unfurlWithSoundEmitEvent(world, pos, state));
             world.scheduleBlockTick(pos, this.asBlock, UNFURL_INTERVAL);
         }
 

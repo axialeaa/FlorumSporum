@@ -31,6 +31,7 @@ stonecutter {
 
 	swap("modify_settings_import", "${netMc}block.${eval(mcVersion, ">=1.20.1") ? "MapColor" : "Material"}")
 	swap("copy_state_function_import", "${netMc}loot.function.${eval(mcVersion, ">=1.20.6") ? "CopyStateLootFunction" : "CopyStateFunction"}")
+	swap("particle_util_import", "${netMc}${eval(mcVersion, ">=1.21.1") ? "particle." : "client.util."}ParticleUtil")
 
 	swap("particle_group_import") {
 		def particleGroupImport = netMc
@@ -145,7 +146,6 @@ if (stonecutter.current.isActive) {
 			main {
 				resources {
 					srcDir(project.file("src/main/generated"))
-					exclude(".cache")
 				}
 			}
 		}

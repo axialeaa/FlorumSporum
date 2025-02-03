@@ -61,7 +61,7 @@ public class FlorumSporumClient implements ClientModInitializer {
         Text translation = Text.translatable("resourcePack.%s.name".formatted(id), FlorumSporum.MOD_NAME);
         ResourceManagerHelper.registerBuiltinResourcePack(id, FlorumSporum.CONTAINER, translation, ResourcePackActivationType.NORMAL);
 
-        FlorumSporum.LOGGER.info("Registered pack {} ({})!", translation.getString(), id);
+        FlorumSporum.LOGGER.info("Registered pack {}!", id);
     }
 
 }
