@@ -8,11 +8,13 @@
     "SporeBlossomBlockMixin",
     "accessor.BlockAccessor",
     "impl.AbstractBlockImplMixin",
-    "impl.BlockImplMixin"
+    "impl.BlockImplMixin",
+    "tooltip.ItemStackMixin"
   ],
   "client": [
     "SporeBlossomAirFactoryMixin",
     "WaterSuspendParticleMixin",
+    "accessor.BlockStateModelGeneratorAccessor",
     "accessor.ParticleAccessor",
     "impl.ParticleImplMixin"
   ],

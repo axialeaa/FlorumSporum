@@ -1,371 +1,371 @@
 {
   "variants": {
     "age=0,facing=down,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_0_ajar",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_ajar",
       "x": 90
     },
     "age=0,facing=down,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_0_closed",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_closed",
       "x": 90
     },
     "age=0,facing=down,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_0_full",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_full",
       "x": 90
     },
     "age=0,facing=down,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_0_partial",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_partial",
       "x": 90
     },
     "age=0,facing=east,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_0_ajar",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_ajar",
       "y": 90
     },
     "age=0,facing=east,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_0_closed",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_closed",
       "y": 90
     },
     "age=0,facing=east,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_0_full",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_full",
       "y": 90
     },
     "age=0,facing=east,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_0_partial",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_partial",
       "y": 90
     },
     "age=0,facing=north,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_0_ajar"
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_ajar"
     },
     "age=0,facing=north,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_0_closed"
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_closed"
     },
     "age=0,facing=north,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_0_full"
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_full"
     },
     "age=0,facing=north,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_0_partial"
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_partial"
     },
     "age=0,facing=south,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_0_ajar",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_ajar",
       "y": 180
     },
     "age=0,facing=south,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_0_closed",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_closed",
       "y": 180
     },
     "age=0,facing=south,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_0_full",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_full",
       "y": 180
     },
     "age=0,facing=south,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_0_partial",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_partial",
       "y": 180
     },
     "age=0,facing=up,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_0_ajar",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_ajar",
       "x": 270
     },
     "age=0,facing=up,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_0_closed",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_closed",
       "x": 270
     },
     "age=0,facing=up,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_0_full",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_full",
       "x": 270
     },
     "age=0,facing=up,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_0_partial",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_partial",
       "x": 270
     },
     "age=0,facing=west,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_0_ajar",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_ajar",
       "y": 270
     },
     "age=0,facing=west,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_0_closed",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_closed",
       "y": 270
     },
     "age=0,facing=west,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_0_full",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_full",
       "y": 270
     },
     "age=0,facing=west,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_0_partial",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_partial",
       "y": 270
     },
     "age=1,facing=down,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_1_ajar",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_ajar",
       "x": 90
     },
     "age=1,facing=down,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_1_closed",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_closed",
       "x": 90
     },
     "age=1,facing=down,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_1_full",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_full",
       "x": 90
     },
     "age=1,facing=down,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_1_partial",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_partial",
       "x": 90
     },
     "age=1,facing=east,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_1_ajar",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_ajar",
       "y": 90
     },
     "age=1,facing=east,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_1_closed",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_closed",
       "y": 90
     },
     "age=1,facing=east,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_1_full",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_full",
       "y": 90
     },
     "age=1,facing=east,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_1_partial",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_partial",
       "y": 90
     },
     "age=1,facing=north,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_1_ajar"
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_ajar"
     },
     "age=1,facing=north,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_1_closed"
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_closed"
     },
     "age=1,facing=north,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_1_full"
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_full"
     },
     "age=1,facing=north,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_1_partial"
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_partial"
     },
     "age=1,facing=south,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_1_ajar",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_ajar",
       "y": 180
     },
     "age=1,facing=south,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_1_closed",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_closed",
       "y": 180
     },
     "age=1,facing=south,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_1_full",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_full",
       "y": 180
     },
     "age=1,facing=south,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_1_partial",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_partial",
       "y": 180
     },
     "age=1,facing=up,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_1_ajar",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_ajar",
       "x": 270
     },
     "age=1,facing=up,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_1_closed",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_closed",
       "x": 270
     },
     "age=1,facing=up,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_1_full",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_full",
       "x": 270
     },
     "age=1,facing=up,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_1_partial",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_partial",
       "x": 270
     },
     "age=1,facing=west,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_1_ajar",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_ajar",
       "y": 270
     },
     "age=1,facing=west,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_1_closed",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_closed",
       "y": 270
     },
     "age=1,facing=west,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_1_full",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_full",
       "y": 270
     },
     "age=1,facing=west,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_1_partial",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_partial",
       "y": 270
     },
     "age=2,facing=down,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_2_ajar",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_ajar",
       "x": 90
     },
     "age=2,facing=down,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_2_closed",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_closed",
       "x": 90
     },
     "age=2,facing=down,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_2_full",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_full",
       "x": 90
     },
     "age=2,facing=down,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_2_partial",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_partial",
       "x": 90
     },
     "age=2,facing=east,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_2_ajar",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_ajar",
       "y": 90
     },
     "age=2,facing=east,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_2_closed",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_closed",
       "y": 90
     },
     "age=2,facing=east,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_2_full",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_full",
       "y": 90
     },
     "age=2,facing=east,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_2_partial",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_partial",
       "y": 90
     },
     "age=2,facing=north,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_2_ajar"
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_ajar"
     },
     "age=2,facing=north,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_2_closed"
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_closed"
     },
     "age=2,facing=north,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_2_full"
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_full"
     },
     "age=2,facing=north,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_2_partial"
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_partial"
     },
     "age=2,facing=south,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_2_ajar",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_ajar",
       "y": 180
     },
     "age=2,facing=south,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_2_closed",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_closed",
       "y": 180
     },
     "age=2,facing=south,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_2_full",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_full",
       "y": 180
     },
     "age=2,facing=south,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_2_partial",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_partial",
       "y": 180
     },
     "age=2,facing=up,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_2_ajar",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_ajar",
       "x": 270
     },
     "age=2,facing=up,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_2_closed",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_closed",
       "x": 270
     },
     "age=2,facing=up,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_2_full",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_full",
       "x": 270
     },
     "age=2,facing=up,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_2_partial",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_partial",
       "x": 270
     },
     "age=2,facing=west,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_2_ajar",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_ajar",
       "y": 270
     },
     "age=2,facing=west,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_2_closed",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_closed",
       "y": 270
     },
     "age=2,facing=west,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_2_full",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_full",
       "y": 270
     },
     "age=2,facing=west,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_2_partial",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_partial",
       "y": 270
     },
     "age=3,facing=down,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_3_ajar",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_ajar",
       "x": 90
     },
     "age=3,facing=down,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_3_closed",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_closed",
       "x": 90
     },
     "age=3,facing=down,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_3_full",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_full",
       "x": 90
     },
     "age=3,facing=down,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_3_partial",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_partial",
       "x": 90
     },
     "age=3,facing=east,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_3_ajar",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_ajar",
       "y": 90
     },
     "age=3,facing=east,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_3_closed",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_closed",
       "y": 90
     },
     "age=3,facing=east,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_3_full",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_full",
       "y": 90
     },
     "age=3,facing=east,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_3_partial",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_partial",
       "y": 90
     },
     "age=3,facing=north,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_3_ajar"
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_ajar"
     },
     "age=3,facing=north,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_3_closed"
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_closed"
     },
     "age=3,facing=north,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_3_full"
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_full"
     },
     "age=3,facing=north,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_3_partial"
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_partial"
     },
     "age=3,facing=south,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_3_ajar",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_ajar",
       "y": 180
     },
     "age=3,facing=south,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_3_closed",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_closed",
       "y": 180
     },
     "age=3,facing=south,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_3_full",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_full",
       "y": 180
     },
     "age=3,facing=south,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_3_partial",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_partial",
       "y": 180
     },
     "age=3,facing=up,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_3_ajar",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_ajar",
       "x": 270
     },
     "age=3,facing=up,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_3_closed",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_closed",
       "x": 270
     },
     "age=3,facing=up,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_3_full",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_full",
       "x": 270
     },
     "age=3,facing=up,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_3_partial",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_partial",
       "x": 270
     },
     "age=3,facing=west,openness=ajar": {
-      "model": "minecraft:block/spore_blossom_stage_3_ajar",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_ajar",
       "y": 270
     },
     "age=3,facing=west,openness=closed": {
-      "model": "minecraft:block/spore_blossom_stage_3_closed",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_closed",
       "y": 270
     },
     "age=3,facing=west,openness=full": {
-      "model": "minecraft:block/spore_blossom_stage_3_full",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_full",
       "y": 270
     },
     "age=3,facing=west,openness=partial": {
-      "model": "minecraft:block/spore_blossom_stage_3_partial",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_partial",
       "y": 270
     }
   }

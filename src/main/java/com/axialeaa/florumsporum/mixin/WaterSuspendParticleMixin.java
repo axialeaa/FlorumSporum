@@ -2,7 +2,7 @@ package com.axialeaa.florumsporum.mixin;
 
 import com.axialeaa.florumsporum.mixin.accessor.ParticleAccessor;
 import com.axialeaa.florumsporum.mixin.impl.ParticleImplMixin;
-import com.axialeaa.florumsporum.util.FragileParticle;
+import com.axialeaa.florumsporum.particle.FragileParticle;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.WaterSuspendParticle;
@@ -18,6 +18,8 @@ public abstract class WaterSuspendParticleMixin extends ParticleImplMixin implem
 
     @Override
     public void moveImpl(double dx, double dy, double dz, Operation<Void> original) {
+        super.moveImpl(dx, dy, dz, original);
+
         if (!this.discardOnCollision)
             return;
 
@@ -25,8 +27,6 @@ public abstract class WaterSuspendParticleMixin extends ParticleImplMixin implem
 
         if (((ParticleAccessor) this.asParticle).getWorld().canCollide(null, box))
             this.asParticle.markDead();
-
-        super.moveImpl(dx, dy, dz, original);
     }
 
     @Override

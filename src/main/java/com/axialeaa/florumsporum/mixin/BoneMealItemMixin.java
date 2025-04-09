@@ -1,5 +1,6 @@
 package com.axialeaa.florumsporum.mixin;
 
+import com.axialeaa.florumsporum.item.SporeBlossomStack;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Block;
@@ -12,7 +13,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import static com.axialeaa.florumsporum.util.FlorumSporumUtils.*;
+import static com.axialeaa.florumsporum.block.SporeBlossomBehaviour.*;
 
 //? if >=1.20.6 {
 import net.minecraft.particle.ParticleTypes;
@@ -33,7 +34,7 @@ public class BoneMealItemMixin {
             return original;
 
         if (isMaxAge(blockState))
-            Block.dropStack(world, pos, createSporeBlossomStack(0));
+            Block.dropStack(world, pos, SporeBlossomStack.create(0));
         else world.setBlockState(pos, advanceAge(world, pos, blockState));
 
         if (!world.isClient())

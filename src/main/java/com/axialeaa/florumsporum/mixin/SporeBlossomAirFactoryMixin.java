@@ -1,6 +1,6 @@
 package com.axialeaa.florumsporum.mixin;
 
-import com.axialeaa.florumsporum.util.FragileParticle;
+import com.axialeaa.florumsporum.particle.FragileParticle;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.WaterSuspendParticle;

@@ -20,12 +20,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldView;
 //?}
 
+//? if >=1.21.5
+import net.minecraft.entity.EntityCollisionHandler;
+
 @Mixin(AbstractBlock.class)
 public class AbstractBlockImplMixin {
 
     @WrapMethod(method = "onEntityCollision")
-    public void onEntityCollisionImpl(BlockState state, World world, BlockPos pos, Entity entity, Operation<Void> original) {
-        original.call(state, world, pos, entity);
+    public void onEntityCollisionImpl(BlockState state, World world, BlockPos pos, Entity entity,
+                                      /*? if >=1.21.5*/
+                                      EntityCollisionHandler handler,
+                                      Operation<Void> original) {
+        original.call(state, world, pos, entity /*? if >=1.21.5 >>*/ ,handler );
     }
 
     @WrapMethod(method = "randomTick")

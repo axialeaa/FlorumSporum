@@ -1,25 +1,25 @@
 {
   "overrides": [
     {
-      "model": "minecraft:block/spore_blossom_stage_0_closed",
+      "model": "minecraft:block/spore_blossom_stage_0_spore_blossom_closed",
       "predicate": {
         "florum-sporum:age": 0.0
       }
     },
     {
-      "model": "minecraft:block/spore_blossom_stage_1_ajar",
+      "model": "minecraft:block/spore_blossom_stage_1_spore_blossom_ajar",
       "predicate": {
         "florum-sporum:age": 0.33333334
       }
     },
     {
-      "model": "minecraft:block/spore_blossom_stage_2_partial",
+      "model": "minecraft:block/spore_blossom_stage_2_spore_blossom_partial",
       "predicate": {
         "florum-sporum:age": 0.6666667
       }
     },
     {
-      "model": "minecraft:block/spore_blossom_stage_3_full",
+      "model": "minecraft:block/spore_blossom_stage_3_spore_blossom_full",
       "predicate": {
         "florum-sporum:age": 1.0
       }
