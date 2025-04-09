@@ -1,7 +1,7 @@
 package com.axialeaa.florumsporum.data.provider;
 
-import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
 import com.axialeaa.florumsporum.block.property.Openness;
+import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
 import com.axialeaa.florumsporum.data.model.SporeBlossomModels;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.block.Blocks;
@@ -59,14 +59,14 @@ public class ModelProvider extends FabricModelProvider {
 
     //? if <1.21.5 {
     /*private static BlockStateVariantMap getBlockStates() {
-        BlockStateVariantMap.DoubleProperty<Integer, Openness> property = BlockStateVariantMap.create(SporeBlossomBehaviour.AGE, SporeBlossomBehaviour.OPENNESS);
+        BlockStateVariantMap.DoubleProperty<Integer, Openness> property = BlockStateVariantMap.create(SporeBlossomProperties.AGE, SporeBlossomProperties.OPENNESS);
         return property.register((age, openness) -> BlockStateVariant.create().put(VariantSettings.MODEL, SporeBlossomModels.getId(age, openness)));
     }
     *///?} else {
     private static BlockStateVariantMap<WeightedVariant> getBlockStates() {
-        BlockStateVariantMap.DoubleProperty<WeightedVariant, Integer, Openness> property = BlockStateVariantMap.models(SporeBlossomBehaviour.AGE, SporeBlossomBehaviour.OPENNESS);
+        BlockStateVariantMap.DoubleProperty<WeightedVariant, Integer, Openness> property = BlockStateVariantMap.models(SporeBlossomProperties.AGE, SporeBlossomProperties.OPENNESS);
 
-        for (int age = 0; age <= SporeBlossomBehaviour.MAX_AGE; age++) {
+        for (int age = 0; age <= SporeBlossomProperties.MAX_AGE; age++) {
             for (Openness openness : Openness.values())
                 property.register(age, openness, BlockStateModelGenerator.createWeightedVariant(SporeBlossomModels.getId(age, openness)));
         }

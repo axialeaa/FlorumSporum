@@ -1,7 +1,6 @@
 package com.axialeaa.florumsporum.block;
 
 import com.axialeaa.florumsporum.block.property.Openness;
-import com.axialeaa.florumsporum.mixin.SporeBlossomBlockMixin;
 import com.axialeaa.florumsporum.registry.FlorumSporumBlockTags;
 import com.axialeaa.florumsporum.registry.FlorumSporumSoundEvents;
 import com.google.common.collect.Maps;
@@ -13,9 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -27,15 +23,10 @@ import net.minecraft.world.event.GameEvent;
 
 import java.util.EnumMap;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
-//? if <=1.21.1
-/*import net.minecraft.state.property.DirectionProperty;*/
+import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.*;
 
-/**
- * The purpose of this class is to store static fields and methods used by {@link SporeBlossomBlockMixin SporeBlossomBlockMixin} without needing to make them private. This allows them to be called outside of that mixin.
- */
 public class SporeBlossomBehaviour {
 
     public static final int
@@ -43,17 +34,8 @@ public class SporeBlossomBehaviour {
         UNFURL_INTERVAL = SharedConstants.TICKS_PER_SECOND / 2;
 
     public static final float PER_RANDOM_TICK_GROWTH_CHANCE = 0.1F;
-    public static final IntProperty AGE = Properties.AGE_3;
-
-    public static final int
-        MAX_AGE = 3,
-        AGE_COUNT = MAX_AGE + 1;
-
-    public static final /*$ direction_property >>*/ EnumProperty<Direction> FACING = Properties.FACING;
-    public static final EnumProperty<Openness> OPENNESS = EnumProperty.of("openness", Openness.class);
 
     public static final Predicate<Entity> CAUSES_RECOIL = EntityPredicates.VALID_LIVING_ENTITY.and(EntityPredicates.EXCEPT_SPECTATOR);
-    public static final Function<BlockState, MapColor> STATE_TO_MAP_COLOR = state -> getFacing(state) == Direction.DOWN ? MapColor.DARK_GREEN : MapColor.PINK;
 
     private static final EnumMap<Direction, VoxelShape> FACING_DIR_TO_SHAPE_MAP = Util.make(Maps.newEnumMap(Direction.class), map -> {
         map.put(Direction.DOWN,  Block.createCuboidShape(2.0, 13.0, 2.0, 14.0, 16.0, 14.0));
@@ -168,6 +150,10 @@ public class SporeBlossomBehaviour {
         List<Entity> entities = world.getEntitiesByClass(Entity.class, box, CAUSES_RECOIL);
 
         return !entities.isEmpty();
+    }
+
+    public static MapColor getMapColor(BlockState state) {
+        return getFacing(state) == Direction.DOWN ? MapColor.DARK_GREEN : MapColor.PINK;
     }
 
     public static void playSound(World world, BlockPos pos, boolean open) {

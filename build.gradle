@@ -34,6 +34,7 @@ stonecutter {
 	swap("modify_settings_import", "${mcImport}block.${eval(mcVersion, ">=1.20.1") ? "MapColor" : "Material"}")
 	swap("particle_util_import", "$mcImport${eval(mcVersion, ">=1.21.1") ? "particle." : "client.util."}ParticleUtil")
 	swap("loot_table_event_import", fapiImport + ".loot." + (eval(mcVersion, ">=1.21.1") ? "v3" : "v2") + ".LootTableEvents")
+	swap("add_particle_client", eval(mcVersion, "<1.21.5") ? "addParticle" : "addParticleClient")
 
 	swap("particle_group_import") {
 		def particleGroupImport = mcImport

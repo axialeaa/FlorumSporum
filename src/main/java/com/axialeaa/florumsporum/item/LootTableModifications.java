@@ -1,6 +1,6 @@
 package com.axialeaa.florumsporum.item;
 
-import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
+import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
 import net.minecraft.block.Blocks;
 import net.minecraft.loot.LootTable;
 
@@ -27,7 +27,7 @@ public class LootTableModifications {
 
     private static /*$ copy_state_function >>*/ CopyStateLootFunction .Builder getAgeStateLootFunction() {
         return /*$ copy_state_function >>*/ CopyStateLootFunction .builder(Blocks.SPORE_BLOSSOM)
-            .addProperty(SporeBlossomBehaviour.AGE);
+            .addProperty(SporeBlossomProperties.AGE);
     }
 
 }

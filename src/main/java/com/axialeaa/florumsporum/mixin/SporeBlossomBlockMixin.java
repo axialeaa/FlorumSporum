@@ -45,6 +45,7 @@ import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.world.block.WireOrientation;
 
 import static com.axialeaa.florumsporum.block.SporeBlossomBehaviour.*;
+import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.*;
 
 @Mixin(SporeBlossomBlock.class)
 public class SporeBlossomBlockMixin extends BlockImplMixin {

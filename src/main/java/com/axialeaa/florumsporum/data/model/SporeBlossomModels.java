@@ -1,9 +1,9 @@
 package com.axialeaa.florumsporum.data.model;
 
 import com.axialeaa.florumsporum.FlorumSporum;
-import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
 import com.axialeaa.florumsporum.block.property.Openness;
 
+import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 
@@ -29,10 +29,10 @@ public class SporeBlossomModels {
     private static final TextureKey FLOWER_TEXTURE_KEY = TextureKey.of(FLOWER);
 
     private static final Identifier[]
-        CLOSED_IDENTIFIERS = new Identifier[SporeBlossomBehaviour.AGE_COUNT],
-        AJAR_IDENTIFIERS = new Identifier[SporeBlossomBehaviour.AGE_COUNT],
-        PARTIAL_IDENTIFIERS = new Identifier[SporeBlossomBehaviour.AGE_COUNT],
-        FULL_IDENTIFIERS = new Identifier[SporeBlossomBehaviour.AGE_COUNT];
+        CLOSED_IDENTIFIERS = new Identifier[SporeBlossomProperties.AGE_COUNT],
+        AJAR_IDENTIFIERS = new Identifier[SporeBlossomProperties.AGE_COUNT],
+        PARTIAL_IDENTIFIERS = new Identifier[SporeBlossomProperties.AGE_COUNT],
+        FULL_IDENTIFIERS = new Identifier[SporeBlossomProperties.AGE_COUNT];
 
     private static final Model
         TEMPLATE_CLOSED = template(Openness.CLOSED),
@@ -69,7 +69,7 @@ public class SporeBlossomModels {
     }
 
     public static void setIds(BlockStateModelGenerator generator) {
-        for (int age = 0; age <= SporeBlossomBehaviour.MAX_AGE; age++) {
+        for (int age = 0; age <= SporeBlossomProperties.MAX_AGE; age++) {
             CLOSED_IDENTIFIERS[age] = upload(generator, TEMPLATE_CLOSED, age);
             AJAR_IDENTIFIERS[age] = upload(generator, TEMPLATE_AJAR, age);
             PARTIAL_IDENTIFIERS[age] = upload(generator, TEMPLATE_PARTIAL, age);
@@ -78,7 +78,7 @@ public class SporeBlossomModels {
     }
 
     private static Identifier upload(BlockStateModelGenerator generator, Model model, int age) {
-        Identifier id = age == SporeBlossomBehaviour.MAX_AGE ? TextureMap.getId(Blocks.SPORE_BLOSSOM) : FlorumSporum.id("block/spore_blossom_stage_" + age);
+        Identifier id = age == SporeBlossomProperties.MAX_AGE ? TextureMap.getId(Blocks.SPORE_BLOSSOM) : FlorumSporum.id("block/spore_blossom_stage_" + age);
         TextureMap textureMap = new TextureMap().put(FLOWER_TEXTURE_KEY, id);
 
         return model.upload(Blocks.SPORE_BLOSSOM, "_stage_" + age, textureMap, generator.modelCollector);
@@ -90,12 +90,12 @@ public class SporeBlossomModels {
     }
 
     public static ItemModel.Unbaked selectItemModel() {
-        Map<Integer, ItemModel.Unbaked> map = new HashMap<>(SporeBlossomBehaviour.AGE_COUNT);
+        Map<Integer, ItemModel.Unbaked> map = new HashMap<>(SporeBlossomProperties.AGE_COUNT);
 
-        for (int age = 0; age <= SporeBlossomBehaviour.MAX_AGE; age++)
+        for (int age = 0; age <= SporeBlossomProperties.MAX_AGE; age++)
             map.put(age, getItemModelForAge(age));
 
-        return ItemModels.select(SporeBlossomBehaviour.AGE, getItemModelForAge(SporeBlossomBehaviour.MAX_AGE), map);
+        return ItemModels.select(SporeBlossomProperties.AGE, getItemModelForAge(SporeBlossomProperties.MAX_AGE), map);
     }
     //?}
 

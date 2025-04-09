@@ -1,6 +1,6 @@
 package com.axialeaa.florumsporum.item;
 
-import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
+import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -19,7 +19,7 @@ public class SporeBlossomStack {
     private static final String TOOLTIP_KEY = "block.spore_blossom.growth_stage";
 
     //? if <1.21.4
-    /*public static final String AGE_NAME = SporeBlossomBehaviour.AGE.getName();*/
+    /*public static final String AGE_NAME = SporeBlossomProperties.AGE.getName();*/
 
     //? if <1.20.6
     /*public static final String BLOCK_STATE_TAG = "BlockStateTag";*/
@@ -30,7 +30,7 @@ public class SporeBlossomStack {
 
     public static ItemStack addDataForAge(ItemStack stack, int age) {
         //? if >=1.20.6 {
-        stack.set(DataComponentTypes.BLOCK_STATE, BlockStateComponent.DEFAULT.with(SporeBlossomBehaviour.AGE, age));
+        stack.set(DataComponentTypes.BLOCK_STATE, BlockStateComponent.DEFAULT.with(SporeBlossomProperties.AGE, age));
         //?} else {
         /*NbtCompound nbtCompound = new NbtCompound();
         nbtCompound.putString(AGE_NAME, String.valueOf(age));
@@ -42,11 +42,11 @@ public class SporeBlossomStack {
     }
 
     public static int getAgeComponentValue(ItemStack stack) {
-        int age = SporeBlossomBehaviour.MAX_AGE;
+        int age = SporeBlossomProperties.MAX_AGE;
 
         //? if >=1.20.6 {
         BlockStateComponent blockStateComponent = stack.getOrDefault(DataComponentTypes.BLOCK_STATE, BlockStateComponent.DEFAULT);
-        var componentValue = blockStateComponent.getValue(SporeBlossomBehaviour.AGE);
+        var componentValue = blockStateComponent.getValue(SporeBlossomProperties.AGE);
 
         if (componentValue != null)
             age = componentValue;

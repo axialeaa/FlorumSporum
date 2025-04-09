@@ -17,7 +17,7 @@ public class BlocksMixin {
     @WrapOperation(method = "<clinit>", slice = @Slice(from = @At(value = "CONSTANT", args = "stringValue=spore_blossom")), at = @At(value = "INVOKE", target = "Lnet/minecraft/block/AbstractBlock$Settings;" + /*$ modify_settings_target >>*/ "mapColor(Lnet/minecraft/block/MapColor;)" + "Lnet/minecraft/block/AbstractBlock$Settings;", ordinal = 0))
     private static AbstractBlock.Settings modifySettings(AbstractBlock.Settings instance, MapColor color, Operation<AbstractBlock.Settings> original) {
         return original.call(instance, color)
-            .mapColor(SporeBlossomBehaviour.STATE_TO_MAP_COLOR)
+            .mapColor(SporeBlossomBehaviour::getMapColor)
             .ticksRandomly();
     }
 

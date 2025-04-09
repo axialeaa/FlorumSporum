@@ -1,5 +1,6 @@
 package com.axialeaa.florumsporum.particle;
 
+import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
 import com.axialeaa.florumsporum.mixin.SporeBlossomBlockMixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.particle.ParticleTypes;
@@ -16,8 +17,6 @@ import net.minecraft.block.ShapeContext;
 /*import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.MinecraftClient;
 *///?}
-
-import static com.axialeaa.florumsporum.block.SporeBlossomBehaviour.*;
 
 /**
  * Creates a box and spawns a certain number of {@link ParticleTypes#SPORE_BLOSSOM_AIR} particles inside it, making sure
@@ -50,10 +49,15 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
         if (!this.hasUnblockedLineOfSight(world, pos))
             return;
 
-        //? if <1.21.5 {
-        /*world.addParticle(ParticleTypes.SPORE_BLOSSOM_AIR, pos.getX(), pos.getY(), pos.getZ(), 0.0, 0.0, 0.0);
-        *///?} else
-        world.addParticleClient(ParticleTypes.SPORE_BLOSSOM_AIR, pos.getX(), pos.getY(), pos.getZ(), 0.0, 0.0, 0.0);
+        world. /*$ add_particle_client >>*/ addParticleClient (
+            ParticleTypes.SPORE_BLOSSOM_AIR,
+            pos.getX(),
+            pos.getY(),
+            pos.getZ(),
+            0.0,
+            0.0,
+            0.0
+        );
     }
 
     /**
@@ -62,7 +66,7 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
      */
     private Box calculateBox() {
         Box box = new Box(-SPORE_RANGE, -SPORE_RANGE, -SPORE_RANGE, SPORE_RANGE, SPORE_RANGE, SPORE_RANGE);
-        Direction supporting = getSupportingDir(this.state);
+        Direction supporting = SporeBlossomBehaviour.getSupportingDir(this.state);
 
         return box.shrink(
             supporting.getOffsetX() * SPORE_RANGE,
@@ -72,18 +76,11 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
     }
 
     private Vec3d getRandomPosInBox(Random random, Box box) {
-        Direction.Axis xAxis = Direction.Axis.X;
-        Direction.Axis yAxis = Direction.Axis.Y;
-        Direction.Axis zAxis = Direction.Axis.Z;
-
-        double minX = box.getMin(xAxis), minY = box.getMin(yAxis), minZ = box.getMin(zAxis);
-        double maxX = box.getMax(xAxis), maxY = box.getMax(yAxis), maxZ = box.getMax(zAxis);
-
         return Vec3d.add(
             this.center,
-            MathHelper.nextDouble(random, minX, maxX),
-            MathHelper.nextDouble(random, minY, maxY),
-            MathHelper.nextDouble(random, minZ, maxZ)
+            MathHelper.nextDouble(random, box.getMin(Direction.Axis.X), box.getMax(Direction.Axis.X)),
+            MathHelper.nextDouble(random, box.getMin(Direction.Axis.Y), box.getMax(Direction.Axis.Y)),
+            MathHelper.nextDouble(random, box.getMin(Direction.Axis.Z), box.getMax(Direction.Axis.Z))
         );
     }
 
@@ -95,7 +92,7 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
             return false;
         *///?}
 
-        RaycastContext ctx = new RaycastContext(pos, Vec3d.of(this.center), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE,
+        RaycastContext ctx = new RaycastContext(pos, Vec3d.of(this.center), RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE,
             //? if >=1.20.4 {
             ShapeContext.absent()
             //?} else

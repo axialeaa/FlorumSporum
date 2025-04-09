@@ -1,6 +1,6 @@
 package com.axialeaa.florumsporum.item;
 
-import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
+import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.ItemStack;
@@ -26,7 +26,7 @@ public class ItemGroupModifications {
 
         ItemStack prevStack = null;
 
-        for (int i = 0; i <= SporeBlossomBehaviour.MAX_AGE; i++) {
+        for (int i = 0; i <= SporeBlossomProperties.MAX_AGE; i++) {
             if (i == 0) {
                 prevStack = SporeBlossomStack.addDataForAge(stack, 0); // replacing the vanilla spore blossom stack with one of age 0
                 continue;

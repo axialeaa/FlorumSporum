@@ -2,7 +2,7 @@
 /*package com.axialeaa.florumsporum.data.model;
 
 import com.axialeaa.florumsporum.FlorumSporum;
-import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
+import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
 import com.axialeaa.florumsporum.item.SporeBlossomStack;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -25,11 +25,11 @@ public class SporeBlossomItemModelJson {
         JsonObject root = new JsonObject();
         JsonArray overrides = new JsonArray();
 
-        for (int age = 0; age <= SporeBlossomBehaviour.MAX_AGE; age++) {
+        for (int age = 0; age <= SporeBlossomProperties.MAX_AGE; age++) {
             JsonObject override = new JsonObject();
             JsonObject predicate = new JsonObject();
 
-            predicate.addProperty(PREDICATE_ID.toString(), (float) age / SporeBlossomBehaviour.MAX_AGE);
+            predicate.addProperty(PREDICATE_ID.toString(), (float) age / SporeBlossomProperties.MAX_AGE);
 
             override.add(PREDICATE, predicate);
             override.addProperty(MODEL, SporeBlossomModels.getIdWithMaxOpenness(age).toString());
@@ -48,7 +48,7 @@ public class SporeBlossomItemModelJson {
     }
 
     private static float getModelPredicateDelta(ItemStack stack) {
-        return (float) SporeBlossomStack.getAgeComponentValue(stack) / SporeBlossomBehaviour.MAX_AGE;
+        return (float) SporeBlossomStack.getAgeComponentValue(stack) / SporeBlossomProperties.MAX_AGE;
     }
 
 }
