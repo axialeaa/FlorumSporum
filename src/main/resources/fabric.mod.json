@@ -24,6 +24,12 @@
 			"contact": {
 				"homepage": "https://github.com/flatkat"
 			}
+		},
+		{
+			"name": "CerealConJugo (es_MX translations)",
+			"contact": {
+				"homepage": "https://github.com/cerealconjugo"
+			}
 		}
 	],
 	"contact": {
@@ -57,7 +63,7 @@
       "florum-sporum.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.16.9",
+		"fabricloader": ">=0.16.10",
 		"fabric": "*",
 		"minecraft": "${target}",
 		"java": ">=${java_version}"

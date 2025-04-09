@@ -1,0 +1,6 @@
+{
+  "parent": "florum-sporum:block/template_spore_blossom_ajar",
+  "textures": {
+    "flower": "minecraft:block/spore_blossom"
+  }
+}
