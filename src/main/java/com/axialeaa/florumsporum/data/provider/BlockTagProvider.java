@@ -1,6 +1,6 @@
 package com.axialeaa.florumsporum.data.provider;
 
-import com.axialeaa.florumsporum.registry.FlorumSporumBlockTags;
+import com.axialeaa.florumsporum.registry.FlorumSporumTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.block.Blocks;
@@ -15,8 +15,8 @@ public class BlockTagProvider extends FabricTagProvider.BlockTagProvider {
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup arg) {
-        this.getOrCreateTagBuilder(FlorumSporumBlockTags.SPORE_BLOSSOM_CAN_GROW_ON).add(Blocks.MOSS_BLOCK);
+    protected void configure(RegistryWrapper.WrapperLookup registries) {
+        this.getOrCreateTagBuilder(FlorumSporumTags.SPORE_BLOSSOM_CAN_GROW_ON).add(Blocks.MOSS_BLOCK);
     }
 
 }

@@ -11,13 +11,10 @@ import net.minecraft.util.math.Direction;
 public class SporeBlossomProperties {
 
     public static final /*$ direction_property >>*/ EnumProperty<Direction> FACING = Properties.FACING;
-
     public static final EnumProperty<Openness> OPENNESS = EnumProperty.of("openness", Openness.class);
-
     public static final IntProperty AGE = Properties.AGE_3;
 
-    public static final int
-        MAX_AGE = 3,
-        AGE_COUNT = MAX_AGE + 1;
+    public static final int MAX_AGE = 3;
+    public static final int GROWTH_STAGE_COUNT = MAX_AGE + 1;
 
 }

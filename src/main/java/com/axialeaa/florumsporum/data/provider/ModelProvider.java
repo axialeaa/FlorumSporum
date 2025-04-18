@@ -66,7 +66,7 @@ public class ModelProvider extends FabricModelProvider {
     private static BlockStateVariantMap<WeightedVariant> getBlockStates() {
         BlockStateVariantMap.DoubleProperty<WeightedVariant, Integer, Openness> property = BlockStateVariantMap.models(SporeBlossomProperties.AGE, SporeBlossomProperties.OPENNESS);
 
-        for (int age = 0; age <= SporeBlossomProperties.MAX_AGE; age++) {
+        for (int age = 0; age < SporeBlossomProperties.GROWTH_STAGE_COUNT; age++) {
             for (Openness openness : Openness.values())
                 property.register(age, openness, BlockStateModelGenerator.createWeightedVariant(SporeBlossomModels.getId(age, openness)));
         }

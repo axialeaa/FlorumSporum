@@ -68,9 +68,9 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
         if (isClosed(state))
             return 0;
 
-        int count = MathHelper.lerp(getAgeDelta(state), 0, original);
         RaycastedSporeArea sporeArea = new RaycastedSporeArea(state, pos);
 
+        int count = MathHelper.lerp((float) getAge(state) / MAX_AGE, 0, original);
         sporeArea.addParticles(world, random, count);
 
         return 0;
@@ -94,7 +94,7 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
     @Override
     public void onPlacedImpl(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack, Operation<Void> original) {
         super.onPlacedImpl(world, pos, state, placer, itemStack, original);
-        world.setBlockState(pos, openFully(state), Block.NOTIFY_LISTENERS);
+        world.setBlockState(pos, open(state), Block.NOTIFY_LISTENERS);
     }
 
     @Override
@@ -115,9 +115,9 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
                                       /*? if >=1.21.5*/
                                       EntityCollisionHandler handler,
                                       Operation<Void> original) {
-        if (!world.isClient() && CAUSES_RECOIL.test(entity) && !world.isReceivingRedstonePower(pos) && !isClosed(state)) {
-            world.setBlockState(pos, recoilWithSoundAndEvent(world, pos, state));
-            world.scheduleBlockTick(pos, this.asBlock, 1);
+        if (!world.isClient() && !world.isReceivingRedstonePower(pos) && !isClosed(state)) {
+            world.setBlockState(pos, recoilNoisily(world, pos, state));
+            world.scheduleBlockTick(pos, this.asBlock, ENTITY_CHECK_INTERVAL);
         }
 
         super.onEntityCollisionImpl(state, world, pos, entity, /*? if >=1.21.5 >>*/ handler, original);
@@ -134,10 +134,8 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
         if (isFullyOpen(state))
             return;
 
-        if (world.isReceivingRedstonePower(pos) || isInvalid(state)) {
-            world.setBlockState(pos, openFully(state));
-            playSound(world, pos, true);
-        }
+        if (world.isReceivingRedstonePower(pos) || isInvalid(state))
+            world.setBlockState(pos, openNoisily(world, pos, state));
     }
 
     @Override
@@ -145,7 +143,7 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
         if (hasEntityAt(world, pos))
             world.scheduleBlockTick(pos, this.asBlock, ENTITY_CHECK_INTERVAL);
         else if (!isFullyOpen(state)) {
-            world.setBlockState(pos, unfurlWithSoundAndEvent(world, pos, state));
+            world.setBlockState(pos, unfurlNoisily(world, pos, state));
             world.scheduleBlockTick(pos, this.asBlock, UNFURL_INTERVAL);
         }
 

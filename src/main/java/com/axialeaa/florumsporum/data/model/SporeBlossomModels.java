@@ -19,69 +19,56 @@ import java.util.Map;
 /*import net.minecraft.data.client.*;
 *///?}
 
+import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.GROWTH_STAGE_COUNT;
+
 public class SporeBlossomModels {
 
-    private static final String
-        TEMPLATE = "template",
-        FLOWER = "flower",
-        SPORE_BLOSSOM = "spore_blossom";
-
-    private static final TextureKey FLOWER_TEXTURE_KEY = TextureKey.of(FLOWER);
-
-    private static final Identifier[]
-        CLOSED_IDENTIFIERS = new Identifier[SporeBlossomProperties.AGE_COUNT],
-        AJAR_IDENTIFIERS = new Identifier[SporeBlossomProperties.AGE_COUNT],
-        PARTIAL_IDENTIFIERS = new Identifier[SporeBlossomProperties.AGE_COUNT],
-        FULL_IDENTIFIERS = new Identifier[SporeBlossomProperties.AGE_COUNT];
-
-    private static final Model
-        TEMPLATE_CLOSED = template(Openness.CLOSED),
-        TEMPLATE_AJAR = template(Openness.AJAR),
-        TEMPLATE_PARTIAL = template(Openness.PARTIAL),
-        TEMPLATE_FULL = template(Openness.FULL);
-
-    private static Model template(Openness openness) {
-        String suffix = '_' + SPORE_BLOSSOM + '_' + openness.asString();
-        String parent = TEMPLATE + suffix;
-
-        return sporeBlossom(parent, Optional.of(suffix));
-    }
-
-    private static Model sporeBlossom(String parent, Optional<String> variant) {
-        return block(parent, variant, FLOWER_TEXTURE_KEY);
-    }
-
-    private static Model block(String parent, Optional<String> variant, TextureKey... requiredTextureKeys) {
-        return new Model(Optional.of(FlorumSporum.id("block/" + parent)), variant, requiredTextureKeys);
-    }
+    private static final TextureKey FLOWER_TEXTURE_KEY = TextureKey.of("flower");
+    private static final int IDENTIFIER_COUNT = GROWTH_STAGE_COUNT * Openness.values().length;
+    private static final Identifier[] IDENTIFIERS = new Identifier[IDENTIFIER_COUNT];
 
     public static Identifier getIdWithMaxOpenness(int age) {
-        return getId(age, Openness.byOrdinal(age));
+        return getId(age, Openness.values()[age]);
     }
 
     public static Identifier getId(int age, Openness openness) {
-        return switch (openness) {
-            case CLOSED -> CLOSED_IDENTIFIERS[age];
-            case AJAR -> AJAR_IDENTIFIERS[age];
-            case PARTIAL -> PARTIAL_IDENTIFIERS[age];
-            case FULL -> FULL_IDENTIFIERS[age];
-        };
+        return IDENTIFIERS[getIdArrayIndex(age, openness)];
     }
 
     public static void setIds(BlockStateModelGenerator generator) {
-        for (int age = 0; age <= SporeBlossomProperties.MAX_AGE; age++) {
-            CLOSED_IDENTIFIERS[age] = upload(generator, TEMPLATE_CLOSED, age);
-            AJAR_IDENTIFIERS[age] = upload(generator, TEMPLATE_AJAR, age);
-            PARTIAL_IDENTIFIERS[age] = upload(generator, TEMPLATE_PARTIAL, age);
-            FULL_IDENTIFIERS[age] = upload(generator, TEMPLATE_FULL, age);
+        for (int age = 0; age < GROWTH_STAGE_COUNT; age++) {
+            for (Openness openness : Openness.values())
+                IDENTIFIERS[getIdArrayIndex(age, openness)] = upload(generator, age, openness);
         }
     }
 
-    private static Identifier upload(BlockStateModelGenerator generator, Model model, int age) {
-        Identifier id = age == SporeBlossomProperties.MAX_AGE ? TextureMap.getId(Blocks.SPORE_BLOSSOM) : FlorumSporum.id("block/spore_blossom_stage_" + age);
-        TextureMap textureMap = new TextureMap().put(FLOWER_TEXTURE_KEY, id);
+    private static int getIdArrayIndex(int age, Openness openness) {
+        return age * GROWTH_STAGE_COUNT + openness.ordinal();
+    }
 
-        return model.upload(Blocks.SPORE_BLOSSOM, "_stage_" + age, textureMap, generator.modelCollector);
+    private static Identifier upload(BlockStateModelGenerator generator, int age, Openness openness) {
+        Model model = template(openness);
+
+        Identifier classicId = TextureMap.getId(Blocks.SPORE_BLOSSOM); // returns minecraft:block/spore_blossom
+        String texturePath = "spore_blossom_stage_" + age;
+
+        Identifier textureId = age == SporeBlossomProperties.MAX_AGE ? classicId : getPrefixedBlockId(texturePath);
+        TextureMap textureMap = new TextureMap().put(FLOWER_TEXTURE_KEY, textureId);
+
+        return model.upload(getPrefixedBlockId(openness.asString() + "/stage_" + age), textureMap, generator.modelCollector);
+    }
+
+    private static Model template(Openness openness) {
+        String suffix = '_' + openness.asString();
+        String path = "template_spore_blossom" + suffix;
+
+        Identifier id = getPrefixedBlockId(path);
+
+        return new Model(Optional.of(id), Optional.of(suffix), FLOWER_TEXTURE_KEY);
+    }
+
+    private static Identifier getPrefixedBlockId(String path) {
+        return FlorumSporum.id(path).withPrefixedPath("block/");
     }
 
     //? if >=1.21.4 {
@@ -90,9 +77,9 @@ public class SporeBlossomModels {
     }
 
     public static ItemModel.Unbaked selectItemModel() {
-        Map<Integer, ItemModel.Unbaked> map = new HashMap<>(SporeBlossomProperties.AGE_COUNT);
+        Map<Integer, ItemModel.Unbaked> map = new HashMap<>(GROWTH_STAGE_COUNT);
 
-        for (int age = 0; age <= SporeBlossomProperties.MAX_AGE; age++)
+        for (int age = 0; age < GROWTH_STAGE_COUNT; age++)
             map.put(age, getItemModelForAge(age));
 
         return ItemModels.select(SporeBlossomProperties.AGE, getItemModelForAge(SporeBlossomProperties.MAX_AGE), map);

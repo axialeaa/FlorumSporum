@@ -2,7 +2,7 @@ package com.axialeaa.florumsporum;
 
 import com.axialeaa.florumsporum.item.ItemGroupModifications;
 import com.axialeaa.florumsporum.item.LootTableModifications;
-import com.axialeaa.florumsporum.registry.FlorumSporumBlockTags;
+import com.axialeaa.florumsporum.registry.FlorumSporumTags;
 import com.axialeaa.florumsporum.registry.FlorumSporumSoundEvents;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
@@ -19,7 +19,7 @@ public class FlorumSporum implements ModInitializer {
     @Override
     public void onInitialize() {
         FlorumSporumSoundEvents.init();
-        FlorumSporumBlockTags.init();
+        FlorumSporumTags.init();
         ItemGroupModifications.addSporeBlossomAges();
         LootTableModifications.addSporeBlossomAgeFunction();
     }

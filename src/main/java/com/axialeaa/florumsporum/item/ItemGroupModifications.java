@@ -26,9 +26,9 @@ public class ItemGroupModifications {
 
         ItemStack prevStack = null;
 
-        for (int i = 0; i <= SporeBlossomProperties.MAX_AGE; i++) {
+        for (int i = 0; i < SporeBlossomProperties.GROWTH_STAGE_COUNT; i++) {
             if (i == 0) {
-                prevStack = SporeBlossomStack.addDataForAge(stack, 0); // replacing the vanilla spore blossom stack with one of age 0
+                prevStack = SporeBlossomStack.addDataForAge(stack, 0); // replacing the vanilla spore blossom stack
                 continue;
             }
 

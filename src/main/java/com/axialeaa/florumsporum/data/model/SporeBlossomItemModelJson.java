@@ -25,7 +25,7 @@ public class SporeBlossomItemModelJson {
         JsonObject root = new JsonObject();
         JsonArray overrides = new JsonArray();
 
-        for (int age = 0; age <= SporeBlossomProperties.MAX_AGE; age++) {
+        for (int age = 0; age < SporeBlossomProperties.GROWTH_STAGE_COUNT; age++) {
             JsonObject override = new JsonObject();
             JsonObject predicate = new JsonObject();
 

@@ -1,10 +1,13 @@
 package com.axialeaa.florumsporum.item;
 
 import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -26,6 +29,10 @@ public class SporeBlossomStack {
 
     public static ItemStack create(int age) {
         return addDataForAge(Items.SPORE_BLOSSOM.getDefaultStack(), age);
+    }
+
+    public static void dropJuvenile(World world, BlockPos pos) {
+        Block.dropStack(world, pos, create(0));
     }
 
     public static ItemStack addDataForAge(ItemStack stack, int age) {

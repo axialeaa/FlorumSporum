@@ -1,10 +1,8 @@
 package com.axialeaa.florumsporum.mixin;
 
 import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
-import com.axialeaa.florumsporum.item.SporeBlossomStack;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SporeBlossomBlock;
 import net.minecraft.item.BoneMealItem;
@@ -29,17 +27,12 @@ public class BoneMealItemMixin {
     private static boolean useOnSporeBlossom(boolean original, @Local(argsOnly = true) ItemStack stack, @Local(argsOnly = true) World world, @Local(argsOnly = true) BlockPos pos) {
         BlockState blockState = world.getBlockState(pos);
 
-        if (!(blockState.getBlock() instanceof SporeBlossomBlock))
-            return original;
+        if (blockState.getBlock() instanceof SporeBlossomBlock) {
+            SporeBlossomBehaviour.onFertilized(world, pos, blockState, stack);
+            return true;
+        }
 
-        if (SporeBlossomBehaviour.isMaxAge(blockState))
-            Block.dropStack(world, pos, SporeBlossomStack.create(0));
-        else world.setBlockState(pos, SporeBlossomBehaviour.advanceAge(world, pos, blockState));
-
-        if (!world.isClient())
-            stack.decrement(1);
-
-        return true;
+        return original;
     }
 
     //? if >=1.20.6 {

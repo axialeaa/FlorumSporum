@@ -92,7 +92,7 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
             return false;
         *///?}
 
-        RaycastContext ctx = new RaycastContext(pos, Vec3d.of(this.center), RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE,
+        RaycastContext ctx = new RaycastContext(pos, Vec3d.of(this.center), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE,
             //? if >=1.20.4 {
             ShapeContext.absent()
             //?} else
