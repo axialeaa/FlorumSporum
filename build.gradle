@@ -1,66 +1,16 @@
 plugins {
-	id 'fabric-loom' version '1.10-SNAPSHOT'
+	id 'fabric-loom' version "$loom_version"
 	id 'maven-publish'
-	id "me.modmuss50.mod-publish-plugin" version "0.8.3"
+	id "me.modmuss50.mod-publish-plugin" version "0.8.4"
 }
 
-def mcVersion = stonecutter.current.version
+def mcVersion = property("build_version")
 
 version = "${property("mod_version")}+$mcVersion"
 group = property("maven_group")
 
 base {
 	archivesName = property("mod_id")
-}
-
-stonecutter {
-	swap("mod_id", "\"${property("mod_id")}\";")
-	swap("mod_name", "\"${property("mod_name")}\";")
-
-	def mcImport = "net.minecraft."
-	def mcTarget = "Lnet/minecraft/"
-	def fapiImport = "net.fabricmc.fabric.api"
-
-	swap("modify_settings_target", eval(mcVersion, ">=1.20.1") ? "\"mapColor(${mcTarget}block/MapColor;)\"" : "\"of(${mcTarget}block/Material;)\"")
-	swap("copy_state_function", eval(mcVersion, ">=1.20.6") ? "CopyStateLootFunction" : "CopyStateFunction")
-	swap("identifier",			   eval(mcVersion, ">=1.21.1") ? "Identifier.of(MOD_ID, path);" : "new Identifier(MOD_ID, path);")
-	swap("direction_property",     eval(mcVersion, ">=1.21.2") ? "EnumProperty<Direction>" : "DirectionProperty")
-
-	def simpleParticleType = eval(mcVersion, ">=1.20.6") ? "SimpleParticleType" : "DefaultParticleType"
-
-	swap("simple_particle_type", simpleParticleType)
-	swap("simple_particle_type_str", "\"$simpleParticleType\"")
-
-	swap("modify_settings_import", "${mcImport}block.${eval(mcVersion, ">=1.20.1") ? "MapColor" : "Material"}")
-	swap("particle_util_import", "$mcImport${eval(mcVersion, ">=1.21.1") ? "particle." : "client.util."}ParticleUtil")
-	swap("loot_table_event_import", fapiImport + ".loot." + (eval(mcVersion, ">=1.21.1") ? "v3" : "v2") + ".LootTableEvents")
-	swap("add_particle_client", eval(mcVersion, "<1.21.5") ? "addParticle" : "addParticleClient")
-
-	swap("particle_group_import") {
-		def particleGroupImport = mcImport
-
-		if (eval(mcVersion, "<1.21.1"))
-			particleGroupImport += "client."
-
-		particleGroupImport + "particle.ParticleGroup"
-	}
-	
-	swap("append_tooltip_target") {
-		def appendTooltipTarget = '"' + mcTarget
-
-		if (eval(mcVersion, "<=1.20.4"))
-			appendTooltipTarget += "item/Item;appendTooltip(%sitem/ItemStack;%<sworld/World;Ljava/util/List;%<sclient/item/TooltipContext;)V"
-        else if (eval(mcVersion, "1.20.6"))
-			appendTooltipTarget += "item/Item;appendTooltip(%sitem/ItemStack;%<sitem/Item\$TooltipContext;Ljava/util/List;%<sclient/item/TooltipType;)V"
-		else if (eval(mcVersion, "<=1.21.4"))
-			appendTooltipTarget += "item/Item;appendTooltip(%sitem/ItemStack;%<sitem/Item\$TooltipContext;Ljava/util/List;%<sitem/tooltip/TooltipType;)V"
-		else
-			appendTooltipTarget += "item/ItemStack;appendTooltip(%sitem/Item\$TooltipContext;%<scomponent/type/TooltipDisplayComponent;%<sentity/player/PlayerEntity;%<sitem/tooltip/TooltipType;Ljava/util/function/Consumer;)V"
-
-		appendTooltipTarget += '"'
-
-		appendTooltipTarget.formatted(mcTarget)
-	}
 }
 
 publishMods {
@@ -71,6 +21,13 @@ publishMods {
 	modLoaders.add("fabric")
 	version = property("mod_version")
 
+	github {
+		accessToken = providers.gradleProperty("secrets.github_token")
+		repository = property("repository")
+		commitish = "master"
+		tagName = property("mod_version")
+	}
+
 	modrinth {
 		accessToken = providers.gradleProperty("secrets.modrinth_token")
 		projectId = property("modrinth_project_id")
@@ -78,8 +35,18 @@ publishMods {
 		for (String version : property("modrinth_versions").toString().split(' '))
 			minecraftVersions.add(version)
 
-		requires {
-			slug = "fabric-api"
+		requires("fabric-api")
+	}
+
+	discord {
+		webhookUrl = providers.gradleProperty("secrets.discord_webhook_url")
+		username = property("mod_name")
+		avatarUrl = property("avatar_url")
+		content = changelog.map {it + "\n||@Announcement Ping||"}
+
+		style {
+			look = "MODERN"
+			link = "BUTTON"
 		}
 	}
 }
@@ -92,15 +59,8 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}"
 }
 
-def javaVersion = stonecutter.eval(mcVersion, ">=1.20.6") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+def javaVersion = JavaVersion.VERSION_21
 def javaVersionNumber = javaVersion.ordinal() + 1
-
-tasks.register('copyBuild', Copy) {
-	from("${layout.buildDirectory.get()}/libs")
-	into("$rootDir/libs/${project.property("mod_version")}")
-}
-
-tasks.build.finalizedBy("copyBuild")
 
 processResources {
 	inputs.property("id", project.property("mod_id"))
@@ -128,16 +88,9 @@ clean {
 	delete("$projectDir/src/main/generated")
 }
 
-if (stonecutter.eval(mcVersion, ">=1.21.4")) {
-	fabricApi {
-		configureDataGeneration() {
-			client = true
-		}
-	}
-}
-else {
-	fabricApi {
-		configureDataGeneration()
+fabricApi {
+	configureDataGeneration() {
+		client = true
 	}
 }
 
@@ -145,28 +98,21 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.release = javaVersionNumber
 }
 
-if (stonecutter.current.isActive) {
-	rootProject.tasks.register("runActiveClient") {
-		group = "fabric"
-		dependsOn(tasks.named("runClient"))
+loom {
+	runs {
+		client {
+			programArgs(["--username", "axialeaa", "--uuid", "dabdffa7-fdd2-4798-9f94-a518c7856163"])
+		}
 	}
-
-	loom {
-		runs {
-			client {
-				programArgs(["--username", "axialeaa", "--uuid", "dabdffa7-fdd2-4798-9f94-a518c7856163"])
-			}
-		}
-		runConfigs.all {
-			ideConfigGenerated = true
-			vmArgs("-Dmixin.debug.export=true")
-			runDir "../../run"
-		}
-		sourceSets {
-			main {
-				resources {
-					srcDir(project.file("src/main/generated"))
-				}
+	runConfigs.configureEach {
+		ideConfigGenerated = true
+		vmArgs("-Dmixin.debug.export=true")
+		runDir "../../run"
+	}
+	sourceSets {
+		main {
+			resources {
+				srcDir(project.file("src/main/generated"))
 			}
 		}
 	}
@@ -178,8 +124,6 @@ java {
 	sourceCompatibility = javaVersion
 	targetCompatibility = javaVersion
 }
-
-tasks.sourcesJar.duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
 jar {
 	from("LICENSE") {

@@ -15,8 +15,6 @@ public class FlorumSporumTags {
         return TagKey.of(registryKey, FlorumSporum.id(path));
     }
 
-    public static void init() {
-        FlorumSporum.logRegistryInit("tags");
-    }
+    public static void init() {}
 
 }

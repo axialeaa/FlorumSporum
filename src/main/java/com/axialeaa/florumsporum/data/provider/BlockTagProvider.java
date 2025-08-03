@@ -16,7 +16,7 @@ public class BlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup registries) {
-        this.getOrCreateTagBuilder(FlorumSporumTags.SPORE_BLOSSOM_CAN_GROW_ON).add(Blocks.MOSS_BLOCK);
+        this.valueLookupBuilder(FlorumSporumTags.SPORE_BLOSSOM_CAN_GROW_ON).add(Blocks.MOSS_BLOCK);
     }
 
 }

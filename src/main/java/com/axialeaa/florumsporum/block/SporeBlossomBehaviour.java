@@ -6,19 +6,16 @@ import com.axialeaa.florumsporum.registry.FlorumSporumTags;
 import com.axialeaa.florumsporum.registry.FlorumSporumSoundEvents;
 import com.google.common.collect.Maps;
 import net.minecraft.SharedConstants;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.MapColor;
+import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.PandaEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.*;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
@@ -49,30 +46,6 @@ public class SporeBlossomBehaviour {
         return FACING_DIR_TO_SHAPE_MAP.get(facing);
     }
 
-    public static int getAge(BlockState state) {
-        return state.get(AGE);
-    }
-
-    public static Direction getFacing(BlockState state) {
-        return state.get(FACING);
-    }
-
-    public static Openness getOpenness(BlockState state) {
-        return state.get(OPENNESS);
-    }
-
-    public static boolean isMaxAge(BlockState state) {
-        return getAge(state) == MAX_AGE;
-    }
-
-    public static boolean isClosed(BlockState state) {
-        return getOpenness(state) == Openness.CLOSED;
-    }
-
-    public static boolean isFullyOpen(BlockState state) {
-        return getOpenness(state).ordinal() == getAge(state);
-    }
-
     /**
      * @param state The spore blossom block state.
      * @return true if {@code state} is "invalid" and should be resolved as soon as a neighbor update is given.
@@ -93,8 +66,12 @@ public class SporeBlossomBehaviour {
         return world.getBlockState(getSupportingPos(pos, state));
     }
 
-    public static boolean isSupportedByMoss(World world, BlockPos pos, BlockState state) {
+    public static boolean isSupportedByCatalyst(World world, BlockPos pos, BlockState state) {
         return getSupportingState(world, pos, state).isIn(FlorumSporumTags.SPORE_BLOSSOM_CAN_GROW_ON);
+    }
+
+    public static boolean canShower(BlockState state) {
+        return !isClosed(state) && isMaxAge(state) && getFacing(state) == Direction.DOWN;
     }
 
     public static BlockState advanceAge(World world, BlockPos pos, BlockState state) {
@@ -164,6 +141,47 @@ public class SporeBlossomBehaviour {
         float pitch = MathHelper.nextBetween(world.getRandom(), 0.8F, 1.2F);
 
         world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1.0F, pitch);
+    }
+
+    public static class PandaSneeze {
+
+        private static final double DEFAULT_SNEEZE_CHANCE = 0.0001667;
+        private static final double WEAK_SNEEZE_CHANCE = 0.002;
+        private static final double IN_SPORE_SHOWER_SNEEZE_CHANCE = 0.01;
+
+        private static double getSneezeChance(PandaEntity panda, boolean inSporeShower) {
+            if (inSporeShower)
+                return IN_SPORE_SHOWER_SNEEZE_CHANCE;
+
+            return panda.isWeak() ? WEAK_SNEEZE_CHANCE : DEFAULT_SNEEZE_CHANCE;
+        }
+
+        public static boolean shouldSneeze(World world, PandaEntity panda, BlockPos pos, Random random) {
+            if (!panda.isBaby() || !panda.isIdle())
+                return false;
+
+            boolean inSporeShower = isInSporeShower(world, pos);
+
+            return random.nextDouble() < getSneezeChance(panda, inSporeShower);
+        }
+
+        private static boolean isInSporeShower(World world, BlockPos pos) {
+            BlockPos.Mutable mutable = pos.mutableCopy();
+            int i = 0;
+
+            while (i < 8 && world.getBlockState(mutable).getCollisionShape(world, mutable).isEmpty()) {
+                mutable.move(Direction.UP);
+                i++;
+
+                BlockState potentialBlossom = world.getBlockState(mutable);
+
+                if (potentialBlossom.getBlock() instanceof SporeBlossomBlock && canShower(potentialBlossom))
+                    return true;
+            }
+
+            return false;
+        }
+
     }
 
 }

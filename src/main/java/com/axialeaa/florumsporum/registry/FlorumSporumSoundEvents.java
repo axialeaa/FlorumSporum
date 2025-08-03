@@ -16,8 +16,6 @@ public class FlorumSporumSoundEvents {
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
 
-    public static void init() {
-        FlorumSporum.logRegistryInit("sound events");
-    }
+    public static void init() {}
 
 }

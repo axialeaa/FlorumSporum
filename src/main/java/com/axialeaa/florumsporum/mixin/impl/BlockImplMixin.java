@@ -12,15 +12,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
-//? if <1.21.4 >=1.20.4
-/*import net.minecraft.world.WorldView;*/
-
-//? if <1.20.6 {
-/*import net.minecraft.world.BlockView;
-import net.minecraft.client.item.TooltipContext;
-import org.jetbrains.annotations.Nullable;
-*///?}
-
 @Mixin(Block.class)
 public class BlockImplMixin extends AbstractBlockImplMixin {
 
@@ -38,24 +29,5 @@ public class BlockImplMixin extends AbstractBlockImplMixin {
     public void onPlacedImpl(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack, Operation<Void> original) {
         original.call(world, pos, state, placer, itemStack);
     }
-
-    //? if <1.21.4 {
-    /*@WrapMethod(method = "getPickStack")
-    public ItemStack getPickStackImpl(
-            //? if <1.20.4 {
-            /^BlockView
-            ^///?} else
-            WorldView
-                world, BlockPos pos, BlockState state, Operation<ItemStack> original) {
-        return original.call(world, pos, state);
-    }
-    *///?}
-
-    //? <=1.20.4 {
-    /*@WrapMethod(method = "hasRandomTicks")
-    public boolean hasRandomTicksImpl(BlockState state, Operation<Boolean> original) {
-        return original.call(state);
-    }
-    *///?}
 
 }

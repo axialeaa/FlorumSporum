@@ -4,19 +4,19 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BlocksMixin",
-    "BoneMealItemMixin",
     "SporeBlossomBlockMixin",
     "accessor.BlockAccessor",
+    "fertilize.BoneMealItemMixin",
     "impl.AbstractBlockImplMixin",
     "impl.BlockImplMixin",
-    "tooltip.ItemStackMixin"
+    "sneeze.SneezeGoalMixin"
   ],
   "client": [
-    "SporeBlossomAirFactoryMixin",
-    "WaterSuspendParticleMixin",
     "accessor.BlockStateModelGeneratorAccessor",
     "accessor.ParticleAccessor",
-    "impl.ParticleImplMixin"
+    "impl.ParticleImplMixin",
+    "particle.SporeBlossomAirFactoryMixin",
+    "particle.WaterSuspendParticleMixin"
   ],
   "injectors": {
     "defaultRequire": 1

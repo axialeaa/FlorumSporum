@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 
 public class FlorumSporum implements ModInitializer {
 
-    public static final String MOD_ID = /*$ mod_id*/ "florum-sporum";
-    public static final String MOD_NAME = /*$ mod_name*/ "Florum Sporum";
+    public static final String MOD_ID = "florum-sporum";
+    public static final String MOD_NAME = "Florum Sporum";
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
@@ -21,15 +21,11 @@ public class FlorumSporum implements ModInitializer {
         FlorumSporumSoundEvents.init();
         FlorumSporumTags.init();
         ItemGroupModifications.addSporeBlossomAges();
-        LootTableModifications.addSporeBlossomAgeFunction();
+        LootTableModifications.register();
     }
 
     public static Identifier id(String path) {
-        return /*$ identifier*/ Identifier.of(MOD_ID, path);
-    }
-
-    public static void logRegistryInit(String registry) {
-        LOGGER.info("Registering {} {}!", MOD_NAME, registry);
+        return Identifier.of(MOD_ID, path);
     }
 
 }
