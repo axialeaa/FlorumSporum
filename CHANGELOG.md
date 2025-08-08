@@ -1,28 +1,33 @@
-So sorry for the delay folks! I've been busy with life stuff and other projects. This small update probably isn't that interesting for most of you as the majority of changes I made have been to the code structure instead of testable behavior. Before talking about that, I need to make a very important announcement:
+Hey! The minor versions have finally stabilized, allowing me to bring you a new update along with the wonderful Chase The Skies drop! This one includes an interesting feature I have had on the backburner since the beginning and have only now got around to writing!
 
-# 🪦 End-of-Life Versions
-A little while ago, I stopped supporting versions below 1.20 due to multi-version projects becoming more and more difficult to maintain as the game itself updates faster. Well, I plan to do it again. Assuming no further hotfix, Update 1.7.0 will be the final release for the following versions:
+# 🪦 Ending the "Florum Chore-um"
+I have finally stood up for the part of myself that had been weighed under by the workload of handling multiple game versions at the same time.
 
-- 1.20.2
-- 1.20.4
-- 1.20.6
+For those in the modding scene you'll know it's a pain in the ass to keep up with. For those *not* in the know: it's incredibly demotivating and shifts my focus away from the quality of the content I make. For this reason, I have decided **I will no longer be supporting versions before the most recent release**.
 
-These versions don't have very much demand compared to 1.20.1, 1.21.1 and the latest drop, so those will be staying. I'm also keeping 1.21.3 and 1.21.4 to allow the players on those versions some time to migrate to 1.21.5 if they so choose. The versions mentioned will be deprecated unless a hotfix needs to happen before deprecation. Make sure to report any issues you encounter on [GitHub][issues]; the clock is ticking!
-***
-
-Now onto the content...
-
-# ➖ Removals
-The in-built 32x resource pack has been removed in this update. Simply put, managing built-in resource packs on multi-version projects like this one is freaking annoying, and they somewhat bloat the resource pack menu. Fret not though, I plan to publish a standalone resource pack on my Modrinth profile which you can download and install to upscale the textures of all of my mods at the same time. It will also be handled on a separate GitHub repository which you will all be able to contribute to!
-
-It's not quite ready yet, but I will work on getting it out as soon as I can after updating each of my mods to 1.21.5. Thank you for your patience! ~🌸
+I am aware that this will alienate a portion of my consumers: it's simply the only way forward for me to continue enjoying what I do. I am sorry if you're someone who will be affected by this decision. I hope you can continue to enjoy my work!!
 
 # ➕ Additions
-`es_MX` translations have been added in this update. Thanks, [CerealConJugo]!
+**Panda snot!** Well, that already existed. A little-known fact about panda cubs is that they have an increeeedibly low chance of sneezing (a little bit higher if they have the "weak" personality) and an average of 1 in every 500 sneezes will drop a slime ball.
+
+As it stands, this is the only way to obtain slime in the Peaceful difficulty which makes it a shame that the chance of it happening is so fundamentally, infeasibly small. **Florum Sporum 1.8.0** aims to fix that!
+
+The chance of panda cubs sneezing has not been changed: 1 in 6000 ticks for normal panda cubs and 1 in 500 ticks for weak ones. However, every sneeze will now drop a slime ball. Now, the way this relates back to spore blossoms is that standing in a spot underneath a "spore shower"--the particles that fall from fully-grown flowers that are hanging from the ceiling--will now increase this probability even further, to 1 in 100 ticks.
+
+Note that this overrides the bonus gotten by the panda cub being "weak".
+
+I'm probably going to be workshopping this feature for a while. Let me know your thoughts over on the "Florum Forum" (my [Discord server][discord]) or the GitHub [issues] page!
 
 # 🔧 Changes
-- Spore particles now perform raycasts using the "outline" algorithm instead of the "collision" one.
-  - This change was made to slightly improve performance, but it does minimally affect behavior; you should expect fewer particles in areas with lots of foliage (e.g. long grass, vines, flowers). If this is a make-or-break for you, consider writing an issue report letting me know why you think this should be re-added!
+- Switched to using the Fabric API tooltip callback instead of original mixins.
+- Tweaked the textures to better represent furled-up petals instead of merely smaller variants of the spore blossom.
+- Updated the mod icon.
 
-[CerealConJugo]: https://github.com/cerealconjugo
+# 🐛 Fixes
+- The textures of some parts of the spore blossoms' models are no longer inappropriately mirrored.
+- Fully-grown spore blossoms from the creative menu now correctly stack with ones that have been placed down and broken.
+- Updated `ru_RU` localization. Thanks, [mpustovoi]!
+
+[mpustovoi]: https://github.com/mpustovoi
 [issues]: https://github.com/axialeaa/FlorumSporum/issues
+[discord]: https://discord.gg/hfVmpeQhe8

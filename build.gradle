@@ -1,38 +1,38 @@
 plugins {
-	id 'fabric-loom' version "$loom_version"
+	id 'fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 	id "me.modmuss50.mod-publish-plugin" version "0.8.4"
 }
 
-def mcVersion = property("build_version")
+def mcVersion = project.build_version
 
-version = "${property("mod_version")}+$mcVersion"
-group = property("maven_group")
+version = "$project.mod_version+$mcVersion"
+group = project.maven_group
 
 base {
-	archivesName = property("mod_id")
+	archivesName = project.mod_id
 }
 
 publishMods {
 	file = remapJar.archiveFile
 	changelog = rootProject.file("CHANGELOG.md").text
 	type = STABLE
-	displayName = "${property("mod_name")} ${property("mod_version")} ($mcVersion) - ${property("update_name")}"
+	displayName = "$mod_name $mod_version ($mcVersion) - $update_name"
 	modLoaders.add("fabric")
-	version = property("mod_version")
+	version = mod_version
 
 	github {
 		accessToken = providers.gradleProperty("secrets.github_token")
-		repository = property("repository")
+		repository = repository
 		commitish = "master"
-		tagName = property("mod_version")
+		tagName = mod_version
 	}
 
 	modrinth {
 		accessToken = providers.gradleProperty("secrets.modrinth_token")
-		projectId = property("modrinth_project_id")
+		projectId = modrinth_project_id
 
-		for (String version : property("modrinth_versions").toString().split(' '))
+		for (String version : modrinth_versions.toString().split(' '))
 			minecraftVersions.add(version)
 
 		requires("fabric-api")
@@ -40,8 +40,8 @@ publishMods {
 
 	discord {
 		webhookUrl = providers.gradleProperty("secrets.discord_webhook_url")
-		username = property("mod_name")
-		avatarUrl = property("avatar_url")
+		username = mod_name
+		avatarUrl = avatar_url
 		content = changelog.map {it + "\n||@Announcement Ping||"}
 
 		style {
@@ -53,39 +53,33 @@ publishMods {
 
 dependencies {
 	minecraft "com.mojang:minecraft:$mcVersion"
-	mappings "net.fabricmc:yarn:${property("yarn_mappings")}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${property("loader_version")}"
+	mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 }
 
 def javaVersion = JavaVersion.VERSION_21
 def javaVersionNumber = javaVersion.ordinal() + 1
 
 processResources {
-	inputs.property("id", project.property("mod_id"))
-	inputs.property("name", project.property("mod_name"))
-	inputs.property("version", project.property("mod_version"))
-	inputs.property("target", project.property("target_version"))
+	inputs.property("id", project.mod_id)
+	inputs.property("name", project.mod_name)
+	inputs.property("version", project.mod_version)
+	inputs.property("target", project.target_version)
 	inputs.property("java_version", javaVersionNumber)
 
 	def map = [
-		"id": project.property("mod_id"),
-		"name": project.property("mod_name"),
-		"version": project.property("mod_version"),
-		"target": project.property("target_version"),
-		"java_version": javaVersionNumber
+		"id": inputs.properties.id,
+		"name": inputs.properties.name,
+		"version": inputs.properties.version,
+		"target": inputs.properties.target,
+		"java_version": inputs.properties.java_version
 	]
 
 	filesMatching("fabric.mod.json") {
 		expand map
 	}
-
-	duplicatesStrategy = DuplicatesStrategy.INCLUDE
-}
-
-clean {
-	delete("$projectDir/src/main/generated")
 }
 
 fabricApi {
@@ -102,18 +96,6 @@ loom {
 	runs {
 		client {
 			programArgs(["--username", "axialeaa", "--uuid", "dabdffa7-fdd2-4798-9f94-a518c7856163"])
-		}
-	}
-	runConfigs.configureEach {
-		ideConfigGenerated = true
-		vmArgs("-Dmixin.debug.export=true")
-		runDir "../../run"
-	}
-	sourceSets {
-		main {
-			resources {
-				srcDir(project.file("src/main/generated"))
-			}
 		}
 	}
 }

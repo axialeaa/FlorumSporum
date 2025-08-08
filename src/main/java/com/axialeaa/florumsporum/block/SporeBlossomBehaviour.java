@@ -2,6 +2,7 @@ package com.axialeaa.florumsporum.block;
 
 import com.axialeaa.florumsporum.block.property.Openness;
 import com.axialeaa.florumsporum.item.SporeBlossomStack;
+import com.axialeaa.florumsporum.mixin.sneeze.GoalAccessor;
 import com.axialeaa.florumsporum.registry.FlorumSporumTags;
 import com.axialeaa.florumsporum.registry.FlorumSporumSoundEvents;
 import com.google.common.collect.Maps;
@@ -145,15 +146,15 @@ public class SporeBlossomBehaviour {
 
     public static class PandaSneeze {
 
-        private static final double DEFAULT_SNEEZE_CHANCE = 0.0001667;
-        private static final double WEAK_SNEEZE_CHANCE = 0.002;
-        private static final double IN_SPORE_SHOWER_SNEEZE_CHANCE = 0.01;
+        private static final int DEFAULT_SNEEZE_TICKS = 6000;
+        private static final int WEAK_SNEEZE_TICKS = 500;
+        private static final int IN_SPORE_SHOWER_SNEEZE_TICKS = 100;
 
-        private static double getSneezeChance(PandaEntity panda, boolean inSporeShower) {
+        private static int getSneezeTicks(PandaEntity panda, boolean inSporeShower) {
             if (inSporeShower)
-                return IN_SPORE_SHOWER_SNEEZE_CHANCE;
+                return IN_SPORE_SHOWER_SNEEZE_TICKS;
 
-            return panda.isWeak() ? WEAK_SNEEZE_CHANCE : DEFAULT_SNEEZE_CHANCE;
+            return panda.isWeak() ? WEAK_SNEEZE_TICKS : DEFAULT_SNEEZE_TICKS;
         }
 
         public static boolean shouldSneeze(World world, PandaEntity panda, BlockPos pos, Random random) {
@@ -161,8 +162,9 @@ public class SporeBlossomBehaviour {
                 return false;
 
             boolean inSporeShower = isInSporeShower(world, pos);
+            int sneezeTicks = getSneezeTicks(panda, inSporeShower);
 
-            return random.nextDouble() < getSneezeChance(panda, inSporeShower);
+            return random.nextInt(GoalAccessor.invokeToGoalTicks(sneezeTicks)) == 1;
         }
 
         private static boolean isInSporeShower(World world, BlockPos pos) {

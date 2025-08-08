@@ -47,9 +47,10 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
     @Unique
     private final Block asBlock = (Block) (Object) this;
 
+    @SuppressWarnings("CastToIncompatibleInterface")
     @Inject(method = "<init>", at = @At("TAIL"))
     private void registerDefaultState(AbstractBlock.Settings settings, CallbackInfo ci) {
-        ((BlockAccessor) asBlock).invokeSetDefaultState(this.asBlock.getDefaultState().with(FACING, Direction.DOWN).with(AGE, MAX_AGE).with(OPENNESS, Openness.FULL));
+        ((BlockAccessor) this.asBlock).invokeSetDefaultState(this.asBlock.getDefaultState().with(FACING, Direction.DOWN).with(AGE, MAX_AGE).with(OPENNESS, Openness.FULL));
     }
 
     @WrapWithCondition(method = "randomDisplayTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticleClient(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V", ordinal = 0))
