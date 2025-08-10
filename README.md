@@ -1,6 +1,3 @@
-<p align=center>
-<img width="20%" src="https://github.com/user-attachments/assets/924b8577-d1fe-42fe-9926-b4a9153d9d7a" alt="Florum Sporum's logo">
-</p>
 <h1 align=center>🌺 Hi there! Thank you for checking out Florum Sporum! 🌺</h1>
 
 <p align=center>
@@ -37,8 +34,6 @@ Check out [the wiki][wiki] for a more in-depth overview of **Florum Sporum**'s f
 
 <h2 align=center>📝 Getting Started 📝</h2>
 
-**Florum Sporum** operates on [Kikugie's fork of Stonecutter][stonecutter-kt], allowing for easy multi-version scheming. Every release will be available for most versions since 1.20, allowing you to get the full experience regardless of your circumstances.
-
 - Make sure you're running a Fabric instance of the game. If you're playing from the vanilla launcher, follow the [Fabric installation guide][fabric-guide]. If you're playing from a third-party launcher like [Prism][prism], you'll need to follow their own instructions which you can often find on their respective websites. For example, [here][prism-guide] is Prism's guide to downloading mods.
 - If you're not using a third-party launcher with in-built mod installation, you'll need to download the latest version of **Florum Sporum** for your game version from the [GitHub releases][github-releases] page or on [Modrinth][modrinth-versions]. Drag the `.jar` file into your mods folder and launch the game!
 
@@ -69,4 +64,3 @@ Modding takes a lot of work, so if you're enjoying what I'm doing and wish to sh
 [prism-guide]: https://prismlauncher.org/wiki/getting-started/download-mods
 [modrinth-versions]: https://modrinth.com/mod/florum-sporum/versions
 [github-releases]: https://github.com/axialeaa/FlorumSporum/releases
-[stonecutter-kt]: https://github.com/kikugie/stonecutter-kt
