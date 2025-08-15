@@ -12,7 +12,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.*;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.entity.LivingEntity;
@@ -66,7 +65,7 @@ public class SporeBlossomBlockMixin extends BlockImplMixin {
         RaycastedSporeArea sporeArea = new RaycastedSporeArea(state, pos);
 
         int count = MathHelper.lerp((float) getAge(state) / MAX_AGE, 0, original);
-        sporeArea.addClientParticles((ClientWorld) world, random, count);
+        sporeArea.addClientParticles(world, random, count);
 
         return 0;
     }

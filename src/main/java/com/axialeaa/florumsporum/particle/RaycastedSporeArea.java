@@ -3,7 +3,6 @@ package com.axialeaa.florumsporum.particle;
 import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
 import com.axialeaa.florumsporum.mixin.SporeBlossomBlockMixin;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -26,7 +25,7 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
 
     public static final int SPORE_RANGE = 10;
 
-    public void addClientParticles(ClientWorld world, Random random, int count) {
+    public void addClientParticles(World world, Random random, int count) {
         for (int i = 0; i < count; i++)
             this.addClientParticle(world, random);
     }
@@ -38,7 +37,7 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
      * @param world The world instance.
      * @param random The random instance.
      */
-    private void addClientParticle(ClientWorld world, Random random) {
+    private void addClientParticle(World world, Random random) {
         Vec3d pos = this.getRandomPosInBox(random);
 
         if (!this.hasUnblockedLineOfSight(world, pos))
@@ -59,7 +58,7 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
      * Calculates a box measuring ({@link RaycastedSporeArea#SPORE_RANGE} * 2) ^ 3, shrunk in accordance with the direction of the block
      * the spore blossom is resting on. This prevents particles from attempting to spawn behind the spore blossom.
      */
-    public Box calculateSporeBox() {
+    private Box calculateSporeBox() {
         Box box = new Box(this.center).expand(SPORE_RANGE);
         Direction supporting = SporeBlossomBehaviour.getSupportingDir(state);
 
