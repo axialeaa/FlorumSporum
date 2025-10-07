@@ -63,7 +63,7 @@
       "florum-sporum.mixins.json"
 	],
 	"depends": {
-		"fabricloader": "${loader_target}",
+		"fabricloader": ">=${loader}",
 		"fabric": "*",
 		"minecraft": "${target}",
 		"java": ">=${java_version}"

@@ -11,9 +11,13 @@ import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Block.class)
-public class BlockImplMixin extends AbstractBlockImplMixin {
+public abstract class BlockImplMixin extends AbstractBlockImplMixin {
+
+    @Shadow protected abstract void setDefaultState(BlockState state);
+    @Shadow public abstract BlockState getDefaultState();
 
     @WrapMethod(method = "appendProperties")
     public void appendPropertiesImpl(StateManager.Builder<Block, BlockState> builder, Operation<Void> original) {

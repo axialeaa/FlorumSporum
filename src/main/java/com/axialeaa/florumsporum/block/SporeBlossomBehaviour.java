@@ -3,9 +3,7 @@ package com.axialeaa.florumsporum.block;
 import com.axialeaa.florumsporum.block.property.Openness;
 import com.axialeaa.florumsporum.item.SporeBlossomStack;
 import com.axialeaa.florumsporum.mixin.sneeze.GoalAccessor;
-import com.axialeaa.florumsporum.registry.FlorumSporumTags;
-import com.axialeaa.florumsporum.registry.FlorumSporumSoundEvents;
-import com.google.common.collect.Maps;
+import com.axialeaa.florumsporum.data.registry.FlorumSporumSoundEvents;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
@@ -14,15 +12,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.*;
 
@@ -30,21 +28,11 @@ public class SporeBlossomBehaviour {
 
     public static final int ENTITY_CHECK_INTERVAL = SharedConstants.TICKS_PER_SECOND * 3;
     public static final int UNFURL_INTERVAL = SharedConstants.TICKS_PER_SECOND / 2;
-
     public static final float PER_RANDOM_TICK_GROWTH_CHANCE = 0.1F;
 
-    private static final EnumMap<Direction, VoxelShape> FACING_DIR_TO_SHAPE_MAP = Util.make(Maps.newEnumMap(Direction.class), map -> {
-        map.put(Direction.DOWN,  Block.createCuboidShape(2, 13,2, 14, 16, 14));
-        map.put(Direction.UP,    Block.createCuboidShape(2, 0, 2, 14, 3,  14));
-        map.put(Direction.NORTH, Block.createCuboidShape(2, 2, 13,14, 14, 16));
-        map.put(Direction.SOUTH, Block.createCuboidShape(2, 2, 0, 14, 14, 3 ));
-        map.put(Direction.WEST,  Block.createCuboidShape(13,2, 2, 16, 14, 14));
-        map.put(Direction.EAST,  Block.createCuboidShape(0, 2, 2, 3,  14, 14));
-    });
-
-    public static VoxelShape getShapeForState(BlockState state) {
-        Direction facing = getFacing(state);
-        return FACING_DIR_TO_SHAPE_MAP.get(facing);
+    // transforms downShape into "north shape", necessary for map ordering
+    public static Map<Direction, VoxelShape> getShapeMap(VoxelShape downShape) {
+        return VoxelShapes.createFacingShapeMap(VoxelShapes.transform(downShape, DirectionTransformation.ROT_90_X_POS));
     }
 
     /**
@@ -53,22 +41,6 @@ public class SporeBlossomBehaviour {
      */
     public static boolean isInvalid(BlockState state) {
         return getOpenness(state).ordinal() > getAge(state);
-    }
-
-    public static Direction getSupportingDir(BlockState state) {
-        return getFacing(state).getOpposite();
-    }
-
-    public static BlockPos getSupportingPos(BlockPos pos, BlockState state) {
-        return pos.offset(getSupportingDir(state));
-    }
-
-    public static BlockState getSupportingState(World world, BlockPos pos, BlockState state) {
-        return world.getBlockState(getSupportingPos(pos, state));
-    }
-
-    public static boolean isSupportedByCatalyst(World world, BlockPos pos, BlockState state) {
-        return getSupportingState(world, pos, state).isIn(FlorumSporumTags.SPORE_BLOSSOM_CAN_GROW_ON);
     }
 
     public static boolean canShower(BlockState state) {

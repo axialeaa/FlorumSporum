@@ -1,3 +1,4 @@
+1.21.10 changed the method signature of `AbstractBlock#onEntityCollision` which means I need to make a separate release just for this hotfix. That doesn't happen very often...
+
 # 🐛 Fixes
-- The game should no longer crash when launching a dedicated server with this mod installed. (#6)
-- The mod now requires *at least* Fabric Loader version 0.17.0.
+- The mod now sends a log message when it has initialized. 

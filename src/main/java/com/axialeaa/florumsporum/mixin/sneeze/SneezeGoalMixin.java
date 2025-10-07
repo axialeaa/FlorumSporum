@@ -18,7 +18,7 @@ public abstract class SneezeGoalMixin extends Goal {
 
     @WrapMethod(method = "canStart")
     private boolean modifyCanStart(Operation<Boolean> original) {
-        World world = this.panda.getWorld();
+        World world = this.panda.getEntityWorld();
         BlockPos blockPos = BlockPos.ofFloored(this.panda.getEyePos());
 
         return SporeBlossomBehaviour.PandaSneeze.shouldSneeze(world, this.panda, blockPos, world.getRandom());

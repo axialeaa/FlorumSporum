@@ -5,7 +5,6 @@
   "mixins": [
     "BlocksMixin",
     "SporeBlossomBlockMixin",
-    "accessor.BlockAccessor",
     "fertilize.BoneMealItemMixin",
     "impl.AbstractBlockImplMixin",
     "impl.BlockImplMixin",
@@ -14,7 +13,6 @@
   ],
   "client": [
     "accessor.BlockStateModelGeneratorAccessor",
-    "accessor.ParticleAccessor",
     "impl.ParticleImplMixin",
     "particle.SporeBlossomAirFactoryMixin",
     "particle.WaterSuspendParticleMixin"

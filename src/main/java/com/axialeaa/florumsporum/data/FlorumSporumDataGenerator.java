@@ -1,9 +1,8 @@
 package com.axialeaa.florumsporum.data;
 
-import com.axialeaa.florumsporum.data.provider.BlockTagProvider;
-import com.axialeaa.florumsporum.data.provider.ModelProvider;
-import com.axialeaa.florumsporum.data.provider.RecipeProvider;
-import com.axialeaa.florumsporum.data.provider.SoundsProvider;
+import com.axialeaa.florumsporum.data.registry.FlorumSporumBlockTags;
+import com.axialeaa.florumsporum.data.registry.FlorumSporumRecipes;
+import com.axialeaa.florumsporum.data.registry.FlorumSporumSoundEvents;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
@@ -13,10 +12,10 @@ public class FlorumSporumDataGenerator implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
         FabricDataGenerator.Pack pack = generator.createPack();
 
-        pack.addProvider(ModelProvider::new);
-        pack.addProvider(SoundsProvider::new);
-        pack.addProvider(RecipeProvider::new);
-        pack.addProvider(BlockTagProvider::new);
+        pack.addProvider(FlorumSporumSoundEvents.Provider::new);
+        pack.addProvider(FlorumSporumBlockTags.Provider::new);
+        pack.addProvider(FlorumSporumRecipes.Provider::new);
+        pack.addProvider(SporeBlossomModels.Provider::new);
     }
 
 }

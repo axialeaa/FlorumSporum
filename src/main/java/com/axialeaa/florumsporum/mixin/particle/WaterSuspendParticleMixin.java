@@ -1,10 +1,8 @@
 package com.axialeaa.florumsporum.mixin.particle;
 
-import com.axialeaa.florumsporum.mixin.accessor.ParticleAccessor;
 import com.axialeaa.florumsporum.mixin.impl.ParticleImplMixin;
 import com.axialeaa.florumsporum.particle.FragileParticle;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.WaterSuspendParticle;
 import net.minecraft.util.math.Box;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +12,6 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class WaterSuspendParticleMixin extends ParticleImplMixin implements FragileParticle {
 
     @Unique private boolean discardOnCollision = false;
-    @Unique private final Particle asParticle = (Particle) (Object) this;
 
     @Override
     public void moveImpl(double dx, double dy, double dz, Operation<Void> original) {
@@ -23,10 +20,10 @@ public abstract class WaterSuspendParticleMixin extends ParticleImplMixin implem
         if (!this.discardOnCollision)
             return;
 
-        Box box = this.asParticle.getBoundingBox();
+        Box box = this.getBoundingBox();
 
-        if (((ParticleAccessor) this.asParticle).getWorld().canCollide(null, box))
-            this.asParticle.markDead();
+        if (this.world.canCollide(null, box))
+            this.markDead();
     }
 
     @Override

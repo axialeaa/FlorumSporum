@@ -1,6 +1,5 @@
 package com.axialeaa.florumsporum.particle;
 
-import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
 import com.axialeaa.florumsporum.mixin.SporeBlossomBlockMixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.particle.ParticleTypes;
@@ -12,6 +11,8 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import net.minecraft.block.ShapeContext;
+
+import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.getFacing;
 
 /**
  * Creates a box and spawns a certain number of {@link ParticleTypes#SPORE_BLOSSOM_AIR} particles inside it, making sure
@@ -60,12 +61,12 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
      */
     private Box calculateSporeBox() {
         Box box = new Box(this.center).expand(SPORE_RANGE);
-        Direction supporting = SporeBlossomBehaviour.getSupportingDir(state);
+        Direction supportDir = getFacing(state).getOpposite();
 
         return box.shrink(
-            supporting.getOffsetX() * SPORE_RANGE,
-            supporting.getOffsetY() * SPORE_RANGE,
-            supporting.getOffsetZ() * SPORE_RANGE
+            supportDir.getOffsetX() * SPORE_RANGE,
+            supportDir.getOffsetY() * SPORE_RANGE,
+            supportDir.getOffsetZ() * SPORE_RANGE
         );
     }
 
@@ -79,7 +80,7 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
         );
     }
 
-    private boolean didRaycastMiss(World world, RaycastContext ctx) {
+    private boolean raycastMissed(World world, RaycastContext ctx) {
         BlockHitResult blockHitResult = world.raycast(ctx);
         BlockPos blockPos = blockHitResult.getBlockPos();
 
@@ -95,7 +96,7 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
             ShapeContext.absent()
         );
 
-        return this.didRaycastMiss(world, ctx);
+        return this.raycastMissed(world, ctx);
     }
 
 

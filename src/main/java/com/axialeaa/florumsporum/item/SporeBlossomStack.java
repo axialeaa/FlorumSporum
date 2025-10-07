@@ -14,8 +14,6 @@ import net.minecraft.world.World;
 
 public class SporeBlossomStack {
 
-    private static final String TOOLTIP_KEY = "block.spore_blossom.growth_stage";
-
     public static ItemStack create(BlockState state) {
         return create(SporeBlossomProperties.getAge(state));
     }
@@ -52,7 +50,7 @@ public class SporeBlossomStack {
 
     public static Text getTooltip(ItemStack stack) {
         int growthStage = getAgeComponentValue(stack) + 1;
-        return Text.translatable(TOOLTIP_KEY, growthStage).formatted(Formatting.GRAY);
+        return Text.translatable("block.spore_blossom.growth_stage", growthStage).formatted(Formatting.GRAY);
     }
 
 }

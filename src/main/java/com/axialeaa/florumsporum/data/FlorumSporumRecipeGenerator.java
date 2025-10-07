@@ -1,13 +1,12 @@
-package com.axialeaa.florumsporum.data.recipe;
+package com.axialeaa.florumsporum.data;
 
+import com.axialeaa.florumsporum.data.registry.FlorumSporumRecipes;
+import net.minecraft.data.recipe.RecipeExporter;
+import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryWrapper;
-
-import net.minecraft.data.recipe.*;
-
-import static com.axialeaa.florumsporum.data.recipe.RecipeConstants.*;
 
 public class FlorumSporumRecipeGenerator extends RecipeGenerator {
 
@@ -17,12 +16,12 @@ public class FlorumSporumRecipeGenerator extends RecipeGenerator {
 
     @Override
     public void generate() {
-        Item sporeBlossom = Items.SPORE_BLOSSOM;
+        Item input = Items.SPORE_BLOSSOM;
         this.createShapeless(RecipeCategory.MISC, Items.PINK_DYE)
-            .input(sporeBlossom)
-            .group(PINK_DYE_GROUP)
-            .criterion(HAS_SPORE_BLOSSOM, this.conditionsFromItem(sporeBlossom))
-            .offerTo(this.exporter, PINK_DYE_RECIPE_KEY);
+            .input(input)
+            .group("pink_dye")
+            .criterion(hasItem(input), this.conditionsFromItem(input))
+            .offerTo(this.exporter, FlorumSporumRecipes.PINK_DYE_RECIPE_KEY);
     }
 
 }

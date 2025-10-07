@@ -15,13 +15,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.block.WireOrientation;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(AbstractBlock.class)
-public class AbstractBlockImplMixin {
+public abstract class AbstractBlockImplMixin {
+
+    @Shadow protected abstract Block asBlock();
 
     @WrapMethod(method = "onEntityCollision")
-    public void onEntityCollisionImpl(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, Operation<Void> original) {
-        original.call(state, world, pos, entity, handler);
+    public void onEntityCollisionImpl(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl, Operation<Void> original) {
+        original.call(state, world, pos, entity, handler, bl);
     }
 
     @WrapMethod(method = "randomTick")
