@@ -1,5 +1,13 @@
 {
-  "block.spore_blossom.growth_stage": "Growth Stage: %d",
-  "subtitles.block.spore_blossom.close": "Spore blossom recoils",
-  "subtitles.block.spore_blossom.open": "Spore blossom unfurls"
+    "block.spore_blossom.growth_stage": "Growth Stage: %d",
+    "gamerule.category.florum-sporum.config": "Florum Sporum",
+    "gamerule.florum-sporum.panda_default_max_sneeze_interval": "Max time between passive panda sneezes",
+    "gamerule.florum-sporum.panda_spore_shower_check_depth": "Spore shower check distance for panda sneezes",
+    "gamerule.florum-sporum.panda_spore_shower_max_sneeze_interval": "Max time between panda sneezes when in a spore shower",
+    "gamerule.florum-sporum.panda_weak_max_sneeze_interval": "Max time between passive weak panda sneezes",
+    "gamerule.florum-sporum.spore_blossom_entity_check_interval": "Time from entity leave to spore blossom unfurling",
+    "gamerule.florum-sporum.spore_blossom_growth_chance": "Spore blossom growth chance per random tick",
+    "gamerule.florum-sporum.spore_blossom_unfurl_interval": "Time between spore blossom unfurling stages",
+    "subtitles.block.spore_blossom.close": "Spore blossom recoils",
+    "subtitles.block.spore_blossom.open": "Spore blossom unfurls"
 }

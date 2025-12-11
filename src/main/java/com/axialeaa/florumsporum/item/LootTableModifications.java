@@ -3,17 +3,17 @@ package com.axialeaa.florumsporum.item;
 import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableSource;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.CopyStateLootFunction;
-import net.minecraft.loot.function.LootFunction;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyBlockState;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 public class LootTableModifications {
 
@@ -22,29 +22,29 @@ public class LootTableModifications {
         LootTableEvents.MODIFY.register(LootTableModifications::registerSporeBlossom);
     }
 
-    private static LootTable registerPandaSneeze(RegistryKey<LootTable> registryKey, LootTable original, LootTableSource source, RegistryWrapper.WrapperLookup wrapperLookup) {
-        if (!validateLootTable(registryKey, LootTables.PANDA_SNEEZE_GAMEPLAY, source))
+    private static LootTable registerPandaSneeze(ResourceKey<LootTable> registryKey, LootTable original, LootTableSource source, HolderLookup.Provider holderLookup) {
+        if (!validateLootTable(registryKey, BuiltInLootTables.PANDA_SNEEZE, source))
             return original;
 
-        return LootTable.builder()
-            .pool(LootPool.builder()
-                .rolls(ConstantLootNumberProvider.create(1.0F))
-                .with(ItemEntry.builder(Items.SLIME_BALL))
+        return LootTable.lootTable()
+            .withPool(LootPool.lootPool()
+                .setRolls(ConstantValue.exactly(1.0F))
+                .add(LootItem.lootTableItem(Items.SLIME_BALL))
             )
             .build();
     }
 
-    private static void registerSporeBlossom(RegistryKey<LootTable> registryKey, LootTable.Builder tableBuilder, LootTableSource source, RegistryWrapper.WrapperLookup wrapperLookup) {
-        if (!validateLootTable(registryKey, Blocks.SPORE_BLOSSOM.getLootTableKey().orElseThrow(), source))
+    private static void registerSporeBlossom(ResourceKey<LootTable> registryKey, LootTable.Builder tableBuilder, LootTableSource source, HolderLookup.Provider holderLookup) {
+        if (!validateLootTable(registryKey, Blocks.SPORE_BLOSSOM.getLootTable().orElseThrow(), source))
             return;
 
-        LootFunction.Builder lootFunctionBuilder = CopyStateLootFunction.builder(Blocks.SPORE_BLOSSOM)
-            .addProperty(SporeBlossomProperties.AGE);
+        LootItemFunction.Builder lootFunctionBuilder = CopyBlockState.copyState(Blocks.SPORE_BLOSSOM)
+            .copy(SporeBlossomProperties.AGE);
 
         tableBuilder.modifyPools(builder -> builder.apply(lootFunctionBuilder));
     }
 
-    private static boolean validateLootTable(RegistryKey<LootTable> registryKey, RegistryKey<LootTable> validatorKey, LootTableSource source) {
+    private static boolean validateLootTable(ResourceKey<LootTable> registryKey, ResourceKey<LootTable> validatorKey, LootTableSource source) {
         return source.isBuiltin() && registryKey.equals(validatorKey);
     }
 

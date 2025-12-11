@@ -1,33 +1,33 @@
 package com.axialeaa.florumsporum.data.registry;
 
 import com.axialeaa.florumsporum.FlorumSporum;
-import com.axialeaa.florumsporum.data.FlorumSporumRecipeGenerator;
+import com.axialeaa.florumsporum.data.FlorumSporumRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.minecraft.data.recipe.RecipeExporter;
-import net.minecraft.data.recipe.RecipeGenerator;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.concurrent.CompletableFuture;
 
 public interface FlorumSporumRecipes {
 
-    RegistryKey<Recipe<?>> PINK_DYE_RECIPE_KEY = RegistryKey.of(RegistryKeys.RECIPE, FlorumSporum.id("pink_dye_from_spore_blossom"));
+    ResourceKey<Recipe<?>> PINK_DYE_RECIPE_KEY = ResourceKey.create(Registries.RECIPE, FlorumSporum.id("pink_dye_from_spore_blossom"));
 
     static void load() {}
 
     class Provider extends FabricRecipeProvider {
 
-        public Provider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
-            super(output, registriesFuture);
+        public Provider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> holderProviderFuture) {
+            super(output, holderProviderFuture);
         }
 
         @Override
-        protected RecipeGenerator getRecipeGenerator(RegistryWrapper.WrapperLookup registries, RecipeExporter recipeExporter) {
-            return new FlorumSporumRecipeGenerator(registries, recipeExporter);
+        protected RecipeProvider createRecipeProvider(HolderLookup.Provider holderProvider, RecipeOutput output) {
+            return new FlorumSporumRecipeProvider(holderProvider, output);
         }
 
         @Override

@@ -3,25 +3,26 @@ package com.axialeaa.florumsporum.mixin.sneeze;
 import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.passive.PandaEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.animal.panda.Panda;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(targets = "net.minecraft.entity.passive.PandaEntity$SneezeGoal")
+@Mixin(targets = "net.minecraft.world.entity.animal.panda.Panda$PandaSneezeGoal")
 public abstract class SneezeGoalMixin extends Goal {
 
-    @Shadow @Final private PandaEntity panda;
+    @Shadow @Final private Panda panda;
 
-    @WrapMethod(method = "canStart")
+    @WrapMethod(method = "canUse")
     private boolean modifyCanStart(Operation<Boolean> original) {
-        World world = this.panda.getEntityWorld();
-        BlockPos blockPos = BlockPos.ofFloored(this.panda.getEyePos());
+        Level level = this.panda.level();
+        BlockPos blockPos = BlockPos.containing(this.panda.getEyePosition());
 
-        return SporeBlossomBehaviour.PandaSneeze.shouldSneeze(world, this.panda, blockPos, world.getRandom());
+        return level instanceof ServerLevel serverLevel && SporeBlossomBehaviour.PandaSneeze.shouldSneeze(serverLevel, this.panda, blockPos, level.getRandom());
     }
 
 }

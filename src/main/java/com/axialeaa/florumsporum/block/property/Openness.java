@@ -1,15 +1,17 @@
 package com.axialeaa.florumsporum.block.property;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Locale;
 
-public enum Openness implements StringIdentifiable {
+public enum Openness implements StringRepresentable {
 
     CLOSED, AJAR, PARTIAL, FULL;
 
     @Override
-    public String asString() {
+    @NonNull
+    public String getSerializedName() {
         return this.name().toLowerCase(Locale.ROOT);
     }
 

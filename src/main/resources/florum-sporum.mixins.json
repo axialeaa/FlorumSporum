@@ -1,23 +1,23 @@
 {
-  "required": true,
-  "package": "com.axialeaa.florumsporum.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "BlocksMixin",
-    "SporeBlossomBlockMixin",
-    "fertilize.BoneMealItemMixin",
-    "impl.AbstractBlockImplMixin",
-    "impl.BlockImplMixin",
-    "sneeze.GoalAccessor",
-    "sneeze.SneezeGoalMixin"
-  ],
-  "client": [
-    "accessor.BlockStateModelGeneratorAccessor",
-    "impl.ParticleImplMixin",
-    "particle.SporeBlossomAirFactoryMixin",
-    "particle.WaterSuspendParticleMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
+    "required": true,
+    "package": "com.axialeaa.florumsporum.mixin",
+    "compatibilityLevel": "JAVA_17",
+    "mixins": [
+        "BlocksMixin",
+        "SporeBlossomBlockMixin",
+        "fertilize.BoneMealItemMixin",
+        "impl.BlockBehaviourImplMixin",
+        "impl.BlockImplMixin",
+        "sneeze.GoalAccessor",
+        "sneeze.SneezeGoalMixin"
+    ],
+    "client": [
+        "accessor.BlockModelGeneratorsAccessor",
+        "impl.ParticleImplMixin",
+        "particle.SporeBlossomAirFactoryMixin",
+        "particle.SuspendedParticleMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
   }
 }

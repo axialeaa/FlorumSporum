@@ -2,36 +2,44 @@ package com.axialeaa.florumsporum.mixin.impl;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Block.class)
-public abstract class BlockImplMixin extends AbstractBlockImplMixin {
+public abstract class BlockImplMixin extends BlockBehaviourImplMixin {
 
-    @Shadow protected abstract void setDefaultState(BlockState state);
-    @Shadow public abstract BlockState getDefaultState();
+    @Shadow
+    public abstract BlockState defaultBlockState();
 
-    @WrapMethod(method = "appendProperties")
-    public void appendPropertiesImpl(StateManager.Builder<Block, BlockState> builder, Operation<Void> original) {
+    @Shadow
+    protected abstract void registerDefaultState(BlockState blockState);
+
+    @Shadow
+    @Final
+    protected StateDefinition<Block, BlockState> stateDefinition;
+
+    @WrapMethod(method = "createBlockStateDefinition")
+    public void createBlockStateDefinitionImpl(StateDefinition.Builder<Block, BlockState> builder, Operation<Void> original) {
         original.call(builder);
     }
 
-    @WrapMethod(method = "getPlacementState")
-    public BlockState getPlacementStateImpl(ItemPlacementContext ctx, Operation<BlockState> original) {
-        return original.call(ctx);
+    @WrapMethod(method = "getStateForPlacement")
+    public BlockState getStateForPlacementImpl(BlockPlaceContext blockPlaceContext, Operation<BlockState> original) {
+        return original.call(blockPlaceContext);
     }
 
-    @WrapMethod(method = "onPlaced")
-    public void onPlacedImpl(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack, Operation<Void> original) {
-        original.call(world, pos, state, placer, itemStack);
+    @WrapMethod(method = "setPlacedBy")
+    public void setPlacedByImpl(Level level, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack, Operation<Void> original) {
+        original.call(level, blockPos, blockState, livingEntity, itemStack);
     }
 
 }

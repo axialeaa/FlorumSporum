@@ -3,7 +3,7 @@ package com.axialeaa.florumsporum;
 import com.axialeaa.florumsporum.item.SporeBlossomStack;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Items;
 
 public class FlorumSporumClient implements ClientModInitializer {
 
@@ -12,7 +12,7 @@ public class FlorumSporumClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ItemTooltipCallback.EVENT.register((stack, tooltipContext, tooltipType, lines) -> {
-            if (stack.isOf(Items.SPORE_BLOSSOM))
+            if (stack.is(Items.SPORE_BLOSSOM))
                 lines.add(COMPONENT_TOOLTIP_LINE_INDEX, SporeBlossomStack.getTooltip(stack));
         });
     }

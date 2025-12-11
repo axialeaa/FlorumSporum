@@ -1,16 +1,16 @@
 package com.axialeaa.florumsporum.item;
 
 import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.BlockStateComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.BlockItemStateProperties;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class SporeBlossomStack {
 
@@ -19,18 +19,18 @@ public class SporeBlossomStack {
     }
 
     public static ItemStack create(int age) {
-        ItemStack stack = Items.SPORE_BLOSSOM.getDefaultStack();
+        ItemStack stack = Items.SPORE_BLOSSOM.getDefaultInstance();
         return age == 3 ? stack : addDataForAge(stack, age);
     }
 
-    public static void dropJuvenile(World world, BlockPos pos) {
-        Block.dropStack(world, pos, create(0));
+    public static void dropJuvenile(Level level, BlockPos pos) {
+        Block.popResource(level, pos, create(0));
     }
 
     public static ItemStack addDataForAge(ItemStack stack, int age) {
         stack.set(
-            DataComponentTypes.BLOCK_STATE,
-            BlockStateComponent.DEFAULT.with(SporeBlossomProperties.AGE, age)
+            DataComponents.BLOCK_STATE,
+            BlockItemStateProperties.EMPTY.with(SporeBlossomProperties.AGE, age)
         );
 
         return stack;
@@ -39,8 +39,8 @@ public class SporeBlossomStack {
     public static int getAgeComponentValue(ItemStack stack) {
         int age = SporeBlossomProperties.MAX_AGE;
 
-        BlockStateComponent blockStateComponent = stack.getOrDefault(DataComponentTypes.BLOCK_STATE, BlockStateComponent.DEFAULT);
-        Integer componentValue = blockStateComponent.getValue(SporeBlossomProperties.AGE);
+        BlockItemStateProperties component = stack.getOrDefault(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY);
+        Integer componentValue = component.get(SporeBlossomProperties.AGE);
 
         if (componentValue != null)
             age = componentValue;
@@ -48,9 +48,9 @@ public class SporeBlossomStack {
         return age;
     }
 
-    public static Text getTooltip(ItemStack stack) {
+    public static Component getTooltip(ItemStack stack) {
         int growthStage = getAgeComponentValue(stack) + 1;
-        return Text.translatable("block.spore_blossom.growth_stage", growthStage).formatted(Formatting.GRAY);
+        return Component.translatable("block.spore_blossom.growth_stage", growthStage).withStyle(ChatFormatting.GRAY);
     }
 
 }

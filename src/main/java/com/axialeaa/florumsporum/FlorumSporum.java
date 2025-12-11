@@ -1,5 +1,6 @@
 package com.axialeaa.florumsporum;
 
+import com.axialeaa.florumsporum.data.registry.FlorumSporumGameRules;
 import com.axialeaa.florumsporum.item.ItemGroupModifications;
 import com.axialeaa.florumsporum.item.LootTableModifications;
 import com.axialeaa.florumsporum.data.registry.FlorumSporumBlockTags;
@@ -7,7 +8,7 @@ import com.axialeaa.florumsporum.data.registry.FlorumSporumRecipes;
 import com.axialeaa.florumsporum.data.registry.FlorumSporumSoundEvents;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,13 +26,14 @@ public class FlorumSporum implements ModInitializer {
         FlorumSporumSoundEvents.load();
         FlorumSporumBlockTags.load();
         FlorumSporumRecipes.load();
+        FlorumSporumGameRules.load();
 
         LootTableModifications.register();
         ItemGroupEvents.MODIFY_ENTRIES_ALL.register(ItemGroupModifications::registerSporeBlossomAges);
     }
 
     public static Identifier id(String path) {
-        return Identifier.of(MOD_ID, path);
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
 }

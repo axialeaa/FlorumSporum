@@ -5,6 +5,6 @@ package com.axialeaa.florumsporum.particle;
  */
 public interface FragileParticle {
 
-    void setDiscardOnCollision(boolean discardOnCollision);
+    void florum_sporum$setDiscardOnCollision(boolean discardOnCollision);
 
 }

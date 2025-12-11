@@ -1,16 +1,19 @@
 package com.axialeaa.florumsporum.particle;
 
 import com.axialeaa.florumsporum.mixin.SporeBlossomBlockMixin;
-import net.minecraft.block.BlockState;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
-
-import net.minecraft.block.ShapeContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 
 import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.getFacing;
 
@@ -20,35 +23,35 @@ import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.ge
  * created past walls; if the spore blossom is outside, the particles will stay outside.
  * @param state The spore blossom block state.
  * @param center The spore blossom position around which to spawn particles.
- * @see SporeBlossomBlockMixin#addSporeArea(int, BlockState, World, BlockPos, Random)
+ * @see SporeBlossomBlockMixin#addSporeArea(int, BlockState, Level, BlockPos, RandomSource)
  */
 public record RaycastedSporeArea(BlockState state, BlockPos center) {
 
     public static final int SPORE_RANGE = 10;
 
-    public void addClientParticles(World world, Random random, int count) {
+    public void addClientParticles(Level level, RandomSource randomSource, int count) {
         for (int i = 0; i < count; i++)
-            this.addClientParticle(world, random);
+            this.addClientParticle(level, randomSource);
     }
 
     /**
      * Spawns a spore particle inside the box as long as there is a direct line of sight from the spore
      * blossom to the particle spawn position.
      *
-     * @param world The world instance.
-     * @param random The random instance.
+     * @param level The level instance.
+     * @param randomSource The randomSource instance.
      */
-    private void addClientParticle(World world, Random random) {
-        Vec3d pos = this.getRandomPosInBox(random);
+    private void addClientParticle(Level level, RandomSource randomSource) {
+        Vec3 pos = this.getRandomPosInBox(randomSource);
 
-        if (!this.hasUnblockedLineOfSight(world, pos))
+        if (!this.hasUnblockedLineOfSight(level, pos))
             return;
 
-        world.addParticleClient(
+        level.addAlwaysVisibleParticle(
             ParticleTypes.SPORE_BLOSSOM_AIR,
-            pos.getX(),
-            pos.getY(),
-            pos.getZ(),
+            pos.x(),
+            pos.y(),
+            pos.z(),
             0.0,
             0.0,
             0.0
@@ -59,44 +62,44 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
      * Calculates a box measuring ({@link RaycastedSporeArea#SPORE_RANGE} * 2) ^ 3, shrunk in accordance with the direction of the block
      * the spore blossom is resting on. This prevents particles from attempting to spawn behind the spore blossom.
      */
-    private Box calculateSporeBox() {
-        Box box = new Box(this.center).expand(SPORE_RANGE);
+    private AABB calculateSporeBox() {
+        AABB box = new AABB(this.center).inflate(SPORE_RANGE);
         Direction supportDir = getFacing(state).getOpposite();
 
-        return box.shrink(
-            supportDir.getOffsetX() * SPORE_RANGE,
-            supportDir.getOffsetY() * SPORE_RANGE,
-            supportDir.getOffsetZ() * SPORE_RANGE
+        return box.contract(
+            supportDir.getStepX() * SPORE_RANGE,
+            supportDir.getStepY() * SPORE_RANGE,
+            supportDir.getStepZ() * SPORE_RANGE
         );
     }
 
-    private Vec3d getRandomPosInBox(Random random) {
-        Box box = this.calculateSporeBox();
-
-        return new Vec3d(
-            MathHelper.nextDouble(random, box.getMin(Direction.Axis.X), box.getMax(Direction.Axis.X)),
-            MathHelper.nextDouble(random, box.getMin(Direction.Axis.Y), box.getMax(Direction.Axis.Y)),
-            MathHelper.nextDouble(random, box.getMin(Direction.Axis.Z), box.getMax(Direction.Axis.Z))
+    private Vec3 getRandomPosInBox(RandomSource randomSource) {
+        AABB box = this.calculateSporeBox();
+        
+        return new Vec3(
+            Mth.nextDouble(randomSource, box.minX, box.maxX),
+            Mth.nextDouble(randomSource, box.minY, box.maxY),
+            Mth.nextDouble(randomSource, box.minZ, box.maxZ)
         );
     }
 
-    private boolean raycastMissed(World world, RaycastContext ctx) {
-        BlockHitResult blockHitResult = world.raycast(ctx);
+    private boolean raycastMissed(Level level, ClipContext ctx) {
+        BlockHitResult blockHitResult = level.clip(ctx);
         BlockPos blockPos = blockHitResult.getBlockPos();
 
         return blockPos.equals(this.center) || blockHitResult.getType() == HitResult.Type.MISS;
     }
 
-    private boolean hasUnblockedLineOfSight(World world, Vec3d pos) {
-        RaycastContext ctx = new RaycastContext(
-            pos,
-            Vec3d.of(this.center),
-            RaycastContext.ShapeType.OUTLINE,
-            RaycastContext.FluidHandling.NONE,
-            ShapeContext.absent()
+    private boolean hasUnblockedLineOfSight(Level level, Vec3 vec) {
+        ClipContext ctx = new ClipContext(
+            vec,
+            this.center.getCenter(),
+            ClipContext.Block.OUTLINE,
+            ClipContext.Fluid.NONE,
+            CollisionContext.empty()
         );
 
-        return this.raycastMissed(world, ctx);
+        return this.raycastMissed(level, ctx);
     }
 
 

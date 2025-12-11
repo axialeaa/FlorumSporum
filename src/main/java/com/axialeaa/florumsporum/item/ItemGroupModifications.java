@@ -2,24 +2,24 @@ package com.axialeaa.florumsporum.item;
 
 import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class ItemGroupModifications {
 
-    public static void registerSporeBlossomAges(ItemGroup group, FabricItemGroupEntries entries) {
-        if (!group.contains(Items.SPORE_BLOSSOM.getDefaultStack()))
+    public static void registerSporeBlossomAges(CreativeModeTab tab, FabricItemGroupEntries entries) {
+        if (!tab.contains(Items.SPORE_BLOSSOM.getDefaultInstance()))
             return;
 
-        for (ItemStack displayStack : group.getDisplayStacks()) {
+        for (ItemStack displayStack : tab.getDisplayItems()) {
             if (tryAddSporeBlossomStacks(displayStack, entries))
                 return;
         }
     }
 
     private static boolean tryAddSporeBlossomStacks(ItemStack displayStack, FabricItemGroupEntries entries) {
-        if (!displayStack.isOf(Items.SPORE_BLOSSOM))
+        if (!displayStack.is(Items.SPORE_BLOSSOM))
             return false;
 
         ItemStack prevStack = SporeBlossomStack.addDataForAge(displayStack, 0); // replacing the vanilla spore blossom stack

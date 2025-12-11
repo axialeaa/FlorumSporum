@@ -1,23 +1,30 @@
 package com.axialeaa.florumsporum.block;
 
 import com.axialeaa.florumsporum.block.property.Openness;
+import com.axialeaa.florumsporum.data.registry.FlorumSporumGameRules;
+import com.axialeaa.florumsporum.data.registry.FlorumSporumSoundEvents;
 import com.axialeaa.florumsporum.item.SporeBlossomStack;
 import com.axialeaa.florumsporum.mixin.sneeze.GoalAccessor;
-import com.axialeaa.florumsporum.data.registry.FlorumSporumSoundEvents;
-import net.minecraft.SharedConstants;
-import net.minecraft.block.*;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.PandaEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import com.mojang.math.OctahedralGroup;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.animal.panda.Panda;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.SporeBlossomBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 import java.util.Map;
@@ -26,13 +33,9 @@ import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.*;
 
 public class SporeBlossomBehaviour {
 
-    public static final int ENTITY_CHECK_INTERVAL = SharedConstants.TICKS_PER_SECOND * 3;
-    public static final int UNFURL_INTERVAL = SharedConstants.TICKS_PER_SECOND / 2;
-    public static final float PER_RANDOM_TICK_GROWTH_CHANCE = 0.1F;
-
     // transforms downShape into "north shape", necessary for map ordering
     public static Map<Direction, VoxelShape> getShapeMap(VoxelShape downShape) {
-        return VoxelShapes.createFacingShapeMap(VoxelShapes.transform(downShape, DirectionTransformation.ROT_90_X_POS));
+        return Shapes.rotateAll(Shapes.rotate(downShape, OctahedralGroup.ROT_90_X_POS));
     }
 
     /**
@@ -47,37 +50,36 @@ public class SporeBlossomBehaviour {
         return !isClosed(state) && isMaxAge(state) && getFacing(state) == Direction.DOWN;
     }
 
-    public static BlockState advanceAge(World world, BlockPos pos, BlockState state) {
-        return openNoisily(world, pos, state.cycle(AGE));
+    public static BlockState advanceAge(ServerLevel serverLevel, BlockPos pos, BlockState state) {
+        return openNoisily(serverLevel, pos, state.cycle(AGE));
     }
 
-    public static void onFertilized(World world, BlockPos pos, BlockState state, ItemStack stack) {
+    public static void onFertilized(ServerLevel serverLevel, BlockPos pos, BlockState state, ItemStack stack) {
         if (isMaxAge(state))
-            SporeBlossomStack.dropJuvenile(world, pos);
-        else world.setBlockState(pos, advanceAge(world, pos, state));
+            SporeBlossomStack.dropJuvenile(serverLevel, pos);
+        else serverLevel.setBlockAndUpdate(pos, advanceAge(serverLevel, pos, state));
 
-        if (!world.isClient())
-            stack.decrement(1);
+        stack.shrink(1);
     }
 
     public static BlockState recoil(BlockState state) {
-        return state.with(OPENNESS, Openness.CLOSED);
+        return state.setValue(OPENNESS, Openness.CLOSED);
     }
 
-    public static BlockState recoilNoisily(World world, BlockPos pos, BlockState state) {
-        world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
-        playSound(world, pos, false);
+    public static BlockState recoilNoisily(ServerLevel serverLevel, BlockPos pos, BlockState state) {
+        serverLevel.gameEvent(null, GameEvent.BLOCK_CHANGE, pos);
+        playSound(serverLevel, pos, false);
 
         return recoil(state);
     }
 
     public static BlockState open(BlockState state) {
-        return state.with(OPENNESS, Openness.values()[getAge(state)]);
+        return state.setValue(OPENNESS, Openness.values()[getAge(state)]);
     }
 
-    public static BlockState openNoisily(World world, BlockPos pos, BlockState state) {
-        world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
-        playSound(world, pos, true);
+    public static BlockState openNoisily(ServerLevel serverLevel, BlockPos pos, BlockState state) {
+        serverLevel.gameEvent(null, GameEvent.BLOCK_CHANGE, pos);
+        playSound(serverLevel, pos, true);
 
         return open(state);
     }
@@ -86,70 +88,74 @@ public class SporeBlossomBehaviour {
         return state.cycle(OPENNESS);
     }
 
-    public static BlockState unfurlNoisily(World world, BlockPos pos, BlockState state) {
-        world.emitGameEvent(null, GameEvent.BLOCK_CHANGE, pos);
-        playSound(world, pos, true);
+    public static BlockState unfurlNoisily(ServerLevel serverLevel, BlockPos pos, BlockState state) {
+        serverLevel.gameEvent(null, GameEvent.BLOCK_CHANGE, pos);
+        playSound(serverLevel, pos, true);
 
         return unfurl(state);
     }
 
     /**
-     * @param world The world the spore blossom is in.
+     * @param serverLevel The level the spore blossom is in.
      * @param pos The position of the spore blossom.
      * @return true if there is at least 1 entity collision box intersects with {@code pos}.
      */
-    public static boolean hasEntityAt(World world, BlockPos pos) {
-        Box box = new Box(pos);
-        List<Entity> entities = world.getEntitiesByClass(Entity.class, box, EntityPredicates.EXCEPT_SPECTATOR);
+    public static boolean hasEntityAt(ServerLevel serverLevel, BlockPos pos) {
+        AABB box = new AABB(pos);
+        List<Entity> entities = serverLevel.getEntitiesOfClass(Entity.class, box, EntitySelector.NO_SPECTATORS);
 
         return !entities.isEmpty();
     }
 
     public static MapColor getMapColor(BlockState state) {
-        return getFacing(state) == Direction.DOWN ? MapColor.DARK_GREEN : MapColor.PINK;
+        return getFacing(state) == Direction.DOWN ? MapColor.PLANT : MapColor.COLOR_PINK;
     }
 
-    public static void playSound(World world, BlockPos pos, boolean opening) {
+    public static void playSound(ServerLevel serverLevel, BlockPos pos, boolean opening) {
         SoundEvent sound = opening ? FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN : FlorumSporumSoundEvents.SPORE_BLOSSOM_CLOSE;
-        float pitch = MathHelper.nextBetween(world.getRandom(), 0.8F, 1.2F);
+        float pitch = Mth.randomBetween(serverLevel.getRandom(), 0.8F, 1.2F);
 
-        world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1.0F, pitch);
+        serverLevel.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0F, pitch);
     }
 
     public static class PandaSneeze {
 
-        private static final int DEFAULT_SNEEZE_TICKS = 6000;
-        private static final int WEAK_SNEEZE_TICKS = 500;
-        private static final int IN_SPORE_SHOWER_SNEEZE_TICKS = 100;
+        private static int getSneezeTicks(ServerLevel serverLevel, Panda panda, boolean inSporeShower) {
+            GameRules gameRules = serverLevel.getGameRules();
 
-        private static int getSneezeTicks(PandaEntity panda, boolean inSporeShower) {
             if (inSporeShower)
-                return IN_SPORE_SHOWER_SNEEZE_TICKS;
+                return gameRules.get(FlorumSporumGameRules.PANDA_SPORE_SHOWER_MAX_SNEEZE_INTERVAL);
 
-            return panda.isWeak() ? WEAK_SNEEZE_TICKS : DEFAULT_SNEEZE_TICKS;
+            return gameRules.get(panda.isWeak() ? FlorumSporumGameRules.PANDA_WEAK_MAX_SNEEZE_INTERVAL : FlorumSporumGameRules.PANDA_DEFAULT_MAX_SNEEZE_INTERVAL);
         }
 
-        public static boolean shouldSneeze(World world, PandaEntity panda, BlockPos pos, Random random) {
-            if (!panda.isBaby() || !panda.isIdle())
+        public static boolean shouldSneeze(ServerLevel serverLevel, Panda panda, BlockPos pos, RandomSource random) {
+            if (!panda.isBaby() || !panda.canPerformAction())
                 return false;
 
-            boolean inSporeShower = isInSporeShower(world, pos);
-            int sneezeTicks = getSneezeTicks(panda, inSporeShower);
+            boolean inSporeShower = isInSporeShower(serverLevel, pos);
+            int sneezeTicks = getSneezeTicks(serverLevel, panda, inSporeShower);
 
-            return random.nextInt(GoalAccessor.invokeToGoalTicks(sneezeTicks)) == 1;
+            return random.nextInt(GoalAccessor.invokeReducedTickDelay(sneezeTicks)) == 1;
         }
 
-        private static boolean isInSporeShower(World world, BlockPos pos) {
-            BlockPos.Mutable mutable = pos.mutableCopy();
-            int i = 0;
+        private static boolean isInSporeShower(ServerLevel serverLevel, BlockPos pos) {
+            BlockPos.MutableBlockPos mutable = pos.mutable();
+            BlockState blockState = serverLevel.getBlockState(mutable);
 
-            while (i < 8 && world.getBlockState(mutable).getCollisionShape(world, mutable).isEmpty()) {
+            int i = 0;
+            int checkRange = serverLevel.getGameRules().get(FlorumSporumGameRules.PANDA_SPORE_SHOWER_CHECK_DEPTH);
+
+            while (i < checkRange && blockState.getCollisionShape(serverLevel, mutable).isEmpty()) {
                 mutable.move(Direction.UP);
                 i++;
 
-                BlockState potentialBlossom = world.getBlockState(mutable);
+                if (serverLevel.isInWorldBounds(mutable))
+                    return false;
 
-                if (potentialBlossom.getBlock() instanceof SporeBlossomBlock && canShower(potentialBlossom))
+                blockState = serverLevel.getBlockState(mutable);
+
+                if (blockState.getBlock() instanceof SporeBlossomBlock && canShower(blockState))
                     return true;
             }
 
