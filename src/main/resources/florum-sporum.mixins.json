@@ -3,21 +3,21 @@
     "package": "com.axialeaa.florumsporum.mixin",
     "compatibilityLevel": "JAVA_17",
     "mixins": [
-        "BlocksMixin",
-        "SporeBlossomBlockMixin",
+        "block.BlocksMixin",
+        "block.SporeBlossomBlockMixin",
         "fertilize.BoneMealItemMixin",
-        "impl.BlockBehaviourImplMixin",
-        "impl.BlockImplMixin",
-        "sneeze.GoalAccessor",
+        "block.BlockBehaviourImplMixin",
+        "block.BlockImplMixin",
+        "sneeze.GoalImplMixin",
         "sneeze.SneezeGoalMixin"
     ],
     "client": [
         "accessor.BlockModelGeneratorsAccessor",
-        "impl.ParticleImplMixin",
+        "particle.ParticleImplMixin",
         "particle.SporeBlossomAirFactoryMixin",
         "particle.SuspendedParticleMixin"
     ],
     "injectors": {
         "defaultRequire": 1
-  }
+    }
 }

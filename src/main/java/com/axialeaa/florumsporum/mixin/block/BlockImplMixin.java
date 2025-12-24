@@ -1,4 +1,4 @@
-package com.axialeaa.florumsporum.mixin.impl;
+package com.axialeaa.florumsporum.mixin.block;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

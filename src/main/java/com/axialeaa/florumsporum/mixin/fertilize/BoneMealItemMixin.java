@@ -1,6 +1,6 @@
 package com.axialeaa.florumsporum.mixin.fertilize;
 
-import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
+import com.axialeaa.florumsporum.block.SporeBlossomBehavior;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,7 @@ public class BoneMealItemMixin {
         BlockState blockState = level.getBlockState(blockPos);
 
         if (level instanceof ServerLevel serverLevel && blockState.getBlock() instanceof SporeBlossomBlock) {
-            SporeBlossomBehaviour.onFertilized(serverLevel, blockPos, blockState, stack);
+            SporeBlossomBehavior.onFertilized(serverLevel, blockPos, blockState, stack);
             return true;
         }
 

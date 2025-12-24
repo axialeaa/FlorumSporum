@@ -21,34 +21,34 @@ public interface FlorumSporumGameRules {
         "spore_blossom_unfurl_interval",
         SharedConstants.TICKS_PER_SECOND / 2,
         1,
-        SharedConstants.TICKS_PER_SECOND * 5
+        Integer.MAX_VALUE
     );
 
     GameRule<Integer> ENTITY_CHECK_INTERVAL = registerInt(
         "spore_blossom_entity_check_interval",
         SharedConstants.TICKS_PER_SECOND * 3,
         1,
-        SharedConstants.TICKS_PER_SECOND * 5
+        Integer.MAX_VALUE
     );
 
     GameRule<Integer> PANDA_DEFAULT_MAX_SNEEZE_INTERVAL = registerInt(
         "panda_default_max_sneeze_interval",
         SharedConstants.TICKS_PER_MINUTE * 5,
-        1,
+        0,
         Integer.MAX_VALUE
     );
 
     GameRule<Integer> PANDA_WEAK_MAX_SNEEZE_INTERVAL = registerInt(
         "panda_weak_max_sneeze_interval",
         SharedConstants.TICKS_PER_SECOND * 25,
-        1,
+        0,
         Integer.MAX_VALUE
     );
 
     GameRule<Integer> PANDA_SPORE_SHOWER_MAX_SNEEZE_INTERVAL = registerInt(
         "panda_spore_shower_max_sneeze_interval",
         SharedConstants.TICKS_PER_SECOND * 5,
-        1,
+        0,
         Integer.MAX_VALUE
     );
 

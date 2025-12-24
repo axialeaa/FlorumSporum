@@ -1,10 +1,8 @@
 package com.axialeaa.florumsporum.block;
 
 import com.axialeaa.florumsporum.block.property.Openness;
-import com.axialeaa.florumsporum.data.registry.FlorumSporumGameRules;
 import com.axialeaa.florumsporum.data.registry.FlorumSporumSoundEvents;
 import com.axialeaa.florumsporum.item.SporeBlossomStack;
-import com.axialeaa.florumsporum.mixin.sneeze.GoalAccessor;
 import com.mojang.math.OctahedralGroup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,15 +10,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.animal.panda.Panda;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.SporeBlossomBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -31,7 +25,7 @@ import java.util.Map;
 
 import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.*;
 
-public class SporeBlossomBehaviour {
+public class SporeBlossomBehavior {
 
     // transforms downShape into "north shape", necessary for map ordering
     public static Map<Direction, VoxelShape> getShapeMap(VoxelShape downShape) {
@@ -116,52 +110,6 @@ public class SporeBlossomBehaviour {
         float pitch = Mth.randomBetween(serverLevel.getRandom(), 0.8F, 1.2F);
 
         serverLevel.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0F, pitch);
-    }
-
-    public static class PandaSneeze {
-
-        private static int getSneezeTicks(ServerLevel serverLevel, Panda panda, boolean inSporeShower) {
-            GameRules gameRules = serverLevel.getGameRules();
-
-            if (inSporeShower)
-                return gameRules.get(FlorumSporumGameRules.PANDA_SPORE_SHOWER_MAX_SNEEZE_INTERVAL);
-
-            return gameRules.get(panda.isWeak() ? FlorumSporumGameRules.PANDA_WEAK_MAX_SNEEZE_INTERVAL : FlorumSporumGameRules.PANDA_DEFAULT_MAX_SNEEZE_INTERVAL);
-        }
-
-        public static boolean shouldSneeze(ServerLevel serverLevel, Panda panda, BlockPos pos, RandomSource random) {
-            if (!panda.isBaby() || !panda.canPerformAction())
-                return false;
-
-            boolean inSporeShower = isInSporeShower(serverLevel, pos);
-            int sneezeTicks = getSneezeTicks(serverLevel, panda, inSporeShower);
-
-            return random.nextInt(GoalAccessor.invokeReducedTickDelay(sneezeTicks)) == 1;
-        }
-
-        private static boolean isInSporeShower(ServerLevel serverLevel, BlockPos pos) {
-            BlockPos.MutableBlockPos mutable = pos.mutable();
-            BlockState blockState = serverLevel.getBlockState(mutable);
-
-            int i = 0;
-            int checkRange = serverLevel.getGameRules().get(FlorumSporumGameRules.PANDA_SPORE_SHOWER_CHECK_DEPTH);
-
-            while (i < checkRange && blockState.getCollisionShape(serverLevel, mutable).isEmpty()) {
-                mutable.move(Direction.UP);
-                i++;
-
-                if (serverLevel.isInWorldBounds(mutable))
-                    return false;
-
-                blockState = serverLevel.getBlockState(mutable);
-
-                if (blockState.getBlock() instanceof SporeBlossomBlock && canShower(blockState))
-                    return true;
-            }
-
-            return false;
-        }
-
     }
 
 }

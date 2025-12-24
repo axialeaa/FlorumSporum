@@ -1,4 +1,4 @@
-package com.axialeaa.florumsporum.mixin.impl;
+package com.axialeaa.florumsporum.mixin.particle;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -13,11 +13,8 @@ import org.spongepowered.asm.mixin.Shadow;
 public abstract class ParticleImplMixin {
 
     @Shadow @Final protected ClientLevel level;
-    @Shadow
-    public abstract AABB getBoundingBox();
-
-    @Shadow
-    public abstract void remove();
+    @Shadow public abstract AABB getBoundingBox();
+    @Shadow public abstract void remove();
 
     @WrapMethod(method = "move(DDD)V")
     public void moveImpl(double dx, double dy, double dz, Operation<Void> original) {

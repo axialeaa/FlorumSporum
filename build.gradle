@@ -5,7 +5,7 @@ plugins {
 }
 
 def mcVersion = project.build_version
-String updateName = "$mod_name $mod_version ($mcVersion) $update_name_suffix"
+String updateName = "$mod_name $mod_version ($mcVersion)$update_name_suffix"
 
 version = "$project.mod_version+$mcVersion"
 group = project.maven_group

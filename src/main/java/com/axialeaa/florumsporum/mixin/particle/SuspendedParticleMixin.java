@@ -1,6 +1,5 @@
 package com.axialeaa.florumsporum.mixin.particle;
 
-import com.axialeaa.florumsporum.mixin.impl.ParticleImplMixin;
 import com.axialeaa.florumsporum.particle.FragileParticle;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.client.particle.SuspendedParticle;

@@ -1,0 +1,372 @@
+{
+  "variants": {
+    "age=0,facing=down,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_0",
+      "x": 90
+    },
+    "age=0,facing=down,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_0",
+      "x": 90
+    },
+    "age=0,facing=down,openness=full": {
+      "model": "florum-sporum:block/full/stage_0",
+      "x": 90
+    },
+    "age=0,facing=down,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_0",
+      "x": 90
+    },
+    "age=0,facing=east,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_0",
+      "y": 90
+    },
+    "age=0,facing=east,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_0",
+      "y": 90
+    },
+    "age=0,facing=east,openness=full": {
+      "model": "florum-sporum:block/full/stage_0",
+      "y": 90
+    },
+    "age=0,facing=east,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_0",
+      "y": 90
+    },
+    "age=0,facing=north,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_0"
+    },
+    "age=0,facing=north,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_0"
+    },
+    "age=0,facing=north,openness=full": {
+      "model": "florum-sporum:block/full/stage_0"
+    },
+    "age=0,facing=north,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_0"
+    },
+    "age=0,facing=south,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_0",
+      "y": 180
+    },
+    "age=0,facing=south,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_0",
+      "y": 180
+    },
+    "age=0,facing=south,openness=full": {
+      "model": "florum-sporum:block/full/stage_0",
+      "y": 180
+    },
+    "age=0,facing=south,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_0",
+      "y": 180
+    },
+    "age=0,facing=up,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_0",
+      "x": 270
+    },
+    "age=0,facing=up,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_0",
+      "x": 270
+    },
+    "age=0,facing=up,openness=full": {
+      "model": "florum-sporum:block/full/stage_0",
+      "x": 270
+    },
+    "age=0,facing=up,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_0",
+      "x": 270
+    },
+    "age=0,facing=west,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_0",
+      "y": 270
+    },
+    "age=0,facing=west,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_0",
+      "y": 270
+    },
+    "age=0,facing=west,openness=full": {
+      "model": "florum-sporum:block/full/stage_0",
+      "y": 270
+    },
+    "age=0,facing=west,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_0",
+      "y": 270
+    },
+    "age=1,facing=down,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_1",
+      "x": 90
+    },
+    "age=1,facing=down,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_1",
+      "x": 90
+    },
+    "age=1,facing=down,openness=full": {
+      "model": "florum-sporum:block/full/stage_1",
+      "x": 90
+    },
+    "age=1,facing=down,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_1",
+      "x": 90
+    },
+    "age=1,facing=east,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_1",
+      "y": 90
+    },
+    "age=1,facing=east,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_1",
+      "y": 90
+    },
+    "age=1,facing=east,openness=full": {
+      "model": "florum-sporum:block/full/stage_1",
+      "y": 90
+    },
+    "age=1,facing=east,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_1",
+      "y": 90
+    },
+    "age=1,facing=north,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_1"
+    },
+    "age=1,facing=north,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_1"
+    },
+    "age=1,facing=north,openness=full": {
+      "model": "florum-sporum:block/full/stage_1"
+    },
+    "age=1,facing=north,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_1"
+    },
+    "age=1,facing=south,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_1",
+      "y": 180
+    },
+    "age=1,facing=south,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_1",
+      "y": 180
+    },
+    "age=1,facing=south,openness=full": {
+      "model": "florum-sporum:block/full/stage_1",
+      "y": 180
+    },
+    "age=1,facing=south,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_1",
+      "y": 180
+    },
+    "age=1,facing=up,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_1",
+      "x": 270
+    },
+    "age=1,facing=up,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_1",
+      "x": 270
+    },
+    "age=1,facing=up,openness=full": {
+      "model": "florum-sporum:block/full/stage_1",
+      "x": 270
+    },
+    "age=1,facing=up,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_1",
+      "x": 270
+    },
+    "age=1,facing=west,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_1",
+      "y": 270
+    },
+    "age=1,facing=west,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_1",
+      "y": 270
+    },
+    "age=1,facing=west,openness=full": {
+      "model": "florum-sporum:block/full/stage_1",
+      "y": 270
+    },
+    "age=1,facing=west,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_1",
+      "y": 270
+    },
+    "age=2,facing=down,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_2",
+      "x": 90
+    },
+    "age=2,facing=down,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_2",
+      "x": 90
+    },
+    "age=2,facing=down,openness=full": {
+      "model": "florum-sporum:block/full/stage_2",
+      "x": 90
+    },
+    "age=2,facing=down,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_2",
+      "x": 90
+    },
+    "age=2,facing=east,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_2",
+      "y": 90
+    },
+    "age=2,facing=east,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_2",
+      "y": 90
+    },
+    "age=2,facing=east,openness=full": {
+      "model": "florum-sporum:block/full/stage_2",
+      "y": 90
+    },
+    "age=2,facing=east,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_2",
+      "y": 90
+    },
+    "age=2,facing=north,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_2"
+    },
+    "age=2,facing=north,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_2"
+    },
+    "age=2,facing=north,openness=full": {
+      "model": "florum-sporum:block/full/stage_2"
+    },
+    "age=2,facing=north,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_2"
+    },
+    "age=2,facing=south,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_2",
+      "y": 180
+    },
+    "age=2,facing=south,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_2",
+      "y": 180
+    },
+    "age=2,facing=south,openness=full": {
+      "model": "florum-sporum:block/full/stage_2",
+      "y": 180
+    },
+    "age=2,facing=south,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_2",
+      "y": 180
+    },
+    "age=2,facing=up,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_2",
+      "x": 270
+    },
+    "age=2,facing=up,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_2",
+      "x": 270
+    },
+    "age=2,facing=up,openness=full": {
+      "model": "florum-sporum:block/full/stage_2",
+      "x": 270
+    },
+    "age=2,facing=up,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_2",
+      "x": 270
+    },
+    "age=2,facing=west,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_2",
+      "y": 270
+    },
+    "age=2,facing=west,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_2",
+      "y": 270
+    },
+    "age=2,facing=west,openness=full": {
+      "model": "florum-sporum:block/full/stage_2",
+      "y": 270
+    },
+    "age=2,facing=west,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_2",
+      "y": 270
+    },
+    "age=3,facing=down,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_3",
+      "x": 90
+    },
+    "age=3,facing=down,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_3",
+      "x": 90
+    },
+    "age=3,facing=down,openness=full": {
+      "model": "florum-sporum:block/full/stage_3",
+      "x": 90
+    },
+    "age=3,facing=down,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_3",
+      "x": 90
+    },
+    "age=3,facing=east,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_3",
+      "y": 90
+    },
+    "age=3,facing=east,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_3",
+      "y": 90
+    },
+    "age=3,facing=east,openness=full": {
+      "model": "florum-sporum:block/full/stage_3",
+      "y": 90
+    },
+    "age=3,facing=east,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_3",
+      "y": 90
+    },
+    "age=3,facing=north,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_3"
+    },
+    "age=3,facing=north,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_3"
+    },
+    "age=3,facing=north,openness=full": {
+      "model": "florum-sporum:block/full/stage_3"
+    },
+    "age=3,facing=north,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_3"
+    },
+    "age=3,facing=south,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_3",
+      "y": 180
+    },
+    "age=3,facing=south,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_3",
+      "y": 180
+    },
+    "age=3,facing=south,openness=full": {
+      "model": "florum-sporum:block/full/stage_3",
+      "y": 180
+    },
+    "age=3,facing=south,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_3",
+      "y": 180
+    },
+    "age=3,facing=up,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_3",
+      "x": 270
+    },
+    "age=3,facing=up,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_3",
+      "x": 270
+    },
+    "age=3,facing=up,openness=full": {
+      "model": "florum-sporum:block/full/stage_3",
+      "x": 270
+    },
+    "age=3,facing=up,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_3",
+      "x": 270
+    },
+    "age=3,facing=west,openness=ajar": {
+      "model": "florum-sporum:block/ajar/stage_3",
+      "y": 270
+    },
+    "age=3,facing=west,openness=closed": {
+      "model": "florum-sporum:block/closed/stage_3",
+      "y": 270
+    },
+    "age=3,facing=west,openness=full": {
+      "model": "florum-sporum:block/full/stage_3",
+      "y": 270
+    },
+    "age=3,facing=west,openness=partial": {
+      "model": "florum-sporum:block/partial/stage_3",
+      "y": 270
+    }
+  }
+}

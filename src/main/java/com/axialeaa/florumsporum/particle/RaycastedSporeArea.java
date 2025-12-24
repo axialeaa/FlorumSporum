@@ -1,6 +1,6 @@
 package com.axialeaa.florumsporum.particle;
 
-import com.axialeaa.florumsporum.mixin.SporeBlossomBlockMixin;
+import com.axialeaa.florumsporum.mixin.block.SporeBlossomBlockMixin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
