@@ -24,7 +24,7 @@ public class LootTableModifications {
 
     private static LootTable registerPandaSneeze(ResourceKey<LootTable> registryKey, LootTable original, LootTableSource source, HolderLookup.Provider holderLookup) {
         if (!validateLootTable(registryKey, BuiltInLootTables.PANDA_SNEEZE, source))
-            return original;
+            return null;
 
         return LootTable.lootTable()
             .withPool(LootPool.lootPool()
