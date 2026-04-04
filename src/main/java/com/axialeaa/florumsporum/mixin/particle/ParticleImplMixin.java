@@ -12,13 +12,14 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(Particle.class)
 public abstract class ParticleImplMixin {
 
-    @Shadow @Final protected ClientLevel level;
     @Shadow public abstract AABB getBoundingBox();
     @Shadow public abstract void remove();
 
+    @Shadow @Final protected ClientLevel level;
+
     @WrapMethod(method = "move(DDD)V")
-    public void moveImpl(double dx, double dy, double dz, Operation<Void> original) {
-        original.call(dx, dy, dz);
+    public void moveImpl(double xa, double ya, double za, Operation<Void> original) {
+        original.call(xa, ya, za);
     }
 
 }

@@ -17,15 +17,10 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(Block.class)
 public abstract class BlockImplMixin extends BlockBehaviourImplMixin {
 
-    @Shadow
-    public abstract BlockState defaultBlockState();
+    @Shadow public abstract BlockState defaultBlockState();
+    @Shadow protected abstract void registerDefaultState(BlockState state);
 
-    @Shadow
-    protected abstract void registerDefaultState(BlockState blockState);
-
-    @Shadow
-    @Final
-    protected StateDefinition<Block, BlockState> stateDefinition;
+    @Shadow @Final protected StateDefinition<Block, BlockState> stateDefinition;
 
     @WrapMethod(method = "createBlockStateDefinition")
     public void createBlockStateDefinitionImpl(StateDefinition.Builder<Block, BlockState> builder, Operation<Void> original) {
@@ -33,13 +28,13 @@ public abstract class BlockImplMixin extends BlockBehaviourImplMixin {
     }
 
     @WrapMethod(method = "getStateForPlacement")
-    public BlockState getStateForPlacementImpl(BlockPlaceContext blockPlaceContext, Operation<BlockState> original) {
-        return original.call(blockPlaceContext);
+    public BlockState getStateForPlacementImpl(BlockPlaceContext context, Operation<BlockState> original) {
+        return original.call(context);
     }
 
     @WrapMethod(method = "setPlacedBy")
-    public void setPlacedByImpl(Level level, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack, Operation<Void> original) {
-        original.call(level, blockPos, blockState, livingEntity, itemStack);
+    public void setPlacedByImpl(Level level, BlockPos pos, BlockState state, LivingEntity by, ItemStack itemStack, Operation<Void> original) {
+        original.call(level, pos, state, by, itemStack);
     }
 
 }

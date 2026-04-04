@@ -1,5 +1,6 @@
 package com.axialeaa.florumsporum.particle;
 
+import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
 import com.axialeaa.florumsporum.mixin.block.SporeBlossomBlockMixin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,8 +16,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
-import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.getFacing;
-
 /**
  * Creates a box and spawns a certain number of {@link ParticleTypes#SPORE_BLOSSOM_AIR} particles inside it, making sure
  * there is a direct line of sight from the spore blossom to the particle position. This prevents particles being
@@ -27,35 +26,21 @@ import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.ge
  */
 public record RaycastedSporeArea(BlockState state, BlockPos center) {
 
-    public static final int SPORE_RANGE = 10;
-
-    public void addClientParticles(Level level, RandomSource randomSource, int count) {
-        for (int i = 0; i < count; i++)
-            this.addClientParticle(level, randomSource);
-    }
+    private static final int SPORE_RANGE = 10;
 
     /**
-     * Spawns a spore particle inside the box as long as there is a direct line of sight from the spore
+     * Spawns spore particles inside the area as long as there is a direct line of sight from the spore
      * blossom to the particle spawn position.
-     *
-     * @param level The level instance.
-     * @param randomSource The randomSource instance.
      */
-    private void addClientParticle(Level level, RandomSource randomSource) {
-        Vec3 pos = this.getRandomPosInBox(randomSource);
+    public void addClientParticles(Level level, RandomSource random, int count) {
+        AABB box = this.calculateSporeBox();
 
-        if (!this.hasUnblockedLineOfSight(level, pos))
-            return;
+        for (int i = 0; i < count; i++) {
+            Vec3 pos = this.getRandomPosInBox(box, random);
 
-        level.addAlwaysVisibleParticle(
-            ParticleTypes.SPORE_BLOSSOM_AIR,
-            pos.x(),
-            pos.y(),
-            pos.z(),
-            0.0,
-            0.0,
-            0.0
-        );
+            if (this.hasUnblockedLineOfSight(level, pos))
+                level.addAlwaysVisibleParticle(ParticleTypes.SPORE_BLOSSOM_AIR, pos.x, pos.y, pos.z, 0.0, 0.0, 0.0);
+        }
     }
 
     /**
@@ -64,7 +49,7 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
      */
     private AABB calculateSporeBox() {
         AABB box = new AABB(this.center).inflate(SPORE_RANGE);
-        Direction supportDir = getFacing(state).getOpposite();
+        Direction supportDir = SporeBlossomProperties.getFacing(state).getOpposite();
 
         return box.contract(
             supportDir.getStepX() * SPORE_RANGE,
@@ -73,26 +58,24 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
         );
     }
 
-    private Vec3 getRandomPosInBox(RandomSource randomSource) {
-        AABB box = this.calculateSporeBox();
-        
+    private Vec3 getRandomPosInBox(AABB box, RandomSource random) {
         return new Vec3(
-            Mth.nextDouble(randomSource, box.minX, box.maxX),
-            Mth.nextDouble(randomSource, box.minY, box.maxY),
-            Mth.nextDouble(randomSource, box.minZ, box.maxZ)
+            Mth.nextDouble(random, box.minX, box.maxX),
+            Mth.nextDouble(random, box.minY, box.maxY),
+            Mth.nextDouble(random, box.minZ, box.maxZ)
         );
     }
 
-    private boolean raycastMissed(Level level, ClipContext ctx) {
-        BlockHitResult blockHitResult = level.clip(ctx);
+    private boolean raycastMissed(Level level, ClipContext context) {
+        BlockHitResult blockHitResult = level.clip(context);
         BlockPos blockPos = blockHitResult.getBlockPos();
 
         return blockPos.equals(this.center) || blockHitResult.getType() == HitResult.Type.MISS;
     }
 
-    private boolean hasUnblockedLineOfSight(Level level, Vec3 vec) {
+    private boolean hasUnblockedLineOfSight(Level level, Vec3 to) {
         ClipContext ctx = new ClipContext(
-            vec,
+            to,
             this.center.getCenter(),
             ClipContext.Block.OUTLINE,
             ClipContext.Fluid.NONE,

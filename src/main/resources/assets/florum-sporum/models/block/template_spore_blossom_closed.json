@@ -1,7 +1,6 @@
 {
 	"format_version": "1.21.6",
 	"credit": "Made by axialeaa using Blockbench",
-	"parent": "florum-sporum:block/spore_blossom_display_parameters",
 	"ambientocclusion": false,
 	"textures": {
 		"base": "block/spore_blossom_base",
@@ -11,7 +10,6 @@
 		{
 			"from": [1, 1, 15.9],
 			"to": [15, 15, 15.9],
-			"shade": false,
 			"rotation": {"angle": 0, "axis": "x", "origin": [0, 16, 8]},
 			"faces": {
 				"north": {"uv": [1, 1, 15, 15], "texture": "#base"},

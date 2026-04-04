@@ -3,7 +3,7 @@
 	"id": "${id}",
 	"version": "${version}",
 	"name": "${name}",
-	"description": "Breathing new life into the spore blossom without undoing any of Mojang's work!",
+	"description": "${description}",
 	"authors": [
 		{
 			"name": "axialeaa",
@@ -30,11 +30,17 @@
 			"contact": {
 				"homepage": "https://github.com/cerealconjugo"
 			}
+		},
+		{
+			"name": "SeriousFreezing (pt_BR translations)",
+			"contact": {
+				"homepage": "https://github.com/seriousfreezing"
+			}
 		}
 	],
 	"contact": {
-		"sources": "https://github.com/axialeaa/FlorumSporum",
-		"issues": "https://github.com/axialeaa/FlorumSporum/issues"
+		"sources": "https://github.com/${repository}",
+		"issues": "https://github.com/${repository}/issues"
 	},
 	"license": "LGPLv3",
 	"icon": "assets/florum-sporum/icon.png",
@@ -45,27 +51,24 @@
 		],
 		"main": [
 			"com.axialeaa.florumsporum.FlorumSporum"
-		],
-		"client": [
-			"com.axialeaa.florumsporum.FlorumSporumClient"
 		]
 	},
 	"custom": {
 		"modmenu": {
 			"links": {
-				"modmenu.github_releases": "https://github.com/axialeaa/FlorumSporum/releases",
-				"modmenu.modrinth": "https://modrinth.com/mod/florum-sporum",
+				"modmenu.github_releases": "https://github.com/${repository}/releases",
+				"modmenu.modrinth": "https://modrinth.com/mod/${id}",
 				"modmenu.discord": "https://discord.gg/hfVmpeQhe8"
 			}
 		}
 	},
 	"mixins": [
-      "florum-sporum.mixins.json"
+		"${id}.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=${loader}",
-		"fabric": "*",
 		"minecraft": "${target}",
-		"java": ">=${java_version}"
-    }
+		"java": ">=${java}",
+		"fabric-api": "*"
+	}
 }

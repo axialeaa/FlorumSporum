@@ -19,5 +19,5 @@
       }
     }
   ],
-  "tool": "c:tools/knife"
+  "tool": "#c:tools/knife"
 }

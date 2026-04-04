@@ -1,13 +1,21 @@
 {
 	"format_version": "1.21.6",
 	"credit": "Made by axialeaa using Blockbench",
-	"parent": "florum-sporum:block/spore_blossom_display_parameters",
 	"ambientocclusion": false,
 	"textures": {
 		"base": "block/spore_blossom_base",
 		"particle": "#flower"
 	},
 	"elements": [
+		{
+			"from": [1, 1, 15.9],
+			"to": [15, 15, 15.9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 15.9]},
+			"faces": {
+				"north": {"uv": [1, 1, 15, 15], "texture": "#base"},
+				"south": {"uv": [1, 1, 15, 15], "texture": "#base"}
+			}
+		},
 		{
 			"from": [8.1, 0, 0],
 			"to": [8.1, 16, 16],
@@ -46,16 +54,6 @@
 			"faces": {
 				"up": {"uv": [0, 0, 16, 16], "texture": "#flower"},
 				"down": {"uv": [16, 16, 0, 0], "texture": "#flower"}
-			}
-		},
-		{
-			"from": [1, 1, 15.9],
-			"to": [15, 15, 15.9],
-			"shade": false,
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 15.9]},
-			"faces": {
-				"north": {"uv": [1, 1, 15, 15], "texture": "#base"},
-				"south": {"uv": [1, 1, 15, 15], "texture": "#base"}
 			}
 		}
 	]

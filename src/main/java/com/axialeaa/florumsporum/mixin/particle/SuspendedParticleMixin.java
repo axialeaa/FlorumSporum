@@ -13,8 +13,8 @@ public abstract class SuspendedParticleMixin extends ParticleImplMixin implement
     @Unique private boolean discardOnCollision = false;
 
     @Override
-    public void moveImpl(double dx, double dy, double dz, Operation<Void> original) {
-        super.moveImpl(dx, dy, dz, original);
+    public void moveImpl(double xa, double ya, double za, Operation<Void> original) {
+        super.moveImpl(xa, ya, za, original);
 
         if (!this.discardOnCollision)
             return;

@@ -1,6 +1,5 @@
 {
   "block.spore_blossom.close": {
-    "category": "block",
     "sounds": [
       {
         "type": "event",
@@ -10,7 +9,6 @@
     "subtitle": "subtitles.block.spore_blossom.close"
   },
   "block.spore_blossom.open": {
-    "category": "block",
     "sounds": [
       {
         "type": "event",

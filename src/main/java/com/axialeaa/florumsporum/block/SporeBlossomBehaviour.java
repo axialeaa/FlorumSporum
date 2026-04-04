@@ -2,7 +2,6 @@ package com.axialeaa.florumsporum.block;
 
 import com.axialeaa.florumsporum.block.property.Openness;
 import com.axialeaa.florumsporum.data.registry.FlorumSporumSoundEvents;
-import com.axialeaa.florumsporum.item.SporeBlossomStack;
 import com.mojang.math.OctahedralGroup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,11 +11,13 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -25,11 +26,11 @@ import java.util.Map;
 
 import static com.axialeaa.florumsporum.block.property.SporeBlossomProperties.*;
 
-public class SporeBlossomBehavior {
+public class SporeBlossomBehaviour {
 
     // transforms downShape into "north shape", necessary for map ordering
     public static Map<Direction, VoxelShape> getShapeMap(VoxelShape downShape) {
-        return Shapes.rotateAll(Shapes.rotate(downShape, OctahedralGroup.ROT_90_X_POS));
+        return Shapes.rotateAll(downShape, OctahedralGroup.BLOCK_ROT_X_270, new Vec3(0.5, 0.5, 0.5));
     }
 
     /**
@@ -48,12 +49,10 @@ public class SporeBlossomBehavior {
         return openNoisily(serverLevel, pos, state.cycle(AGE));
     }
 
-    public static void onFertilized(ServerLevel serverLevel, BlockPos pos, BlockState state, ItemStack stack) {
+    public static void onFertilized(ServerLevel serverLevel, BlockPos pos, BlockState state) {
         if (isMaxAge(state))
-            SporeBlossomStack.dropJuvenile(serverLevel, pos);
+            Block.popResource(serverLevel, pos, Items.SPORE_BLOSSOM.getDefaultInstance());
         else serverLevel.setBlockAndUpdate(pos, advanceAge(serverLevel, pos, state));
-
-        stack.shrink(1);
     }
 
     public static BlockState recoil(BlockState state) {

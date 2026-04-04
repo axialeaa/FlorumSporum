@@ -16,9 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class SporeBlossomAirFactoryMixin {
 
     @Inject(method = "createParticle(Lnet/minecraft/core/particles/SimpleParticleType;Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/util/RandomSource;)Lnet/minecraft/client/particle/Particle;", at = @At("TAIL"))
-    private void setDiscardOnCollision(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double d, double e, double f, double g, double h, double i, RandomSource randomSource, CallbackInfoReturnable<Particle> cir, @Local SuspendedParticle suspendedParticle) {
-        assert suspendedParticle instanceof FragileParticle;
-        ((FragileParticle) suspendedParticle).florum_sporum$setDiscardOnCollision(true);
+    private void setDiscardOnCollision(SimpleParticleType options, ClientLevel level, double x, double y, double z, double xAux, double yAux, double zAux, RandomSource random, CallbackInfoReturnable<Particle> cir, @Local(name = "particle") SuspendedParticle particle) {
+        FragileParticle.cast(particle).florum_sporum$setDiscardOnCollision(true);
     }
 
 }
