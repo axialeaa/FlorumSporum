@@ -39,7 +39,7 @@ public class FlorumSporumRecipeProvider extends FabricRecipeProvider {
         @Override
         public void buildRecipes() {
             Item input = Items.SPORE_BLOSSOM;
-            this.shapeless(RecipeCategory.MISC, Items.PINK_DYE)
+            this.shapeless(RecipeCategory.MISC, Items.DYE.pink())
                 .requires(input)
                 .group("pink_dye")
                 .unlockedBy(getHasName(input), this.has(input))

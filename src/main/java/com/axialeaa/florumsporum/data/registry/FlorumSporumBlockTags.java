@@ -5,10 +5,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
-public interface FlorumSporumBlockTags {
+public final class FlorumSporumBlockTags {
 
-    TagKey<Block> SPORE_BLOSSOM_CAN_GROW_ON = TagKey.create(Registries.BLOCK, FlorumSporum.id("spore_blossom_can_grow_on"));
-
-    static void init() {}
+    public static final TagKey<Block> SPORE_BLOSSOM_CAN_GROW_ON = TagKey.create(Registries.BLOCK, FlorumSporum.id("spore_blossom_can_grow_on"));
 
 }

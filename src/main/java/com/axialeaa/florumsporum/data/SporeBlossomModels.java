@@ -15,8 +15,7 @@ import java.util.Optional;
 public final class SporeBlossomModels {
 
     private static final String TEMPLATE_PATH = "template_spore_blossom";
-    private static final String FLOWER = "flower";
-    private static final TextureSlot FLOWER_TEXTURE_KEY = TextureSlot.create(FLOWER);
+    private static final TextureSlot FLOWER_TEXTURE_KEY = TextureSlot.create("flower");
 
     private static final int IDENTIFIER_COUNT = SporeBlossomProperties.GROWTH_STAGE_COUNT * Openness.values().length;
     private static final Identifier[] IDENTIFIERS = new Identifier[IDENTIFIER_COUNT];

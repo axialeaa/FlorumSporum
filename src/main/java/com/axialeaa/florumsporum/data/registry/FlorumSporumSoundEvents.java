@@ -6,16 +6,16 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
-public interface FlorumSporumSoundEvents {
+public final class FlorumSporumSoundEvents {
 
-    SoundEvent SPORE_BLOSSOM_CLOSE = of("block.spore_blossom.close");
-    SoundEvent SPORE_BLOSSOM_OPEN = of("block.spore_blossom.open");
+    public static final SoundEvent SPORE_BLOSSOM_CLOSE = of("block.spore_blossom.close");
+    public static final SoundEvent SPORE_BLOSSOM_OPEN = of("block.spore_blossom.open");
 
-    private static SoundEvent of(String path) {
+    public static SoundEvent of(String path) {
         Identifier id = FlorumSporum.id(path);
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 
-    static void init() {}
+    public static void init() {}
 
 }

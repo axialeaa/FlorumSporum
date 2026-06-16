@@ -76,7 +76,7 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
     private boolean hasUnblockedLineOfSight(Level level, Vec3 to) {
         ClipContext ctx = new ClipContext(
             to,
-            this.center.getCenter(),
+            Vec3.atCenterOf(this.center),
             ClipContext.Block.OUTLINE,
             ClipContext.Fluid.NONE,
             CollisionContext.empty()

@@ -58,7 +58,7 @@ public abstract class SporeBlossomBlockMixin extends BlockImplMixin implements B
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void registerDefaultState(BlockBehaviour.Properties properties, CallbackInfo ci) {
-        this.registerDefaultState(this.stateDefinition.any()
+        this.registerDefaultState(this.getStateDefinition().any()
             .setValue(FACING, Direction.DOWN)
             .setValue(AGE, MAX_AGE)
             .setValue(OPENNESS, Openness.FULL)
