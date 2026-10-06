@@ -1,14 +1,16 @@
 package com.axialeaa.florumsporum.data.provider;
 
-import com.axialeaa.florumsporum.data.registry.FlorumSporumRecipes;
+import com.axialeaa.florumsporum.FlorumSporum;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.world.item.Item;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.concurrent.CompletableFuture;
@@ -20,31 +22,29 @@ public class FlorumSporumRecipeProvider extends FabricRecipeProvider {
         super(output, holderProviderFuture);
     }
 
-    @Override
-    protected RecipeProvider createRecipeProvider(HolderLookup.Provider holderProvider, RecipeOutput output) {
-        return new Runner(holderProvider, output);
-    }
-
-    @Override
-    public String getName() {
-        return "Recipe Provider";
-    }
+	@Override
+	protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, BootstrapContext<Recipe<?>> recipes, BootstrapContext<Advancement> advancements) {
+		return new Runner(recipes, advancements);
+	}
 
     private static class Runner extends RecipeProvider {
 
-        private Runner(HolderLookup.Provider holderProvider, RecipeOutput output) {
-            super(holderProvider, output);
+		private Runner(BootstrapContext<Recipe<?>> recipeOutput, BootstrapContext<Advancement> advancementOutput) {
+			super(recipeOutput, advancementOutput);
+		}
+
+	    @Override
+        public void buildRecipes() {
+			this.save("pink_dye_from_spore_blossom", this.shapeless(RecipeCategory.MISC, Items.DYE.pink())
+                .requires(Items.SPORE_BLOSSOM)
+                .group("pink_dye")
+                .unlockedBy(getHasName(Items.SPORE_BLOSSOM), this.has(Items.SPORE_BLOSSOM))
+			);
         }
 
-        @Override
-        public void buildRecipes() {
-            Item input = Items.SPORE_BLOSSOM;
-            this.shapeless(RecipeCategory.MISC, Items.DYE.pink())
-                .requires(input)
-                .group("pink_dye")
-                .unlockedBy(getHasName(input), this.has(input))
-                .save(this.output, FlorumSporumRecipes.PINK_DYE_RECIPE_KEY);
-        }
+		private void save(String path, RecipeBuilder builder) {
+			builder.save(this.output, FlorumSporum.id(path).toString());
+		}
 
     }
 

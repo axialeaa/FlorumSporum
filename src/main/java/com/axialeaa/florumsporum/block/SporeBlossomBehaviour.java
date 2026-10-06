@@ -1,7 +1,7 @@
 package com.axialeaa.florumsporum.block;
 
 import com.axialeaa.florumsporum.block.property.Openness;
-import com.axialeaa.florumsporum.data.registry.FlorumSporumSoundEvents;
+import com.axialeaa.florumsporum.data.registry.ModSoundEvents;
 import com.mojang.math.OctahedralGroup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -45,23 +45,23 @@ public class SporeBlossomBehaviour {
         return !isClosed(state) && isMaxAge(state) && getFacing(state) == Direction.DOWN;
     }
 
-    public static BlockState advanceAge(ServerLevel serverLevel, BlockPos pos, BlockState state) {
-        return openNoisily(serverLevel, pos, state.cycle(AGE));
+    public static BlockState advanceAge(ServerLevel level, BlockPos pos, BlockState state) {
+        return openNoisily(level, pos, state.cycle(AGE));
     }
 
-    public static void onFertilized(ServerLevel serverLevel, BlockPos pos, BlockState state) {
+    public static void onFertilized(ServerLevel level, BlockPos pos, BlockState state) {
         if (isMaxAge(state))
-            Block.popResource(serverLevel, pos, Items.SPORE_BLOSSOM.getDefaultInstance());
-        else serverLevel.setBlockAndUpdate(pos, advanceAge(serverLevel, pos, state));
+            Block.popResource(level, pos, Items.SPORE_BLOSSOM.getDefaultInstance());
+        else level.setBlockAndUpdate(pos, advanceAge(level, pos, state));
     }
 
     public static BlockState recoil(BlockState state) {
         return state.setValue(OPENNESS, Openness.CLOSED);
     }
 
-    public static BlockState recoilNoisily(ServerLevel serverLevel, BlockPos pos, BlockState state) {
-        serverLevel.gameEvent(null, GameEvent.BLOCK_CHANGE, pos);
-        playSound(serverLevel, pos, false);
+    public static BlockState recoilNoisily(ServerLevel level, BlockPos pos, BlockState state) {
+        level.gameEvent(null, GameEvent.BLOCK_CHANGE, pos);
+        playSound(level, pos, false);
 
         return recoil(state);
     }
@@ -70,9 +70,9 @@ public class SporeBlossomBehaviour {
         return state.setValue(OPENNESS, Openness.values()[getAge(state)]);
     }
 
-    public static BlockState openNoisily(ServerLevel serverLevel, BlockPos pos, BlockState state) {
-        serverLevel.gameEvent(null, GameEvent.BLOCK_CHANGE, pos);
-        playSound(serverLevel, pos, true);
+    public static BlockState openNoisily(ServerLevel level, BlockPos pos, BlockState state) {
+        level.gameEvent(null, GameEvent.BLOCK_CHANGE, pos);
+        playSound(level, pos, true);
 
         return open(state);
     }
@@ -81,21 +81,21 @@ public class SporeBlossomBehaviour {
         return state.cycle(OPENNESS);
     }
 
-    public static BlockState unfurlNoisily(ServerLevel serverLevel, BlockPos pos, BlockState state) {
-        serverLevel.gameEvent(null, GameEvent.BLOCK_CHANGE, pos);
-        playSound(serverLevel, pos, true);
+    public static BlockState unfurlNoisily(ServerLevel level, BlockPos pos, BlockState state) {
+        level.gameEvent(null, GameEvent.BLOCK_CHANGE, pos);
+        playSound(level, pos, true);
 
         return unfurl(state);
     }
 
     /**
-     * @param serverLevel The level the spore blossom is in.
+     * @param level The level the spore blossom is in.
      * @param pos The position of the spore blossom.
      * @return true if there is at least 1 entity collision box intersects with {@code pos}.
      */
-    public static boolean hasEntityAt(ServerLevel serverLevel, BlockPos pos) {
+    public static boolean hasEntityAt(ServerLevel level, BlockPos pos) {
         AABB box = new AABB(pos);
-        List<Entity> entities = serverLevel.getEntitiesOfClass(Entity.class, box, EntitySelector.NO_SPECTATORS);
+        List<Entity> entities = level.getEntitiesOfClass(Entity.class, box, EntitySelector.NO_SPECTATORS);
 
         return !entities.isEmpty();
     }
@@ -104,11 +104,11 @@ public class SporeBlossomBehaviour {
         return getFacing(state) == Direction.DOWN ? MapColor.PLANT : MapColor.COLOR_PINK;
     }
 
-    public static void playSound(ServerLevel serverLevel, BlockPos pos, boolean opening) {
-        SoundEvent sound = opening ? FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN : FlorumSporumSoundEvents.SPORE_BLOSSOM_CLOSE;
-        float pitch = Mth.randomBetween(serverLevel.getRandom(), 0.8F, 1.2F);
+    public static void playSound(ServerLevel level, BlockPos pos, boolean opening) {
+        SoundEvent sound = opening ? ModSoundEvents.SPORE_BLOSSOM_OPEN : ModSoundEvents.SPORE_BLOSSOM_CLOSE;
+        float pitch = Mth.randomBetween(level.getRandom(), 0.8F, 1.2F);
 
-        serverLevel.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0F, pitch);
+        level.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0F, pitch);
     }
 
 }

@@ -16,14 +16,13 @@ public abstract class SuspendedParticleMixin extends ParticleImplMixin implement
     public void moveImpl(double xa, double ya, double za, Operation<Void> original) {
         super.moveImpl(xa, ya, za, original);
 
-        if (!this.discardOnCollision)
-            return;
+		if (this.discardOnCollision) {
+			AABB box = this.getBoundingBox();
 
-        AABB box = this.getBoundingBox();
-
-        if (this.level.collidesWithSuffocatingBlock(null, box))
-            this.remove();
-    }
+			if (this.level.collidesWithSuffocatingBlock(null, box))
+				this.remove();
+		}
+	}
 
     @Override
     public void florum_sporum$setDiscardOnCollision(boolean discardOnCollision) {

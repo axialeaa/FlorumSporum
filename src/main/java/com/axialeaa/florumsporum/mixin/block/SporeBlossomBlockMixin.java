@@ -1,8 +1,8 @@
 package com.axialeaa.florumsporum.mixin.block;
 
 import com.axialeaa.florumsporum.block.SporeBlossomBehaviour;
-import com.axialeaa.florumsporum.data.registry.FlorumSporumBlockTags;
-import com.axialeaa.florumsporum.data.registry.FlorumSporumGameRules;
+import com.axialeaa.florumsporum.data.registry.ModTags;
+import com.axialeaa.florumsporum.data.registry.ModGameRules;
 import com.axialeaa.florumsporum.block.property.Openness;
 import com.axialeaa.florumsporum.particle.RaycastedSporeArea;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -26,6 +26,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.SporeBlossomBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jspecify.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -99,18 +101,18 @@ public abstract class SporeBlossomBlockMixin extends BlockImplMixin implements B
     }
 
     @WrapMethod(method = "isValidBonemealTarget")
-    private boolean wrapIsValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, Operation<Boolean> original) {
+    private boolean wrapIsValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, BonemealSource source, Operation<Boolean> original) {
         return true;
     }
 
     @WrapMethod(method = "isBonemealSuccess")
-    private boolean wrapIsBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state, Operation<Boolean> original) {
+    private boolean wrapIsBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state, BonemealSource source, Operation<Boolean> original) {
         return true;
     }
 
     @WrapMethod(method = "performBonemeal")
-    private void wrapPerformBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state, Operation<Void> original) {
-        original.call(level, random, pos, state);
+    private void wrapPerformBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state, BonemealSource source, Operation<Void> original) {
+        original.call(level, random, pos, state, source);
         SporeBlossomBehaviour.onFertilized(level, pos, state);
     }
 
@@ -128,7 +130,7 @@ public abstract class SporeBlossomBlockMixin extends BlockImplMixin implements B
 
         if (level instanceof ServerLevel serverLevel && !serverLevel.hasNeighborSignal(pos) && !isClosed(state)) {
             serverLevel.setBlockAndUpdate(pos, SporeBlossomBehaviour.recoilNoisily(serverLevel, pos, state));
-            serverLevel.scheduleTick(pos, this.asBlock(), serverLevel.getGameRules().get(FlorumSporumGameRules.ENTITY_CHECK_INTERVAL));
+            serverLevel.scheduleTick(pos, this.asBlock(), serverLevel.getGameRules().get(ModGameRules.ENTITY_CHECK_INTERVAL));
         }
     }
 
@@ -148,17 +150,17 @@ public abstract class SporeBlossomBlockMixin extends BlockImplMixin implements B
         GameRules gameRules = level.getGameRules();
 
         if (SporeBlossomBehaviour.hasEntityAt(level, pos))
-            level.scheduleTick(pos, this.asBlock(), gameRules.get(FlorumSporumGameRules.ENTITY_CHECK_INTERVAL));
+            level.scheduleTick(pos, this.asBlock(), gameRules.get(ModGameRules.ENTITY_CHECK_INTERVAL));
         else if (!isFullyOpen(state)) {
             level.setBlockAndUpdate(pos, SporeBlossomBehaviour.unfurlNoisily(level, pos, state));
-            level.scheduleTick(pos, this.asBlock(), gameRules.get(FlorumSporumGameRules.SPORE_BLOSSOM_UNFURL_INTERVAL));
+            level.scheduleTick(pos, this.asBlock(), gameRules.get(ModGameRules.SPORE_BLOSSOM_UNFURL_INTERVAL));
         }
 
         super.tickImpl(state, level, pos, random, original);
     }
 
-    @Override
-    public BlockState getStateForPlacementImpl(BlockPlaceContext context, Operation<BlockState> original) {
+	@Override
+    public @Nullable BlockState getStateForPlacementImpl(BlockPlaceContext context, Operation<BlockState> original) {
         BlockState blockState = super.getStateForPlacementImpl(context, original);
 
         if (blockState == null)
@@ -180,7 +182,7 @@ public abstract class SporeBlossomBlockMixin extends BlockImplMixin implements B
     @Override
     public void randomTickImpl(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, Operation<Void> original) {
         super.randomTickImpl(state, level, pos, random, original);
-        double chance = level.getGameRules().get(FlorumSporumGameRules.SPORE_BLOSSOM_GROWTH_CHANCE);
+        double chance = level.getGameRules().get(ModGameRules.SPORE_BLOSSOM_GROWTH_CHANCE);
 
         if (chance == 0 || random.nextDouble() > chance)
             return;
@@ -188,7 +190,7 @@ public abstract class SporeBlossomBlockMixin extends BlockImplMixin implements B
         Direction support = getFacing(state).getOpposite();
         BlockState supportState = level.getBlockState(pos.relative(support));
 
-        if (supportState.is(FlorumSporumBlockTags.SPORE_BLOSSOM_CAN_GROW_ON))
+        if (supportState.is(ModTags.Blocks.SPORE_BLOSSOM_CAN_GROW_ON))
             level.setBlockAndUpdate(pos, SporeBlossomBehaviour.advanceAge(level, pos, state));
     }
 

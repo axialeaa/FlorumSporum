@@ -6,7 +6,7 @@ plugins {
 }
 
 String mcVersion = project.build_version
-String updateName = "$mod_name $mod_version ($mcVersion)$update_name_suffix"
+String updateName = "$mod_name $mod_version for Minecraft $mcVersion"
 
 version = "$project.mod_version+$mcVersion"
 group = project.maven_group
@@ -22,13 +22,13 @@ publishMods {
 	displayName = updateName
 
 	modLoaders.add("fabric")
-	version = mod_version
+	version = "$mod_version+$mcVersion"
 
 	github {
 		accessToken = providers.gradleProperty("secrets.github_token")
 		repository = repository_url
 		commitish = "master"
-		tagName = mod_version
+		tagName = "release/$mod_version+$mcVersion"
 	}
 
 	modrinth {
@@ -51,6 +51,7 @@ publishMods {
 
 dependencies {
 	minecraft("com.mojang:minecraft:$mcVersion")
+
 	implementation("net.fabricmc:fabric-loader:${loader_version}")
 	implementation("net.fabricmc.fabric-api:fabric-api:${fabric_api_version}")
 }
@@ -105,8 +106,6 @@ loom {
             )
             jvmArguments.addAll(
                 "-XX:+UseG1GC", // cannot use ZGC for enhanced class redef
-                "-XX:+UseCompactObjectHeaders",
-                "-XX:+UseStringDeduplication",
                 "-XX:+AllowEnhancedClassRedefinition"
             )
 		}

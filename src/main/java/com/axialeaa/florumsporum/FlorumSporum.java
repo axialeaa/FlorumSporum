@@ -1,11 +1,9 @@
 package com.axialeaa.florumsporum;
 
-import com.axialeaa.florumsporum.data.registry.FlorumSporumGameRules;
-import com.axialeaa.florumsporum.data.registry.FlorumSporumSoundEvents;
+import com.axialeaa.florumsporum.data.registry.ModGameRules;
+import com.axialeaa.florumsporum.data.registry.ModSoundEvents;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,16 +18,12 @@ public class FlorumSporum implements ModInitializer {
     public void onInitialize() {
         LOGGER.info("{} initialized! Have some florum decorum...", MOD_NAME);
 
-        FlorumSporumSoundEvents.init();
-        FlorumSporumGameRules.init();
+        ModSoundEvents.init();
+        ModGameRules.init();
     }
 
     public static Identifier id(String path) {
         return Identifier.fromNamespaceAndPath(MOD_ID, path);
-    }
-
-    public static <T> ResourceKey<T> resourceKey(ResourceKey<? extends Registry<T>> registryKey, String path) {
-        return ResourceKey.create(registryKey, id(path));
     }
 
 }

@@ -1,6 +1,5 @@
 {
-    "block.spore_blossom.growth_stage": "Growth Stage: %d",
-    "gamerule.category.florum-sporum.config": "Florum Sporum",
+    "gamerule.category.florum-sporum.main": "Florum Sporum",
     "gamerule.florum-sporum.spore_blossom_entity_check_interval": "Time from entity leave to spore blossom unfurling",
     "gamerule.florum-sporum.spore_blossom_growth_chance": "Spore blossom growth chance per random tick",
     "gamerule.florum-sporum.spore_blossom_unfurl_interval": "Time between spore blossom unfurling stages",

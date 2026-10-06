@@ -10,7 +10,6 @@
         "block.SporeBlossomBlockMixin"
     ],
     "client": [
-        "accessor.BlockModelGeneratorsAccessor",
         "particle.ParticleImplMixin",
         "particle.SporeBlossomAirFactoryMixin",
         "particle.SuspendedParticleMixin"

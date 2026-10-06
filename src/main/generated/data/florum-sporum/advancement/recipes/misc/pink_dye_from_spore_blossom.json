@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "florum-sporum:pink_dye_from_spore_blossom"
+        "recipes": "florum-sporum:pink_dye_from_spore_blossom"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

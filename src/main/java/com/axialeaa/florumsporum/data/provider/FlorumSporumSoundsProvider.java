@@ -1,6 +1,6 @@
 package com.axialeaa.florumsporum.data.provider;
 
-import com.axialeaa.florumsporum.data.registry.FlorumSporumSoundEvents;
+import com.axialeaa.florumsporum.data.registry.ModSoundEvents;
 import net.fabricmc.fabric.api.client.datagen.v1.builder.SoundTypeBuilder;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricSoundsProvider;
 import net.minecraft.core.HolderLookup;
@@ -20,8 +20,8 @@ public class FlorumSporumSoundsProvider extends FabricSoundsProvider {
 
     @Override
     protected void configure(HolderLookup.Provider holderProvider, SoundExporter exporter) {
-        add(FlorumSporumSoundEvents.SPORE_BLOSSOM_CLOSE, SoundEvents.BIG_DRIPLEAF_TILT_DOWN, exporter);
-        add(FlorumSporumSoundEvents.SPORE_BLOSSOM_OPEN, SoundEvents.BIG_DRIPLEAF_TILT_UP, exporter);
+        add(ModSoundEvents.SPORE_BLOSSOM_CLOSE, SoundEvents.BIG_DRIPLEAF_TILT_DOWN, exporter);
+        add(ModSoundEvents.SPORE_BLOSSOM_OPEN, SoundEvents.BIG_DRIPLEAF_TILT_UP, exporter);
     }
 
     private static void add(SoundEvent sporeBlossomEvent, SoundEvent event, SoundExporter exporter) {
@@ -33,7 +33,7 @@ public class FlorumSporumSoundsProvider extends FabricSoundsProvider {
 
     @Override
     public String getName() {
-        return "Sounds Provider";
+        return "Sounds";
     }
 
 }

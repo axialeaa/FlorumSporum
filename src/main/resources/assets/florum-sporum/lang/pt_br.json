@@ -1,5 +1,4 @@
 {
-    "block.spore_blossom.growth_stage": "Estágio de Crescimento: %d",
     "gamerule.florum-sporum.spore_blossom_entity_check_interval": "Tempo desde a saída da entidade até o desabrochar da flor de esporos",
     "gamerule.florum-sporum.spore_blossom_growth_chance": "Chance de crescimento da flor de esporos por tick aleatório",
     "gamerule.florum-sporum.spore_blossom_unfurl_interval": "Tempo entre os estágios de desenvolvimento dos esporos",

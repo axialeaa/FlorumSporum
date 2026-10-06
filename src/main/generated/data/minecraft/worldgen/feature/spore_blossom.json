@@ -1,0 +1,45 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "data": {
+          "id": "minecraft:spore_blossom",
+          "properties": {
+            "age": "0",
+            "facing": "down",
+            "openness": "closed"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "minecraft:spore_blossom",
+          "properties": {
+            "age": "1",
+            "facing": "down",
+            "openness": "ajar"
+          }
+        },
+        "weight": 1
+      },
+      {
+        "data": {
+          "id": "minecraft:spore_blossom",
+          "properties": {
+            "age": "2",
+            "facing": "down",
+            "openness": "partial"
+          }
+        },
+        "weight": 1
+      },
+      {
+        "data": "minecraft:spore_blossom",
+        "weight": 1
+      }
+    ]
+  }
+}

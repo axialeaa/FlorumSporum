@@ -1,4 +1,4 @@
-package com.axialeaa.florumsporum.data;
+package com.axialeaa.florumsporum.data.provider;
 
 import com.axialeaa.florumsporum.FlorumSporum;
 import com.axialeaa.florumsporum.block.property.Openness;
@@ -20,7 +20,9 @@ public final class SporeBlossomModels {
     private static final int IDENTIFIER_COUNT = SporeBlossomProperties.GROWTH_STAGE_COUNT * Openness.values().length;
     private static final Identifier[] IDENTIFIERS = new Identifier[IDENTIFIER_COUNT];
 
-    public static Identifier getId(int age, Openness openness) {
+	private SporeBlossomModels() {}
+
+	public static Identifier getId(int age, Openness openness) {
         return IDENTIFIERS[getIdArrayIndex(age, openness)];
     }
 
@@ -33,7 +35,7 @@ public final class SporeBlossomModels {
     }
 
     public static void setIds(BlockModelGenerators generators) {
-        for (int age = 0; age < SporeBlossomProperties.GROWTH_STAGE_COUNT; age++) {
+        for (int age = 0; age <= SporeBlossomProperties.MAX_AGE; age++) {
             for (Openness openness : Openness.values())
                 setId(age, openness, upload(generators, age, openness));
         }

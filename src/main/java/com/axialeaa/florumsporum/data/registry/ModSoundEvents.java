@@ -6,7 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
-public final class FlorumSporumSoundEvents {
+public final class ModSoundEvents {
 
     public static final SoundEvent SPORE_BLOSSOM_CLOSE = of("block.spore_blossom.close");
     public static final SoundEvent SPORE_BLOSSOM_OPEN = of("block.spore_blossom.open");

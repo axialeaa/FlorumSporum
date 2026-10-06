@@ -85,5 +85,4 @@ public record RaycastedSporeArea(BlockState state, BlockPos center) {
         return this.raycastMissed(level, ctx);
     }
 
-
 }

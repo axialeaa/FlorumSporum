@@ -3,8 +3,6 @@ package com.axialeaa.florumsporum.data.provider;
 import com.axialeaa.florumsporum.FlorumSporum;
 import com.axialeaa.florumsporum.block.property.Openness;
 import com.axialeaa.florumsporum.block.property.SporeBlossomProperties;
-import com.axialeaa.florumsporum.data.SporeBlossomModels;
-import com.axialeaa.florumsporum.mixin.accessor.BlockModelGeneratorsAccessor;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -34,7 +32,7 @@ public class FlorumSporumModelProvider extends FabricModelProvider {
 
         generators.blockStateOutput.accept(MultiVariantGenerator.dispatch(Blocks.SPORE_BLOSSOM)
             .with(getBlockStates())
-            .with(BlockModelGeneratorsAccessor.getRotationFacing())
+            .with(BlockModelGenerators.ROTATION_FACING)
         );
     }
 
@@ -49,7 +47,7 @@ public class FlorumSporumModelProvider extends FabricModelProvider {
     private static PropertyDispatch<MultiVariant> getBlockStates() {
         PropertyDispatch.C2<MultiVariant, Integer, Openness> property = PropertyDispatch.initial(SporeBlossomProperties.AGE, SporeBlossomProperties.OPENNESS);
 
-        for (int age = 0; age < SporeBlossomProperties.GROWTH_STAGE_COUNT; age++) {
+        for (int age = 0; age <= SporeBlossomProperties.MAX_AGE; age++) {
             for (Openness openness : Openness.values())
                 property.select(age, openness, BlockModelGenerators.plainVariant(SporeBlossomModels.getId(age, openness)));
         }
